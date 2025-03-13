@@ -595,6 +595,34 @@ if uploaded_file is not None:
     except Exception as e:
         st.sidebar.error(f"Error importing history: {e}")
 
+# Generate button and output area
+if st.button("🚀 Generate Content", type="primary"):
+    if not st.session_state.api_key:
+        st.error("Please enter your API key in the sidebar first.")
+    elif not user_prompt:
+        st.warning("Please enter a prompt to generate content.")
+    else:
+        # Build prompt with template and style instructions
+        template = st.session_state.prompt_templates.get(selected_tool, "Create {prompt}")
+        formatted_prompt = template.replace("{prompt}", user_prompt)
+        
+        # Add style instructions to prompt
+        style_prompt = f"{formatted_prompt}\n\nStyle Guidelines:\n"
+        for key, value in st.session_state.style_instructions.items():
+            if value and value not in ["None", "Standard"] and (not isinstance(value, list) or len(value) > 0):
+                style_prompt += f"- {key.replace('_', ' ').title()}: {value}\n"
+        
+        # Generate content
+        output = generate_ai_content(style_prompt, st.session_state.api_key, st.session_state.api_model)
+        
+        # Display output
+        st.markdown("### 🎯 Generated Content")
+        with st.expander("Content Output", expanded=True):
+            st.markdown(output)
+        
+        # Save to history
+        save_to_history(selected_tool, user_prompt, output)
+              
 # Add theme selector
 st.sidebar.markdown("---")
 st.sidebar.markdown("### 🎨 App Theme")
