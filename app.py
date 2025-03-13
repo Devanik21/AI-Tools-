@@ -601,6 +601,7 @@ with st.expander("⚙️ Advanced Options"):
 
 # Add style instructions to prompt based on selections
 style_instructions = {
+    "Response Length": response_length,
     "tone": tone,
     "voice": voice,
     "audience": audience,
