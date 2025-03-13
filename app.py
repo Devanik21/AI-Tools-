@@ -341,7 +341,8 @@ with st.expander("⚙️ Advanced Options"):
         with col2:
             if st.button("Apply Preset"):
                 st.session_state.prompt_templates[selected_tool] = template_presets[selected_preset]
-                st.experimental_rerun()
+                st.rerun()
+
     
     with tabs[1]:
         # Writing style options
