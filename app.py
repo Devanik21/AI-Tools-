@@ -343,7 +343,7 @@ with tab2:
 # Content generation section
 st.header("✨ Create Content")
 # Add this under the 'Generate Content' section
-if output:
+'''if output:
     st.markdown("### 🌐 Translate Content")
     col1, col2 = st.columns([3, 1])
     with col1:
@@ -358,7 +358,7 @@ if output:
             translation = generate_ai_content(translation_prompt, st.session_state.api_key, st.session_state.api_model)
             
             st.markdown(f"### 🌐 {target_language} Translation")
-            st.markdown(translation)
+            st.markdown(translation)'''
 # Display selected tool or default
 selected_tool = st.session_state.get('selected_tool', 'Smart Content Creator')
 st.markdown(f"### Currently using: **{selected_tool}**")
@@ -628,6 +628,27 @@ style_instructions = {
     "creativity": creativity,
     "reasoning_depth": reasoning_depth
 }
+# Add this after the output is displayed
+if output and st.button("📊 Analyze Content"):
+    analysis = analyze_content(output)
+    
+    st.markdown("### 📊 Content Analytics")
+    
+    col1, col2, col3, col4 = st.columns(4)
+    with col1:
+        st.metric("Word Count", analysis["word_count"])
+    with col2:
+        st.metric("Sentences", analysis["sentence_count"])
+    with col3:
+        st.metric("Paragraphs", analysis["paragraph_count"])
+    with col4:
+        st.metric("Avg Word Length", analysis["avg_word_length"])
+    
+    st.markdown(f"**Sentiment Analysis:** {analysis['sentiment']}")
+    
+    st.markdown("**Most Common Words:**")
+    for word, count in analysis["common_words"]:
+        st.markdown(f"- {word}: {count}")
 
 # Store parameters to session state for use in prompt building
 st.session_state.style_instructions = style_instructions
