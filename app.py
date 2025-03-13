@@ -313,6 +313,7 @@ st.markdown(f"### Currently using: **{selected_tool}**")
 user_prompt = st.text_area("What would you like to create?", height=100)
 
 # Advanced options expander
+# Advanced options expander
 with st.expander("⚙️ Advanced Options"):
     # Document structure tabs
     tabs = st.tabs(["Template", "Content Style", "Structure", "Format", "Generation"])
@@ -410,8 +411,8 @@ with st.expander("⚙️ Advanced Options"):
             )
         
         with col2:
-            keyword_inclusion = st.text_area("Keywords to Include (comma separated):", height=70)
-            forbidden_words = st.text_area("Words to Avoid (comma separated):", height=70)
+            keyword_inclusion = st.text_area("Keywords to Include (comma separated):", height=68)
+            forbidden_words = st.text_area("Words to Avoid (comma separated):", height=68)
             readability_target = st.slider("Readability Score Target:", 
                                           min_value=0, max_value=100, value=60, step=5, 
                                           help="Lower = more complex, Higher = simpler")
@@ -536,23 +537,23 @@ with st.expander("⚙️ Advanced Options"):
         
         # Specialized content options
         st.divider()
-        specialized_options = st.expander("Specialized Content Options")
-        with specialized_options:
-            col1, col2, col3 = st.columns(3)
-            with col1:
-                st.checkbox("Enable Technical Analysis", help="Add technical depth with specialized terminology")
-                st.checkbox("Include Data Visualization", help="Add descriptions of charts/graphs where appropriate")
-                st.checkbox("Add Case Studies", help="Include relevant examples and case studies")
-            
-            with col2:
-                st.checkbox("Research Focus", help="Emphasize research findings and methodologies")
-                st.checkbox("Step-by-Step Breakdown", help="Include detailed procedural explanations")
-                st.checkbox("Comparative Analysis", help="Include comparisons to alternatives or competitors")
-            
-            with col3:
-                st.checkbox("Future Trends", help="Include predictions and future developments")
-                st.checkbox("Historical Context", help="Add historical background and evolution")
-                st.checkbox("Expert Citations", help="Include references to subject matter experts")
+        st.subheader("Specialized Content Options")
+        st.info("Select additional content features to include in generation")
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            tech_analysis = st.checkbox("Enable Technical Analysis", help="Add technical depth with specialized terminology")
+            data_viz = st.checkbox("Include Data Visualization", help="Add descriptions of charts/graphs where appropriate")
+            case_studies = st.checkbox("Add Case Studies", help="Include relevant examples and case studies")
+        
+        with col2:
+            research_focus = st.checkbox("Research Focus", help="Emphasize research findings and methodologies")
+            step_breakdown = st.checkbox("Step-by-Step Breakdown", help="Include detailed procedural explanations")
+            comparative = st.checkbox("Comparative Analysis", help="Include comparisons to alternatives or competitors")
+        
+        with col3:
+            future_trends = st.checkbox("Future Trends", help="Include predictions and future developments")
+            historical = st.checkbox("Historical Context", help="Add historical background and evolution")
+            expert_citations = st.checkbox("Expert Citations", help="Include references to subject matter experts")
 
 # Add style instructions to prompt based on selections
 style_instructions = {
