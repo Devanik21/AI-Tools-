@@ -1,6 +1,5 @@
 import streamlit as st
 import google.generativeai as genai
-from PIL import Image
 import io
 import base64
 import json
@@ -8,13 +7,8 @@ import time
 import os
 from datetime import datetime
 
-# Configure the Streamlit page
-st.set_page_config(
-    page_title="Ultimate AI Creator Hub",
-    page_icon="🧠",
-    layout="wide",
-    initial_sidebar_state="expanded"
-)
+# Configure Streamlit page
+st.set_page_config(page_title="Ultimate AI Creator Hub", page_icon="🧠", layout="wide", initial_sidebar_state="expanded")
 
 # Custom CSS (highly condensed)
 st.markdown("""<style>.main{background-color:#f8f9fa}.stApp{max-width:1200px;margin:0 auto}.tool-category{font-size:1.2rem;font-weight:bold;margin-top:1rem;color:#1e3a8a}div[data-testid="stVerticalBlock"]{gap:0.5rem}.stButton>button{background:linear-gradient(90deg,#3b82f6,#8b5cf6);color:white;font-weight:600;border-radius:10px;padding:10px 20px;box-shadow:0 4px 14px rgba(0,0,0,0.1);transition:all 0.3s ease}.stButton>button:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,0.15)}div.stTabs [data-baseweb="tab-list"]{gap:8px}div.stTabs [data-baseweb="tab"]{background-color:#f0f9ff;border-radius:8px 8px 0px 0px;padding:10px 16px;font-weight:600}div.stTabs [aria-selected="true"]{background-color:#bfdbfe}.output-box{background-color:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:20px;margin-top:20px}.history-item{padding:10px;border:1px solid #e5e7eb;border-radius:8px;margin-bottom:8px;background-color:white}.category-selector{margin:10px 0}.search-box{margin:15px 0}</style>""", unsafe_allow_html=True)
@@ -28,203 +22,176 @@ if 'prompt_templates' not in st.session_state: st.session_state.prompt_templates
 # Function to generate expanded AI tools list
 @st.cache_data
 def generate_ai_tools():
-    # Core categories with most common tools
-    core_tools = {
+    # Base categories dictionary - we'll expand with multipliers later
+    base_categories = {
         "Writing": [
-            "Resume Generator", "Cover Letter Generator", "Email Writer", "Blog Post Generator", 
-            "Content Rewriter", "Grammar Checker", "Summary Generator", "Academic Essay", 
-            "Letter Writer", "Script Writer", "Technical Writer", "Research Paper Helper", 
-            "Whitepaper Generator", "Thesis Statement", "Literature Review", "Citation Generator",
-            "Lab Report Writer", "Case Study Template", "Editorial Guidelines", "Style Guide Creator",
-            "Professional Bio", "Executive Summary", "Project Proposal", "Meeting Minutes", 
-            "Documentation Writer", "SOP Writer", "Policy Draft Generator", "Legal Document Helper",
-            "Contract Clause Generator", "Terms & Conditions", "Privacy Policy Creator"
+            "Resume", "Cover Letter", "Email", "Blog Post", "Content Rewrite", "Grammar Check", 
+            "Summary", "Academic Essay", "Letter", "Script", "Technical Writing", "Research Paper",
+            "Whitepaper", "Thesis Statement", "Literature Review", "Citation", "Lab Report",
+            "Case Study", "Editorial Guidelines", "Style Guide", "Professional Bio", "Executive Summary",
+            "Project Proposal", "Meeting Minutes", "Documentation", "SOP", "Policy Draft",
+            "Legal Document", "Contract Clause", "Terms & Conditions", "Privacy Policy"
         ],
         
         "Creative": [
-            "Poem Creator", "Story Generator", "Dialogue Creator", "Character Creator", 
-            "Book Title Generator", "Horror Story", "Sci-Fi Story", "Song Lyrics", 
-            "Children's Story", "Novel Outline", "Metaphor Creator", "Joke Generator", 
-            "Fantasy World Builder", "Sci-Fi Technology", "Historical Fiction", "Memoir Starter",
-            "Poetry Prompt", "Creative Writing Prompt", "Short Story Starter", "Screenplay Format Helper",
-            "Plot Twist Generator", "Character Backstory", "Fictional Setting", "Alternate History",
-            "Mythical Creature Creator", "Magic System Designer", "Fictional Language", "Story Conflict Generator"
+            "Poem", "Story", "Dialogue", "Character", "Book Title", "Horror Story", "Sci-Fi Story",
+            "Song Lyrics", "Children's Story", "Novel Outline", "Metaphor", "Joke", "Fantasy World",
+            "Sci-Fi Technology", "Historical Fiction", "Memoir", "Poetry Prompt", "Creative Prompt",
+            "Short Story Starter", "Screenplay Format", "Plot Twist", "Character Backstory",
+            "Setting Description", "Alternate History", "Mythical Creature", "Magic System",
+            "Fictional Language", "Story Conflict"
         ],
         
         "Business": [
-            "Business Idea Generator", "Startup Pitch", "SEO Keywords", "Business Consultant",
-            "Marketing Strategy", "Grant Proposal", "Freelance Proposal", "LinkedIn Bio", 
-            "Branding Guide", "Business Email", "SWOT Analysis", "Business Case", 
-            "Market Research", "Competitor Analysis", "Pricing Strategy", "Product Launch Plan", 
-            "Go-to-Market Strategy", "Customer Persona", "Mission Statement", "Company Values",
-            "Executive Summary", "Business Plan Outline", "Investor Pitch Deck", "Funding Request",
-            "Project Timeline", "Risk Assessment", "ROI Calculator", "KPI Framework"
-        ],
-        
-        "Social Media": [
-            "Social Post Generator", "Caption Generator", "Viral Tweet", 
-            "YouTube Video Idea", "Tagline Creator", "Pinterest Description",
-            "Cold Emails", "Podcast Episode", "Content Calendar", "Viral Content Formula", 
-            "Influencer Pitch", "Brand Partnership", "YouTube Script", "Dating Profile", 
-            "Networking Opener", "TikTok Trend Ideas", "Instagram Story Series",
-            "LinkedIn Article", "Twitter Thread", "Facebook Ad Copy", "Hashtag Strategy"
-        ],
-        
-        "Productivity": [
-            "Productivity Planner", "Daily Planner", "Travel Itinerary", "Note-Taking Assistant",
-            "Brainstorming Tool", "Grocery List", "Interview Coach", "Learning Path Guide",
-            "Time Management", "Prioritization Framework", "Decision Matrix", 
-            "Problem-Solving", "Critical Thinking", "Goal Setting", "Habit Tracker",
-            "Professional Development", "Weekly Schedule", "Project Management", "Task Breakdown"
+            "Business Idea", "Startup Pitch", "SEO Keywords", "Business Consultation", "Marketing Strategy",
+            "Grant Proposal", "Freelance Proposal", "LinkedIn Bio", "Branding Guide", "Business Email",
+            "SWOT Analysis", "Business Case", "Market Research", "Competitor Analysis", "Pricing Strategy",
+            "Product Launch", "Go-to-Market", "Customer Persona", "Mission Statement", "Company Values",
+            "Business Plan", "Investor Pitch", "Funding Request", "Project Timeline", "Risk Assessment",
+            "ROI Calculator", "KPI Framework"
         ]
     }
     
-    # Extended categories
+    # Additional categories to reach 2000+ tools
     extended_categories = {
-        "Personal Development": [
-            "Dream Interpreter", "Therapy Assistant", "Meditation Guide", "Horoscope Reader", 
-            "Workout Plan Creator", "Tarot Reader", "Love Letter Generator", "Parenting Guide", 
-            "Public Speaking Coach", "Personal Coach", "Mindfulness Coach", "Therapy Journal", 
-            "Personal Mission", "Life Purpose", "Stress Management", "Emotional Intelligence", 
-            "Gratitude Letter", "Self-Reflection Prompt", "Personal SWOT Analysis", "Life Priorities",
-            "Personal Values Explorer", "Habit Change Plan", "Morning Routine", "Evening Ritual",
-            "Digital Detox Plan", "Focus Enhancement", "Motivation Builder", "Confidence Booster"
-        ],
+        "Social Media": ["Post", "Caption", "Viral Tweet", "YouTube Idea", "Tagline", "Pinterest Description",
+                        "Cold Email", "Podcast Episode", "Content Calendar", "Viral Formula", "Influencer Pitch",
+                        "Brand Partnership", "YouTube Script", "Dating Profile", "Networking Opener",
+                        "TikTok Trend", "Instagram Story", "LinkedIn Article", "Twitter Thread", "Facebook Ad",
+                        "Hashtag Strategy", "Reel Script", "Community Post", "Review Response", "Crisis Response"],
         
-        "Educational": [
-            "Homework Helper", "Coding Assistant", "Documentation Generator", "Math Problem Solver",
-            "Physics Tutor", "Language Translator", "Essay Outline", "Curriculum Designer",
-            "Lesson Plan", "Student Assessment", "Tutoring Script", "Scientific Abstract",
-            "Research Methodology", "Data Analysis", "Statistical Helper", "Experimental Design",
-            "Chemistry Problem Solver", "Biology Concept Explainer", "History Timeline Creator",
-            "Geography Quiz Generator", "Language Learning Exercise", "Music Theory Helper"
-        ],
+        "Productivity": ["Productivity Plan", "Daily Plan", "Travel Itinerary", "Note-Taking", "Brainstorming",
+                         "Grocery List", "Interview Prep", "Learning Path", "Time Management", "Prioritization",
+                         "Decision Matrix", "Problem-Solving", "Critical Thinking", "Goal Setting", "Habit Tracker",
+                         "Professional Development", "Weekly Schedule", "Project Management", "Task Breakdown"],
         
-        "Marketing": [
-            "Ad Copy Generator", "Product Description", "Slogan Maker", "Press Release",
-            "Product Naming Tool", "Blog Post", "Book Review", "Product Review",
-            "Brand Voice", "User Journey Map", "UX Survey", "A/B Test Planner",
-            "Content Calendar", "Email Campaign", "Newsletter Template", "Landing Page Copy",
-            "Value Proposition", "USP Generator", "Brand Positioning Statement", "Marketing Persona"
-        ],
-                 
-        "Human Resources": [
-            "HR Policy Generator", "Job Description", "Performance Review", "Employee Handbook",
-            "Onboarding Process", "Training Manual", "Team Building", "Remote Work Policy",
-            "Career Path Advisor", "Salary Negotiation", "Interview Questions", "Feedback Framework",
-            "Conflict Resolution", "Diversity Statement", "Employee Survey", "Recognition Program"
-        ],
-                        
-        "Events & Celebrations": [
-            "Wedding Speech", "Event Invitation", "Party Planning", "Gift Suggestions",
-            "Thank You Note", "Eulogy Writer", "Memorial Service", "Anniversary Message",
-            "Family Reunion", "Holiday Tradition", "Cultural Celebration", "Festival Planning",
-            "Birthday Message", "Graduation Speech", "Toast Generator", "Ceremony Script"
-        ],
-                              
-        "Relationships": [
-            "Relationship Advice", "Conflict Resolution", "Apology Letter", 
-            "Friendship Message", "Breakup Letter", "Legacy Letter", "Ethical Will", 
-            "Ancestry Interview", "Cultural Heritage", "Dating Conversation Starters",
-            "Long-Distance Tips", "Relationship Check-in", "Boundary Setting Guide"
-        ],
-                      
-        "Entertainment": [
-            "Movie Review", "Book Club Guide", "Podcast Script", "TED Talk Script",
-            "Storyboard Creator", "Souvenir Story", "Photo Caption", "Market Summary",
-            "Board Game Rules", "Tabletop RPG Adventure", "Fan Fiction Prompt", "Film Analysis",
-            "TV Show Pitch", "Music Review", "Concert Setlist", "Festival Guide"
-        ],
+        "Education": ["Lesson Plan", "Course Outline", "Curriculum", "Educational Quiz", "Study Guide",
+                     "Teaching Material", "Assignment", "Workshop", "Test Questions", "Learning Objectives",
+                     "Educational Game", "Academic Resource", "Subject Summary", "Syllabus", "Tutorial"],
         
-        "Health & Wellness": [
-            "Diet Plan Generator", "Fitness Routine", "Mental Health Guide", "Sleep Improvement Plan",
-            "Meditation Script", "Yoga Sequence", "Nutrition Guide", "Symptom Analyzer",
-            "Health Goal Setter", "Wellness Challenge", "Self-Care Routine", "Stress Reduction",
-            "Hydration Reminder", "Medical Question Helper", "Allergy Management", "Recovery Plan"
-        ],
+        "Design": ["Design Brief", "Color Palette", "Typography Guide", "Design System", "Logo Concept",
+                  "UI Element", "UX Flow", "Website Layout", "Print Material", "Product Packaging",
+                  "Illustration Concept", "Icon Set", "Brand Identity", "Style Tile", "Mood Board"],
         
-        "Finance": [
-            "Budget Template", "Investment Strategy", "Debt Reduction Plan", "Retirement Calculator",
-            "Tax Preparation Guide", "Financial Goal Setting", "Expense Tracker", "Savings Plan",
-            "Financial Literacy Guide", "Money Management Tips", "Real Estate Analysis", "Mortgage Helper",
-            "Credit Score Improvement", "Insurance Guide", "Cryptocurrency Explainer", "Estate Planning"
-        ],
+        "Development": ["Code Review", "Technical Spec", "API Documentation", "Development Plan", "Code Architecture",
+                       "Database Schema", "Software Requirements", "Testing Strategy", "Bug Report", "Feature Spec",
+                       "Code Refactoring", "Algorithm", "Tech Stack", "System Architecture", "Code Snippet"],
         
-        "Technology": [
-            "Tech Tutorial Writer", "Software Comparison", "Digital Transformation Guide", "IT Solution Finder",
-            "Cybersecurity Tips", "Data Privacy Guide", "Tech Trend Analysis", "Digital Strategy",
-            "AI Use Case Generator", "Blockchain Explainer", "Software Requirements", "Tech Roadmap",
-            "API Documentation", "System Architecture", "Database Schema", "Cloud Migration Plan"
-        ],
+        "Marketing": ["Marketing Plan", "Campaign Brief", "Ad Copy", "Landing Page", "Email Campaign",
+                     "Conversion Strategy", "Growth Hack", "Product Description", "Promotion", "Sales Script",
+                     "Value Proposition", "USP", "Elevator Pitch", "Customer Journey", "Messaging Framework"],
         
-        "Legal": [
-            "Legal Agreement Writer", "Disclaimer Generator", "Copyright Notice", "DMCA Template",
-            "Legal Term Explainer", "Intellectual Property Guide", "Compliance Checklist", "Legal Research",
-            "Contract Review Guide", "Licensing Agreement", "Partnership Agreement", "NDA Generator"
-        ]
+        "Finance": ["Budget Plan", "Financial Analysis", "Investment Strategy", "Expense Report", "Revenue Forecast",
+                   "Cash Flow", "Financial Model", "Cost Reduction", "Profit Optimization", "Tax Strategy",
+                   "Retirement Plan", "Debt Management", "Financial Education", "Savings Plan", "Equity Distribution"],
+        
+        "Health": ["Wellness Plan", "Diet Plan", "Fitness Routine", "Mental Health", "Sleep Improvement",
+                  "Meditation Script", "Nutrition Guide", "Health Goal", "Self-Care Routine", "Stress Management",
+                  "Recovery Plan", "Symptom Analysis", "Mindfulness Exercise", "Health Tracker", "Medical Information"],
+        
+        "Legal": ["Legal Analysis", "Contract Template", "Legal Response", "Compliance Check", "Privacy Statement",
+                 "Disclaimer", "Terms of Service", "Copyright Notice", "IP Strategy", "Legal Research",
+                 "Legal Letter", "Dispute Resolution", "Regulatory Filing", "Legal Defense", "Intellectual Property"],
+        
+        "Event": ["Event Plan", "Invitation", "Wedding Speech", "Toast", "Anniversary Message", "Party Theme",
+                 "Conference Agenda", "Event Marketing", "Catering Menu", "Venue Description", "Entertainment Plan",
+                 "Guest List", "Event Schedule", "Thank You Note", "Event Budget", "Virtual Event"],
+        
+        "Relationships": ["Relationship Advice", "Conflict Resolution", "Apology Letter", "Friendship Message",
+                         "Love Letter", "Dating Profile", "Breakup Letter", "Family Communication", "Networking Message",
+                         "Condolence Note", "Birthday Message", "Anniversary Note", "Congratulations Note", "Reconnection"],
+        
+        "Industry": ["Industry Analysis", "Sector Trend", "Market Forecast", "Industry Report", "Competitive Landscape",
+                    "Regulatory Impact", "Technology Adoption", "Industry Disruption", "Vertical Strategy", "Supply Chain",
+                    "Distribution Channel", "Industry Standards", "Industry Partnership", "Trade Association", "Industry Event"]
     }
     
-    # Specialized categories
-    specialized_categories = {
-        "E-commerce": [
-            "Product Listing", "Return Policy", "Shipping Information", "Customer FAQ",
-            "Abandoned Cart Email", "Product Launch Email", "Discount Announcement", "Sale Campaign"
-        ],
+    # Combine base and extended categories
+    all_categories = {**base_categories, **extended_categories}
+    
+    # Multipliers to expand each tool category (adjectival prefixes)
+    tool_multipliers = [
+        "Advanced", "Custom", "Premium", "Enhanced", "Professional", "Intelligent", "Smart", "Dynamic",
+        "Interactive", "Personalized", "Strategic", "Comprehensive", "Automated", "High-Performance", "Next-Gen",
+        "Streamlined", "Optimized", "Scalable", "Innovative", "Creative", "Essential", "Ultimate", "Practical",
+        "Specialized", "Expert", "Efficient", "Versatile", "Powerful", "Flexible", "Multi-purpose"
+    ]
+    
+    # Format multipliers (output format variations)
+    format_multipliers = [
+        "Generator", "Builder", "Creator", "Designer", "Maker", "Assistant", "Helper", "Tool", "Solution",
+        "Expert", "Consultant", "Advisor", "Planner", "Architect", "Analyst", "Strategist", "Developer",
+        "Manager", "Optimizer", "Writer", "Guide", "Template", "Framework", "System", "Toolkit"
+    ]
+    
+    # Generate expanded tools by combining base tools with multipliers
+    expanded_categories = {}
+    for category, base_tools in all_categories.items():
+        expanded_tools = []
+        for base_tool in base_tools:
+            # Add the original tool with common suffixes
+            for format_mult in format_multipliers[:3]:  # Limit to top 3 formats
+                expanded_tools.append(f"{base_tool} {format_mult}")
+            
+            # Add tools with multipliers (limit to reduce overwhelming options)
+            for mult in tool_multipliers[:5]:  # Limit to top 5 multipliers
+                expanded_tools.append(f"{mult} {base_tool}")
         
-        "Food & Cooking": [
-            "Recipe Creator", "Food Description", "Cooking Tutorial", "Menu Design",
-            "Meal Plan Generator", "Food Blog Post", "Flavor Profile", "Ingredient Substitution"
-        ],
+        expanded_categories[category] = expanded_tools
+    
+    # Create specialized industry categories (new areas)
+    specialized_industries = {
+        "Healthcare": ["Patient Care", "Medical Record", "Clinical Trial", "Health Assessment", "Treatment Plan",
+                      "Healthcare Policy", "Medical Research", "Patient Education", "Telehealth", "Health Insurance",
+                      "Medical Device", "Healthcare Compliance", "Medical Diagnosis", "Patient Experience", "Wellness Program"],
         
-        "Travel & Lifestyle": [
-            "Travel Guide", "Destination Description", "Packing List", "Travel Blog",
-            "Accommodation Review", "Attraction Description", "Local Experience", "Cultural Guide"
-        ],
+        "E-commerce": ["Product Listing", "Customer Review", "E-commerce Copy", "Shipping Policy", "Return Policy",
+                       "Product Bundle", "Flash Sale", "Customer Engagement", "Shopping Experience", "Loyalty Program",
+                       "Product Recommendation", "Checkout Process", "Customer Retention", "Marketplace Strategy", "Pricing Model"],
         
-        "Academic & Research": [
-            "Hypothesis Generator", "Research Question", "Literature Search", "Methodology Designer",
-            "Data Collection Plan", "Statistics Explainer", "Academic Presentation", "Grant Application"
-        ],
+        "Real Estate": ["Property Description", "Market Analysis", "Investment Property", "Rental Analysis", "Home Staging",
+                       "Property Marketing", "Neighborhood Guide", "Real Estate Listing", "Agent Bio", "Mortgage Information",
+                       "Home Inspection", "Lease Agreement", "Property Management", "HOA Communication", "Commercial Lease"],
         
-        "Nonprofit & Social": [
-            "Mission Statement", "Donation Appeal", "Volunteer Recruitment", "Impact Report",
-            "Community Survey", "Advocacy Campaign", "Fundraising Letter", "Awareness Campaign"
-        ]
+        "Sustainability": ["Environmental Impact", "Sustainability Report", "Green Initiative", "Carbon Footprint", "ESG Strategy",
+                          "Circular Economy", "Sustainable Design", "Climate Action", "Conservation Plan", "Energy Efficiency",
+                          "Waste Reduction", "Water Conservation", "Sustainable Supply Chain", "Social Impact", "Eco Certification"],
+        
+        "Technology": ["Tech Specification", "Product Roadmap", "User Guide", "Tech Support", "Software Release",
+                      "Hardware Design", "Tech Solution", "IT Strategy", "Digital Transformation", "Tech Integration",
+                      "Tech Troubleshooting", "Cloud Migration", "Data Strategy", "Network Design", "Tech Evaluation"]
     }
     
-    # Combine all categories
-    all_categories = {**core_tools, **extended_categories, **specialized_categories}
+    # Add specialized industries to the expanded categories
+    for industry, tools in specialized_industries.items():
+        industry_tools = []
+        for tool in tools:
+            # Add the original tool with common suffixes
+            for format_mult in format_multipliers[:3]:  # Limit to top 3 formats
+                industry_tools.append(f"{tool} {format_mult}")
+            
+            # Add tools with multipliers (limit to reduce overwhelming options)
+            for mult in tool_multipliers[:3]:  # Limit to top 3 multipliers
+                industry_tools.append(f"{mult} {tool}")
+        
+        expanded_categories[industry] = industry_tools
     
     # Create flat list of all tools
     all_tools = []
-    for category, tools in all_categories.items():
+    for category, tools in expanded_categories.items():
         all_tools.extend(tools)
     
-    return all_tools, all_categories
+    return all_tools, expanded_categories
 
 # Get all tools and categories
 ai_tools, tool_categories = generate_ai_tools()
 
-# Function to load prompt templates (condensed)
+# Function to load prompt templates (dynamic generation)
 @st.cache_data
 def load_prompt_templates():
-    base_templates = {
-        "Resume Generator": "Create a professional resume for {prompt}. Include sections for summary, work experience, education, skills, and achievements.",
-        "Cover Letter Generator": "Write a persuasive cover letter for {prompt}. It should highlight relevant skills and explain why I'm a good fit for the position.",
-        "Poem Creator": "Write a beautiful poem about {prompt}. The poem should be evocative and use vivid imagery.",
-        "Story Generator": "Create an engaging story about {prompt}. Include interesting characters, setting, and plot.",
-        "Email Writer": "Write a professional email about {prompt}. Ensure it has a clear purpose, concise content, and appropriate tone.",
-    }
-    
-    # Generic template for all other tools
     templates = {}
     for tool in ai_tools:
-        if tool in base_templates:
-            templates[tool] = base_templates[tool]
-        else:
-            tool_name = tool.strip()
-            templates[tool_name] = f"Generate content using the '{tool_name}' feature for: {{prompt}}. Ensure the output is high quality, relevant, and tailored to the user's needs."
-    
+        templates[tool] = f"Generate content using the '{tool}' feature for: {{prompt}}. Ensure the output is high quality, relevant, and tailored to the user's needs."
     return templates
 
 # Function to generate content with AI
@@ -264,6 +231,7 @@ with st.sidebar:
     search_term = st.text_input("🔍 Search for tools:")
     filtered_tools = [tool for tool in ai_tools if search_term.lower() in tool.lower()] if search_term else ai_tools
     
+    # Statistics
     # Statistics
     st.markdown(f"### 📊 Stats")
     st.markdown(f"**Total Tools:** {len(ai_tools)}+")
