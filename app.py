@@ -215,7 +215,7 @@ def save_to_history(tool_name, prompt, output):
 
 # Sidebar for API configuration
 with st.sidebar:
-    st.image("https://via.placeholder.com/150x60?text=AI+Hub", width=150)
+    st.image("https://www.shutterstock.com/image-generated/ai-component-data-visualization-software-engineering-2504435535", width=150)
     st.markdown("### 🔑 API Configuration")
     api_key = st.text_input("Enter Google Gemini API Key:", type="password", value=st.session_state.api_key, help="Your API key is stored in the session and not saved.")
     if api_key: st.session_state.api_key = api_key
