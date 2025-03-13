@@ -347,6 +347,14 @@ with st.expander("⚙️ Advanced Options"):
         # Writing style options
         col1, col2 = st.columns(2)
         with col1:
+            response_length = st.selectbox(
+                "Response Length:",["Short", "Medium", "Long"],index=1  # Default to Medium
+            )
+            output_length = st.select_slider(
+                "Output Detail Level:",
+                options=["Minimal", "Brief", "Standard", "Detailed", "Comprehensive", "Exhaustive"],
+                value="Standard"
+            )
             tone = st.selectbox(
                 "Tone:",
                 ["Professional", "Casual", "Academic", "Persuasive", "Inspirational", 
