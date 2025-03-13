@@ -183,6 +183,44 @@ def generate_ai_tools():
     
     return all_tools, expanded_categories
 
+
+# Add this to your imports
+import re
+from collections import Counter
+
+# Add this function after your other functions
+def analyze_content(text):
+    # Basic text analysis
+    word_count = len(re.findall(r'\w+', text))
+    sentence_count = len(re.findall(r'[.!?]+', text)) + 1
+    paragraph_count = len(text.split('\n\n'))
+    
+    # Readability metrics
+    words = re.findall(r'\w+', text.lower())
+    word_lengths = [len(word) for word in words]
+    avg_word_length = sum(word_lengths) / len(word_lengths) if word_lengths else 0
+    
+    # Sentiment indicators (simplified)
+    positive_words = ['good', 'great', 'excellent', 'best', 'positive', 'happy', 'wonderful', 'amazing']
+    negative_words = ['bad', 'worst', 'terrible', 'negative', 'poor', 'awful', 'horrible']
+    
+    positive_count = sum(1 for word in words if word in positive_words)
+    negative_count = sum(1 for word in words if word in negative_words)
+    
+    sentiment = "Positive" if positive_count > negative_count else "Negative" if negative_count > positive_count else "Neutral"
+    
+    # Most common words
+    common_words = Counter(words).most_common(5)
+    
+    return {
+        "word_count": word_count,
+        "sentence_count": sentence_count,
+        "paragraph_count": paragraph_count,
+        "avg_word_length": round(avg_word_length, 2),
+        "sentiment": sentiment,
+        "common_words": common_words
+    }
+    
 # Get all tools and categories
 ai_tools, tool_categories = generate_ai_tools()
 
