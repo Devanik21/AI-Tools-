@@ -628,27 +628,6 @@ style_instructions = {
     "creativity": creativity,
     "reasoning_depth": reasoning_depth
 }
-# Add this after the output is displayed
-if output and st.button("📊 Analyze Content"):
-    analysis = analyze_content(output)
-    
-    st.markdown("### 📊 Content Analytics")
-    
-    col1, col2, col3, col4 = st.columns(4)
-    with col1:
-        st.metric("Word Count", analysis["word_count"])
-    with col2:
-        st.metric("Sentences", analysis["sentence_count"])
-    with col3:
-        st.metric("Paragraphs", analysis["paragraph_count"])
-    with col4:
-        st.metric("Avg Word Length", analysis["avg_word_length"])
-    
-    st.markdown(f"**Sentiment Analysis:** {analysis['sentiment']}")
-    
-    st.markdown("**Most Common Words:**")
-    for word, count in analysis["common_words"]:
-        st.markdown(f"- {word}: {count}")
 
 # Store parameters to session state for use in prompt building
 st.session_state.style_instructions = style_instructions
