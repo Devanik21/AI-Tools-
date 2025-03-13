@@ -233,127 +233,217 @@ with st.sidebar:
     
     # Statistics
     # Statistics
-    st.markdown(f"### 📊 Stats")
-    st.markdown(f"**Total Tools:** {len(ai_tools)}+")
-    st.markdown(f"**Categories:** {len(tool_categories)}")
+    st.sidebar.markdown("### 📊 Stats")
+    st.sidebar.markdown(f"**Total Tools:** {len(ai_tools)}")
+    st.sidebar.markdown(f"**Categories:** {len(tool_categories)}")
+    
+    # History button in sidebar
+    st.sidebar.markdown("---")
+    show_history = st.sidebar.button("📜 View History")
+    clear_history = st.sidebar.button("🗑️ Clear History")
+    if clear_history:
+        st.session_state.history = []
+        st.sidebar.success("History cleared!")
 
-# Main app content
+# Main content area
 st.title("🧠 Ultimate AI Creator Hub")
-st.markdown("##### 600+ AI tools to supercharge your creativity and productivity")
+st.markdown("Create amazing content with AI-powered tools - all in one place!")
 
-# Create tabs for different sections
-tabs = st.tabs(["🛠️ Tools", "📚 History", "ℹ️ About"])
+# Welcome message
+if not st.session_state.api_key:
+    st.info("👋 Welcome! Please enter your API key in the sidebar to get started.")
 
-with tabs[0]:
-    col1, col2 = st.columns([1, 2])
-    with col1:
-        st.markdown("### Select a Tool")
-        selected_category = st.selectbox("Choose a category:", list(tool_categories.keys()), key="category_selector")
-        category_tools = tool_categories[selected_category]
-        
-        # Filter tools based on search term within category
-        displayed_tools = [tool for tool in category_tools if tool in filtered_tools]
-        selected_tool = st.selectbox("Select a tool:", displayed_tools, key="tool_selector")
-        
-        # Load templates
-        prompt_templates = load_prompt_templates()
-        
-        # Tool info and input area
-        st.markdown(f"### {selected_tool}")
-        st.markdown("Enter your request:")
-        user_prompt = st.text_area("", height=150, placeholder="Type your request here...")
-        
-        # Advanced options in expander
-        with st.expander("Advanced Options"):
-            col_a, col_b = st.columns(2)
-            with col_a:
-                tone = st.selectbox("Tone:", ["Professional", "Casual", "Humorous", "Formal", "Inspirational", "Persuasive", "Educational", "Dramatic"])
-            with col_b:
-                length = st.select_slider("Length:", options=["Very Short", "Short", "Medium", "Long", "Very Long"])
-            
-            # Additional advanced options
-            format_options = st.multiselect("Format Elements:", ["Headings", "Bullet Points", "Numbered List", "Bold Key Points", "Examples", "Statistics"], default=["Headings", "Bold Key Points"])
-            audience = st.selectbox("Target Audience:", ["General", "Professionals", "Students", "Executives", "Technical", "Children", "Seniors"])
-        
-        generate_button = st.button("🚀 Generate Content")
+# Display history if requested
+if show_history and 'history' in st.session_state and len(st.session_state.history) > 0:
+    st.header("📜 Content History")
+    for i, item in enumerate(st.session_state.history):
+        with st.expander(f"{item['timestamp']} - {item['tool']}"):
+            st.markdown("**Prompt:**")
+            st.markdown(f"```\n{item['prompt']}\n```")
+            st.markdown("**Output:**")
+            st.markdown(item['output'])
+    st.markdown("---")
+
+# Load prompt templates if needed
+if not st.session_state.prompt_templates or len(st.session_state.prompt_templates) == 0:
+    st.session_state.prompt_templates = load_prompt_templates()
+
+# Tool Selection Section
+st.header("🛠️ Select Your Creation Tool")
+
+# Tool selection 
+tab1, tab2 = st.tabs(["📋 Categories", "🔍 Search Results"])
+
+with tab1:
+    selected_category = st.selectbox("Choose a category:", list(tool_categories.keys()))
     
-    with col2:
-        st.markdown("### Generated Content")
-        if generate_button:
-            if not st.session_state.api_key:
-                st.warning("⚠️ Please enter a valid Google Gemini API Key in the sidebar.")
-            else:
-                template = prompt_templates.get(selected_tool, "Generate content about: {prompt}")
-                format_str = ", ".join(format_options) if format_options else "Standard"
-                full_prompt = f"""Task: {selected_tool}
-Tone: {tone}
-Length: {length}
-Format: {format_str}
-Audience: {audience}
+    # Only show tools from selected category
+    if selected_category:
+        tools_in_category = tool_categories[selected_category]
+        st.markdown(f"### {selected_category} Tools ({len(tools_in_category)})")
+        
+        # Create grid layout for tools
+        cols = st.columns(3)
+        for i, tool in enumerate(tools_in_category):
+            with cols[i % 3]:
+                if st.button(tool, key=f"cat_{tool}"):
+                    st.session_state.selected_tool = tool
 
-{template.format(prompt=user_prompt)}"""
-                
-                output = generate_ai_content(full_prompt, st.session_state.api_key, st.session_state.api_model)
-                st.markdown("""<div class="output-box">""", unsafe_allow_html=True)
-                st.markdown(output)
-                st.markdown("""</div>""", unsafe_allow_html=True)
-                
-                # Save to history
-                save_to_history(selected_tool, user_prompt, output)
-                
-                # Action buttons
-                col_copy, col_edit, col_export = st.columns(3)
-                with col_copy: st.button("📋 Copy to Clipboard")
-                with col_edit: st.button("✏️ Edit & Refine")
-                with col_export:
-                    st.download_button(label="💾 Download", data=output, 
-                                      file_name=f"{selected_tool.lower().replace(' ', '_')}_{datetime.now().strftime('%Y%m%d')}.txt", 
-                                      mime="text/plain")
-
-with tabs[1]:
-    st.markdown("### Your Generation History")
-    if not st.session_state.history:
-        st.info("You haven't generated any content yet. Your history will appear here.")
+with tab2:
+    if search_term:
+        st.markdown(f"### Search Results for '{search_term}' ({len(filtered_tools)})")
+        
+        # Create grid layout for search results
+        cols = st.columns(3)
+        for i, tool in enumerate(filtered_tools[:30]):  # Limit to 30 results
+            with cols[i % 3]:
+                if st.button(tool, key=f"search_{tool}"):
+                    st.session_state.selected_tool = tool
     else:
-        # History filter
-        history_filter = st.text_input("🔍 Filter history:", key="history_filter")
-        filtered_history = [item for item in st.session_state.history 
-                           if history_filter.lower() in item['tool'].lower() or 
-                              history_filter.lower() in item['prompt'].lower()] if history_filter else st.session_state.history
-        
-        # Display history items
-        for i, item in enumerate(filtered_history):
-            with st.expander(f"{item['tool']} - {item['timestamp']}"):
-                st.markdown(f"**Prompt:** {item['prompt']}")
-                st.markdown(f"**Output:**\n{item['output']}")
-                col1, col2 = st.columns(2)
-                with col1: st.button(f"📋 Copy", key=f"copy_{i}")
-                with col2: st.button(f"🔄 Regenerate", key=f"regen_{i}")
+        st.info("Enter a search term in the sidebar to find specific tools.")
 
-with tabs[2]:
-    st.markdown("### About Ultimate AI Creator Hub")
-    st.markdown("""
-    This application provides a comprehensive suite of AI-powered tools to assist with various creative and professional tasks.
+# Content generation section
+st.header("✨ Create Content")
+
+# Display selected tool or default
+selected_tool = st.session_state.get('selected_tool', 'Smart Content Creator')
+st.markdown(f"### Currently using: **{selected_tool}**")
+
+# Content prompt area
+user_prompt = st.text_area("What would you like to create?", height=100)
+
+# Advanced options expander
+with st.expander("⚙️ Advanced Options"):
+    template_edit = st.text_area(
+        "Customize prompt template (use {prompt} as placeholder for your input):",
+        value=st.session_state.prompt_templates.get(selected_tool, "Create {prompt}"),
+        height=100
+    )
+    st.session_state.prompt_templates[selected_tool] = template_edit
     
-    **Key Features:**
-    - 600+ specialized AI tools in one place
-    - Professional content generation
-    - History tracking for your generations
-    - Advanced customization options
+    # Output length slider
+    output_length = st.select_slider(
+        "Output Length:",
+        options=["Brief", "Standard", "Detailed", "Comprehensive"],
+        value="Standard"
+    )
     
-    **How to use:**
-    1. Enter your Google Gemini API key in the sidebar
-    2. Select a tool category and specific tool
-    3. Enter your request details
-    4. Customize with advanced options as needed
-    5. Click 'Generate Content'
+    # Creativity slider
+    creativity = st.slider("Creativity:", min_value=0.0, max_value=1.0, value=0.7, step=0.1)
+
+# Generate button
+generate_pressed = st.button("🚀 Generate", type="primary")
+
+# Content generation
+if generate_pressed and user_prompt and st.session_state.api_key:
+    # Prepare prompt with template
+    template = st.session_state.prompt_templates.get(selected_tool, "Create {prompt}")
+    formatted_prompt = template.replace("{prompt}", user_prompt)
     
-    **Privacy Note:**
-    Your API key is only stored in your current session and is not saved on any server.
-    """)
+    # Add length instruction
+    length_instructions = {
+        "Brief": "Keep the response concise and to the point.",
+        "Standard": "Provide a standard-length response with adequate detail.",
+        "Detailed": "Include thorough details and explanations in the response.",
+        "Comprehensive": "Create a comprehensive, in-depth response with extensive details."
+    }
+    
+    full_prompt = f"""{formatted_prompt}
+{length_instructions[output_length]}
+Make the content {int(creativity * 100)}% creative and {int((1-creativity) * 100)}% factual."""
+
+    # Generate content
+    output = generate_ai_content(full_prompt, st.session_state.api_key, st.session_state.api_model)
+    
+    # Display output
+    st.markdown("### 🎉 Your AI-Generated Content")
+    with st.container(border=True):
+        st.markdown(output)
+    
+    # Download button
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    filename = f"{selected_tool.replace(' ', '_')}_{timestamp}.txt"
+    
+    st.download_button(
+        label="📥 Download as Text",
+        data=output,
+        file_name=filename,
+        mime="text/plain",
+    )
+    
+    # Save to history
+    save_to_history(selected_tool, user_prompt, output)
+    
+elif generate_pressed and not user_prompt:
+    st.warning("Please enter what you'd like to create.")
+elif generate_pressed and not st.session_state.api_key:
+    st.error("Please enter your API key in the sidebar.")
 
 # Footer
 st.markdown("---")
-st.markdown("""<div style="text-align: center; color: #6b7280; font-size: 0.8rem;">
-Ultimate AI Creator Hub • Powered by Gemini • Made with ❤️ • 600+ AI Tools
-</div>""", unsafe_allow_html=True)
+st.markdown("""
+<div style="text-align: center">
+    <p>Ultimate AI Creator Hub | 2025 | The complete solution for AI-powered content creation</p>
+</div>
+""", unsafe_allow_html=True)
+
+# Add quick-access template section
+st.sidebar.markdown("---")
+st.sidebar.markdown("### 🔄 Quick Templates")
+quick_templates = [
+    "Write a blog post about",
+    "Create a marketing email for",
+    "Design a social media campaign for",
+    "Draft a business proposal for",
+    "Generate a creative story about"
+]
+
+selected_template = st.sidebar.selectbox("Templates:", quick_templates)
+if st.sidebar.button("📋 Use Template"):
+    st.session_state.template_text = selected_template
+    st.experimental_rerun()
+
+# Export/Import functionality
+st.sidebar.markdown("---")
+st.sidebar.markdown("### 💾 Export/Import History")
+
+# Export history
+if st.session_state.history and st.sidebar.button("📤 Export History"):
+    history_json = json.dumps(st.session_state.history)
+    b64_history = base64.b64encode(history_json.encode()).decode()
+    href = f'<a href="data:application/json;base64,{b64_history}" download="ai_content_history.json">Download History File</a>'
+    st.sidebar.markdown(href, unsafe_allow_html=True)
+
+# Import history
+uploaded_file = st.sidebar.file_uploader("Import History:", type=['json'])
+if uploaded_file is not None:
+    try:
+        imported_history = json.loads(uploaded_file.read())
+        if st.sidebar.button("📥 Load Imported History"):
+            st.session_state.history = imported_history
+            st.sidebar.success("History imported successfully!")
+    except Exception as e:
+        st.sidebar.error(f"Error importing history: {e}")
+
+# Add theme selector
+st.sidebar.markdown("---")
+st.sidebar.markdown("### 🎨 App Theme")
+themes = ["Light", "Dark", "Blue", "Green", "Purple"]
+selected_theme = st.sidebar.selectbox("Select Theme:", themes, index=0)
+
+# Apply selected theme with custom CSS
+theme_colors = {
+    "Light": {"bg": "#f8f9fa", "accent": "#3b82f6"},
+    "Dark": {"bg": "#1e293b", "accent": "#8b5cf6"},
+    "Blue": {"bg": "#f0f9ff", "accent": "#0284c7"},
+    "Green": {"bg": "#f0fdf4", "accent": "#16a34a"},
+    "Purple": {"bg": "#faf5ff", "accent": "#9333ea"}
+}
+
+theme_css = f"""
+<style>
+    .main {{ background-color: {theme_colors[selected_theme]["bg"]} }}
+    .stButton>button {{ background: linear-gradient(90deg, {theme_colors[selected_theme]["accent"]}, {theme_colors[selected_theme]["accent"]}88) }}
+</style>
+"""
+st.sidebar.markdown(theme_css, unsafe_allow_html=True)
