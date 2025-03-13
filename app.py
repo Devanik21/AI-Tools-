@@ -350,11 +350,6 @@ with st.expander("⚙️ Advanced Options"):
             response_length = st.selectbox(
                 "Response Length:",["Short", "Medium", "Long"],index=1  # Default to Medium
             )
-            output_length = st.select_slider(
-                "Output Detail Level:",
-                options=["Minimal", "Brief", "Standard", "Detailed", "Comprehensive", "Exhaustive"],
-                value="Standard"
-            )
             tone = st.selectbox(
                 "Tone:",
                 ["Professional", "Casual", "Academic", "Persuasive", "Inspirational", 
