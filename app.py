@@ -389,7 +389,7 @@ with st.expander("⚙️ Advanced Options"):
         with col1:
             response_length = st.selectbox(
                 "Response Length:", ["Short", "Medium", "Long", "Very Short", "Concise", "Brief", "Detailed", "Extensive", "Summary", "In-depth", "Comprehensive", "Elaboration", "Thorough"]
-,index=1)  # Default to Medium
+,index=1  # Default to Medium
             )
             tone = st.selectbox(
                 "Tone:",
