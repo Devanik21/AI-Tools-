@@ -343,22 +343,7 @@ with tab2:
 # Content generation section
 st.header("✨ Create Content")
 # Add this under the 'Generate Content' section
-'''if output:
-    st.markdown("### 🌐 Translate Content")
-    col1, col2 = st.columns([3, 1])
-    with col1:
-        target_language = st.selectbox(
-            "Select Target Language:",
-            ["Spanish", "French", "German", "Italian", "Portuguese", "Dutch", 
-             "Russian", "Japanese", "Chinese", "Korean", "Arabic", "Hindi"]
-        )
-    with col2:
-        if st.button("🔄 Translate"):
-            translation_prompt = f"Translate the following content to {target_language}:\n\n{output}"
-            translation = generate_ai_content(translation_prompt, st.session_state.api_key, st.session_state.api_model)
-            
-            st.markdown(f"### 🌐 {target_language} Translation")
-            st.markdown(translation)'''
+
 # Display selected tool or default
 selected_tool = st.session_state.get('selected_tool', 'Smart Content Creator')
 st.markdown(f"### Currently using: **{selected_tool}**")
