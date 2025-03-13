@@ -410,8 +410,8 @@ with st.expander("⚙️ Advanced Options"):
             )
         
         with col2:
-            keyword_inclusion = st.text_area("Keywords to Include (comma separated):", height=50)
-            forbidden_words = st.text_area("Words to Avoid (comma separated):", height=50)
+            keyword_inclusion = st.text_area("Keywords to Include (comma separated):", height=70)
+            forbidden_words = st.text_area("Words to Avoid (comma separated):", height=70)
             readability_target = st.slider("Readability Score Target:", 
                                           min_value=0, max_value=100, value=60, step=5, 
                                           help="Lower = more complex, Higher = simpler")
