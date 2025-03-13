@@ -314,136 +314,261 @@ user_prompt = st.text_area("What would you like to create?", height=100)
 
 # Advanced options expander
 with st.expander("⚙️ Advanced Options"):
-    template_edit = st.text_area(
-        "Customize prompt template (use {prompt} as placeholder for your input):",
-        value=st.session_state.prompt_templates.get(selected_tool, "Create {prompt}"),
-        height=100
-    )
-    st.session_state.prompt_templates[selected_tool] = template_edit
+    # Document structure tabs
+    tabs = st.tabs(["Template", "Content Style", "Structure", "Format", "Generation"])
     
-    # Output length slider
-    output_length = st.select_slider(
-        "Output Length:",
-        options=["Brief", "Standard", "Detailed", "Comprehensive"],
-        value="Standard"
-    )
+    with tabs[0]:
+        template_edit = st.text_area(
+            "Customize prompt template (use {prompt} as placeholder for your input):",
+            value=st.session_state.prompt_templates.get(selected_tool, "Create {prompt}"),
+            height=100
+        )
+        st.session_state.prompt_templates[selected_tool] = template_edit
+        
+        # Template presets
+        st.divider()
+        col1, col2 = st.columns([3, 1])
+        with col1:
+            template_presets = {
+                "Standard": "Create {prompt}",
+                "Detailed Analysis": "Conduct a comprehensive analysis of {prompt}, including key insights, trends, and recommendations.",
+                "Creative Writing": "Write a creative and engaging piece about {prompt} with vivid descriptions and compelling narrative.",
+                "Business Report": "Generate a professional business report about {prompt} with executive summary, analysis, and actionable recommendations.",
+                "Technical Guide": "Create a detailed technical guide for {prompt} with step-by-step instructions, code examples, and troubleshooting tips."
+            }
+            selected_preset = st.selectbox("Template Presets:", list(template_presets.keys()))
+        with col2:
+            if st.button("Apply Preset"):
+                st.session_state.prompt_templates[selected_tool] = template_presets[selected_preset]
+                st.experimental_rerun()
     
-    # Creativity slider
-    creativity = st.slider("Creativity:", min_value=0.0, max_value=1.0, value=0.7, step=0.1)
-
-# Generate button
-generate_pressed = st.button("🚀 Generate", type="primary")
-
-# Content generation
-if generate_pressed and user_prompt and st.session_state.api_key:
-    # Prepare prompt with template
-    template = st.session_state.prompt_templates.get(selected_tool, "Create {prompt}")
-    formatted_prompt = template.replace("{prompt}", user_prompt)
+    with tabs[1]:
+        # Writing style options
+        col1, col2 = st.columns(2)
+        with col1:
+            tone = st.selectbox(
+                "Tone:",
+                ["Professional", "Casual", "Academic", "Persuasive", "Inspirational", 
+                 "Technical", "Conversational", "Humorous", "Formal", "Storytelling", 
+                 "Authoritative", "Empathetic", "Neutral", "Enthusiastic", "Thoughtful"]
+            )
+            voice = st.selectbox(
+                "Voice:",
+                ["Active", "Passive", "First Person", "Second Person", "Third Person", 
+                 "Objective", "Subjective", "Instructional", "Narrative", "Analytical"]
+            )
+            
+        with col2:
+            audience = st.selectbox(
+                "Target Audience:",
+                ["General", "Technical", "Executive", "Academic", "Marketing", 
+                 "Education", "Healthcare", "Financial", "Legal", "Scientific",
+                 "Children", "Teenagers", "Senior Management", "Beginners", "Advanced"]
+            )
+            industry = st.selectbox(
+                "Industry Focus:",
+                ["General", "Technology", "Healthcare", "Finance", "Education", 
+                 "Entertainment", "Legal", "Marketing", "Science", "Engineering", 
+                 "Manufacturing", "Retail", "Government", "Nonprofit", "Energy"]
+            )
+        
+        # Language style 
+        st.divider()
+        col1, col2 = st.columns(2)
+        with col1:
+            language_style = st.selectbox(
+                "Language Style:",
+                ["Standard", "Simple", "Technical", "Poetic", "Journalistic", 
+                 "Business", "Academic", "Conversational", "Persuasive", "Narrative"]
+            )
+            emotion = st.select_slider(
+                "Emotional Intensity:",
+                options=["Neutral", "Subtle", "Moderate", "Strong", "Intense"],
+                value="Moderate"
+            )
+        with col2:
+            formality = st.select_slider(
+                "Formality Level:",
+                options=["Very Casual", "Casual", "Neutral", "Formal", "Very Formal"],
+                value="Neutral"
+            )
+            persona = st.selectbox(
+                "Writing Persona:",
+                ["Default", "Expert", "Teacher", "Coach", "Journalist", 
+                 "Storyteller", "Analyst", "Researcher", "Consultant", "Mentor"]
+            )
     
-    # Add length instruction
-    length_instructions = {
-        "Brief": "Keep the response concise and to the point.",
-        "Standard": "Provide a standard-length response with adequate detail.",
-        "Detailed": "Include thorough details and explanations in the response.",
-        "Comprehensive": "Create a comprehensive, in-depth response with extensive details."
-    }
+    with tabs[2]:
+        col1, col2 = st.columns(2)
+        with col1:
+            max_words = st.number_input("Maximum Word Count:", min_value=50, max_value=10000, value=500, step=50)
+            min_words = st.number_input("Minimum Word Count:", min_value=10, max_value=5000, value=100, step=50)
+            complexity = st.select_slider(
+                "Language Complexity:",
+                options=["Elementary", "Middle School", "High School", "College", "Graduate", "Expert", "Technical"],
+                value="College"
+            )
+        
+        with col2:
+            keyword_inclusion = st.text_area("Keywords to Include (comma separated):", height=50)
+            forbidden_words = st.text_area("Words to Avoid (comma separated):", height=50)
+            readability_target = st.slider("Readability Score Target:", 
+                                          min_value=0, max_value=100, value=60, step=5, 
+                                          help="Lower = more complex, Higher = simpler")
+        
+        # Structure options
+        st.divider()
+        col1, col2 = st.columns(2)
+        with col1:
+            structure_type = st.selectbox(
+                "Content Structure:",
+                ["Standard", "Problem-Solution", "Comparison", "Chronological", 
+                 "Cause-Effect", "Spatial", "Process", "Thesis-Led", "Data-Led", 
+                 "Argumentative", "Descriptive", "Exploratory", "Instructional"]
+            )
+            emphasis = st.selectbox(
+                "Content Emphasis:",
+                ["Balanced", "Data-Focused", "Process-Focused", "Outcome-Focused", 
+                 "Analysis-Focused", "Solution-Focused", "Context-Focused"]
+            )
+        with col2:
+            sections = st.multiselect(
+                "Required Sections:",
+                ["Introduction", "Background", "Methodology", "Results", "Discussion", 
+                 "Conclusion", "Executive Summary", "Recommendations", "References", 
+                 "Appendix", "FAQ", "Glossary", "Abstract", "Literature Review", 
+                 "Case Studies", "Implementation", "Limitations", "Future Work"]
+            )
+            argument_style = st.selectbox(
+                "Argument Style:",
+                ["Balanced", "Steelmanning", "Devil's Advocate", "Persuasive", 
+                 "Exploratory", "Socratic", "Analytical", "Comparative"]
+            )
     
-    full_prompt = f"""{formatted_prompt}
-{length_instructions[output_length]}
-Make the content {int(creativity * 100)}% creative and {int((1-creativity) * 100)}% factual."""
-
-    # Generate content
-    output = generate_ai_content(full_prompt, st.session_state.api_key, st.session_state.api_model)
+    with tabs[3]:
+        col1, col2 = st.columns(2)
+        with col1:
+            output_format = st.selectbox(
+                "Output Format:",
+                ["Standard Text", "Markdown", "HTML", "JSON", "CSV", "Outline", 
+                 "Bullet Points", "Q&A Format", "Table", "Script Format", 
+                 "Newsletter", "Blog Post", "Academic Paper", "Business Report", 
+                 "Technical Documentation", "Speech/Presentation"]
+            )
+            citation_style = st.selectbox(
+                "Citation Style:",
+                ["None", "APA", "MLA", "Chicago", "IEEE", "Harvard", "Vancouver", 
+                 "AMA", "ASA", "Bluebook", "CSE", "ACS", "NLM"]
+            )
+        
+        with col2:
+            layout_style = st.selectbox(
+                "Layout Style:",
+                ["Standard", "Minimal", "Hierarchical", "Segmented", "Web-Optimized", 
+                 "Print-Optimized", "Mobile-Optimized", "Presentation", "Technical"]
+            )
+            visual_elements = st.multiselect(
+                "Visual Elements:",
+                ["None", "Tables", "Lists", "Blockquotes", "Code Blocks", "Headings", 
+                 "Sub-headings", "Bold Emphasis", "Italics", "Horizontal Rules", 
+                 "Indentation"]
+            )
+            
+        # Media and formatting
+        st.divider()
+        col1, col2 = st.columns(2)
+        with col1:
+            formatting_style = st.selectbox(
+                "Formatting Style:",
+                ["Standard", "Minimal", "Academic", "Web", "Print", "Journalistic", 
+                 "Technical Document", "Creative", "Business", "Scientific"]
+            )
+        with col2:
+            syntax_highlighting = st.selectbox(
+                "Code Syntax Highlighting:",
+                ["None", "Standard", "GitHub", "VSCode", "Atom", "Sublime"]
+            )
     
-    # Display output
-    st.markdown("### 🎉 Your AI-Generated Content")
-    with st.container(border=True):
-        st.markdown(output)
-    
-    # Download button
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    filename = f"{selected_tool.replace(' ', '_')}_{timestamp}.txt"
-    
-    st.download_button(
-        label="📥 Download as Text",
-        data=output,
-        file_name=filename,
-        mime="text/plain",
-    )
-    
-    # Save to history
-    save_to_history(selected_tool, user_prompt, output)
-    
-elif generate_pressed and not user_prompt:
-    st.warning("Please enter what you'd like to create.")
-elif generate_pressed and not st.session_state.api_key:
-    st.error("Please enter your API key in the sidebar.")
+    with tabs[4]:
+        # Generation parameters
+        col1, col2 = st.columns(2)
+        with col1:
+            output_length = st.select_slider(
+                "Output Detail Level:",
+                options=["Minimal", "Brief", "Standard", "Detailed", "Comprehensive", "Exhaustive"],
+                value="Standard"
+            )
+            creativity = st.slider("Creativity:", min_value=0.0, max_value=1.0, value=0.7, step=0.1,
+                                help="Lower = more deterministic, Higher = more creative")
+        
+        with col2:
+            determinism = st.slider("Determinism:", min_value=0.0, max_value=1.0, value=0.3, step=0.1,
+                                help="Lower = more varied outputs, Higher = more consistent outputs")
+            reasoning_depth = st.select_slider(
+                "Reasoning Depth:",
+                options=["Basic", "Standard", "Advanced", "Expert", "Comprehensive"],
+                value="Standard",
+                help="Controls depth of logical analysis and reasoning in generated content"
+            )
+        
+        # Advanced AI parameters
+        st.divider()
+        col1, col2 = st.columns(2)
+        with col1:
+            factuality = st.slider("Factuality Weight:", min_value=0.0, max_value=1.0, value=0.8, step=0.1,
+                                help="Higher values prioritize factual accuracy over creativity")
+            expertise_level = st.select_slider(
+                "AI Expertise Level:",
+                options=["Generalist", "Field Expert", "Subject Specialist", "Domain Authority", "World-Class Expert"],
+                value="Field Expert",
+                help="Level of expertise the AI should demonstrate in the response"
+            )
+        
+        with col2:
+            context_relevance = st.slider("Context Relevance:", min_value=0.0, max_value=1.0, value=0.9, step=0.1,
+                                      help="Higher values keep content more focused on the specific prompt")
+            innovation_level = st.select_slider(
+                "Innovation Level:",
+                options=["Conservative", "Balanced", "Progressive", "Cutting-Edge", "Revolutionary"],
+                value="Balanced",
+                help="Controls how novel or traditional the ideas and approach should be"
+            )
+        
+        # Specialized content options
+        st.divider()
+        specialized_options = st.expander("Specialized Content Options")
+        with specialized_options:
+            col1, col2, col3 = st.columns(3)
+            with col1:
+                st.checkbox("Enable Technical Analysis", help="Add technical depth with specialized terminology")
+                st.checkbox("Include Data Visualization", help="Add descriptions of charts/graphs where appropriate")
+                st.checkbox("Add Case Studies", help="Include relevant examples and case studies")
+            
+            with col2:
+                st.checkbox("Research Focus", help="Emphasize research findings and methodologies")
+                st.checkbox("Step-by-Step Breakdown", help="Include detailed procedural explanations")
+                st.checkbox("Comparative Analysis", help="Include comparisons to alternatives or competitors")
+            
+            with col3:
+                st.checkbox("Future Trends", help="Include predictions and future developments")
+                st.checkbox("Historical Context", help="Add historical background and evolution")
+                st.checkbox("Expert Citations", help="Include references to subject matter experts")
 
-# Footer
-st.markdown("---")
-st.markdown("""
-<div style="text-align: center">
-    <p>Ultimate AI Creator Hub | 2025 | The complete solution for AI-powered content creation</p>
-</div>
-""", unsafe_allow_html=True)
-
-# Add quick-access template section
-st.sidebar.markdown("---")
-st.sidebar.markdown("### 🔄 Quick Templates")
-quick_templates = [
-    "Write a blog post about",
-    "Create a marketing email for",
-    "Design a social media campaign for",
-    "Draft a business proposal for",
-    "Generate a creative story about"
-]
-
-selected_template = st.sidebar.selectbox("Templates:", quick_templates)
-if st.sidebar.button("📋 Use Template"):
-    st.session_state.template_text = selected_template
-    st.experimental_rerun()
-
-# Export/Import functionality
-st.sidebar.markdown("---")
-st.sidebar.markdown("### 💾 Export/Import History")
-
-# Export history
-if st.session_state.history and st.sidebar.button("📤 Export History"):
-    history_json = json.dumps(st.session_state.history)
-    b64_history = base64.b64encode(history_json.encode()).decode()
-    href = f'<a href="data:application/json;base64,{b64_history}" download="ai_content_history.json">Download History File</a>'
-    st.sidebar.markdown(href, unsafe_allow_html=True)
-
-# Import history
-uploaded_file = st.sidebar.file_uploader("Import History:", type=['json'])
-if uploaded_file is not None:
-    try:
-        imported_history = json.loads(uploaded_file.read())
-        if st.sidebar.button("📥 Load Imported History"):
-            st.session_state.history = imported_history
-            st.sidebar.success("History imported successfully!")
-    except Exception as e:
-        st.sidebar.error(f"Error importing history: {e}")
-
-# Add theme selector
-st.sidebar.markdown("---")
-st.sidebar.markdown("### 🎨 App Theme")
-themes = ["Light", "Dark", "Blue", "Green", "Purple"]
-selected_theme = st.sidebar.selectbox("Select Theme:", themes, index=0)
-
-# Apply selected theme with custom CSS
-theme_colors = {
-    "Light": {"bg": "#f8f9fa", "accent": "#3b82f6"},
-    "Dark": {"bg": "#1e293b", "accent": "#8b5cf6"},
-    "Blue": {"bg": "#f0f9ff", "accent": "#0284c7"},
-    "Green": {"bg": "#f0fdf4", "accent": "#16a34a"},
-    "Purple": {"bg": "#faf5ff", "accent": "#9333ea"}
+# Add style instructions to prompt based on selections
+style_instructions = {
+    "tone": tone,
+    "voice": voice,
+    "audience": audience,
+    "industry": industry,
+    "max_words": max_words,
+    "min_words": min_words,
+    "output_format": output_format,
+    "structure_type": structure_type,
+    "sections": sections,
+    "output_length": output_length,
+    "creativity": creativity,
+    "reasoning_depth": reasoning_depth
 }
 
-theme_css = f"""
-<style>
-    .main {{ background-color: {theme_colors[selected_theme]["bg"]} }}
-    .stButton>button {{ background: linear-gradient(90deg, {theme_colors[selected_theme]["accent"]}, {theme_colors[selected_theme]["accent"]}88) }}
-</style>
-"""
-st.sidebar.markdown(theme_css, unsafe_allow_html=True)
+# Store parameters to session state for use in prompt building
+st.session_state.style_instructions = style_instructions
