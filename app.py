@@ -6,70 +6,190 @@ import json
 import time
 import os
 from datetime import datetime
-import re
-from collections import Counter
-import pandas as pd
-import uuid
 
 # Configure Streamlit page
-st.set_page_config(page_title="Advanced AI Creator Hub", page_icon="🧠", layout="wide", initial_sidebar_state="expanded")
+st.set_page_config(page_title="Ultimate AI Creator Hub", page_icon="🧠", layout="wide", initial_sidebar_state="expanded")
 
-# Compressed CSS with advanced styling
-st.markdown("""<style>
-:root{--primary:#4f46e5;--secondary:#06b6d4;--dark:#1e293b;--light:#f8fafc;--success:#10b981;--warning:#f59e0b;--error:#ef4444}
-.main{background:linear-gradient(135deg,var(--light),#eff6ff)}
-.main.dark{background:linear-gradient(135deg,var(--dark),#0f172a)}
-.stApp{max-width:1200px;margin:0 auto}
-.tool-category{font-size:1.1rem;font-weight:600;color:var(--primary)}
-div[data-testid="stVerticalBlock"]{gap:0.4rem}
-.stButton>button{background:linear-gradient(90deg,var(--primary),var(--secondary));color:white;font-weight:500;border-radius:8px;padding:8px 16px;box-shadow:0 3px 12px rgba(0,0,0,0.12);transition:all 0.2s ease}
-.stButton>button:hover{transform:translateY(-2px);box-shadow:0 6px 14px rgba(79,70,229,0.2)}
-div.stTabs [data-baseweb="tab-list"]{gap:4px}
-div.stTabs [data-baseweb="tab"]{background-color:#312e81;border-radius:6px 6px 0px 0px;padding:8px 16px;font-weight:500}
-div.stTabs [aria-selected="true"]{background-color:#4f46e5}
-.output-box{background-color:var(--light);border:1px solid #e2e8f0;border-radius:8px;padding:16px;margin-top:16px;box-shadow:0 2px 6px rgba(0,0,0,0.05)}
-.output-box.dark{background-color:#1e293b;border:1px solid #334155}
-.history-item{padding:12px;border:1px solid #e5e7eb;border-radius:6px;margin-bottom:6px;background-color:white;transition:all 0.2s ease}
-.history-item:hover{box-shadow:0 4px 10px rgba(0,0,0,0.08);transform:translateY(-1px)}
-.history-item.dark{background-color:#334155;border:1px solid #475569}
-.theme-light{background-color:var(--light)}
-.theme-dark{background-color:var(--dark);color:var(--light)}
-.prompt-editor{border:1px solid #e2e8f0;border-radius:6px;padding:10px}
-.tool-btn{transition:all 0.15s ease;border:1px solid #e5e7eb;border-radius:6px;text-align:center;padding:8px 12px;margin:4px 0}
-.tool-btn:hover{background-color:#f1f5f9;transform:translateY(-1px);box-shadow:0 2px 5px rgba(0,0,0,0.05)}
-.tool-btn.dark{border:1px solid #475569;background-color:#1e293b}
-.tool-btn.dark:hover{background-color:#334155}
-.banner{padding:12px;border-radius:8px;margin-bottom:12px;background:linear-gradient(90deg,#c7d2fe,#ddd6fe);font-weight:500}
-.banner.dark{background:linear-gradient(90deg,#312e81,#4c1d95);color:white}
-.status-badge{padding:3px 8px;border-radius:12px;font-size:0.75rem;font-weight:500}
-.badge-success{background-color:#d1fae5;color:#047857}
-.badge-warning{background-color:#fef3c7;color:#b45309}
-.badge-error{background-color:#fee2e2;color:#b91c1c}
-.sidebar-section{margin-bottom:20px;border-bottom:1px solid #e5e7eb;padding-bottom:15px}
-</style>""", unsafe_allow_html=True)
+# Custom CSS (highly condensed)
+st.markdown("""<style>.main{background-color:#f8f9fa}.stApp{max-width:1200px;margin:0 auto}.tool-category{font-size:1.2rem;font-weight:bold;margin-top:1rem;color:#1e3a8a}div[data-testid="stVerticalBlock"]{gap:0.5rem}.stButton>button{background:linear-gradient(90deg,#3b82f6,#8b5cf6);color:white;font-weight:600;border-radius:10px;padding:10px 20px;box-shadow:0 4px 14px rgba(0,0,0,0.1);transition:all 0.3s ease}.stButton>button:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,0.15)}div.stTabs [data-baseweb="tab-list"]{gap:8px}div.stTabs [data-baseweb="tab"]{background-color:#300661;border-radius:8px 8px 0px 0px;padding:10px 16px;font-weight:600}div.stTabs [aria-selected="true"]{background-color:#450542}.output-box{background-color:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:20px;margin-top:20px}.history-item{padding:10px;border:1px solid #e5e7eb;border-radius:8px;margin-bottom:8px;background-color:white}.category-selector{margin:10px 0}.search-box{margin:15px 0}</style>""", unsafe_allow_html=True)
 
 # Initialize session state
-def init_session_state():
-    if 'api_key' not in st.session_state: st.session_state.api_key = ""
-    if 'history' not in st.session_state: st.session_state.history = []
-    if 'api_model' not in st.session_state: st.session_state.api_model = "gemini-2.0-flash"
-    if 'prompt_templates' not in st.session_state: st.session_state.prompt_templates = {}
-    if 'favorites' not in st.session_state: st.session_state.favorites = []
-    if 'current_theme' not in st.session_state: st.session_state.current_theme = "light"
-    if 'model_params' not in st.session_state: st.session_state.model_params = {
-        "temperature": 0.7, "top_p": 0.95, "top_k": 40, "max_output_tokens": 2048
-    }
-    if 'user_history' not in st.session_state: st.session_state.user_history = []
-    if 'workspace' not in st.session_state: st.session_state.workspace = {"templates": {}}
-    
-init_session_state()
+if 'api_key' not in st.session_state: st.session_state.api_key = ""
+if 'history' not in st.session_state: st.session_state.history = []
+if 'api_model' not in st.session_state: st.session_state.api_model = "gemini-2.0-flash"
+if 'prompt_templates' not in st.session_state: st.session_state.prompt_templates = {}
 
-# Helper functions
-def analyze_content(text):
-    """Analyze text content for metrics and insights"""
-    if not text:
-        return {}
+# Function to generate expanded AI tools list
+@st.cache_data
+def generate_ai_tools():
+    # Base categories dictionary - we'll expand with multipliers later
+    base_categories = {
+        "Writing": [
+            "Resume", "Cover Letter", "Email", "Blog Post", "Content Rewrite", "Grammar Check", 
+            "Summary", "Academic Essay", "Letter", "Script", "Technical Writing", "Research Paper",
+            "Whitepaper", "Thesis Statement", "Literature Review", "Citation", "Lab Report",
+            "Case Study", "Editorial Guidelines", "Style Guide", "Professional Bio", "Executive Summary",
+            "Project Proposal", "Meeting Minutes", "Documentation", "SOP", "Policy Draft",
+            "Legal Document", "Contract Clause", "Terms & Conditions", "Privacy Policy"
+        ],
+        
+        "Creative": [
+            "Poem", "Story", "Dialogue", "Character", "Book Title", "Horror Story", "Sci-Fi Story",
+            "Song Lyrics", "Children's Story", "Novel Outline", "Metaphor", "Joke", "Fantasy World",
+            "Sci-Fi Technology", "Historical Fiction", "Memoir", "Poetry Prompt", "Creative Prompt",
+            "Short Story Starter", "Screenplay Format", "Plot Twist", "Character Backstory",
+            "Setting Description", "Alternate History", "Mythical Creature", "Magic System",
+            "Fictional Language", "Story Conflict"
+        ],
+        
+        "Business": [
+            "Business Idea", "Startup Pitch", "SEO Keywords", "Business Consultation", "Marketing Strategy",
+            "Grant Proposal", "Freelance Proposal", "LinkedIn Bio", "Branding Guide", "Business Email",
+            "SWOT Analysis", "Business Case", "Market Research", "Competitor Analysis", "Pricing Strategy",
+            "Product Launch", "Go-to-Market", "Customer Persona", "Mission Statement", "Company Values",
+            "Business Plan", "Investor Pitch", "Funding Request", "Project Timeline", "Risk Assessment",
+            "ROI Calculator", "KPI Framework"
+        ]
+    }
     
+    # Additional categories to reach 2000+ tools
+    extended_categories = {
+        "Social Media": ["Post", "Caption", "Viral Tweet", "YouTube Idea", "Tagline", "Pinterest Description",
+                        "Cold Email", "Podcast Episode", "Content Calendar", "Viral Formula", "Influencer Pitch",
+                        "Brand Partnership", "YouTube Script", "Dating Profile", "Networking Opener",
+                        "TikTok Trend", "Instagram Story", "LinkedIn Article", "Twitter Thread", "Facebook Ad",
+                        "Hashtag Strategy", "Reel Script", "Community Post", "Review Response", "Crisis Response"],
+        
+        "Productivity": ["Productivity Plan", "Daily Plan", "Travel Itinerary", "Note-Taking", "Brainstorming",
+                         "Grocery List", "Interview Prep", "Learning Path", "Time Management", "Prioritization",
+                         "Decision Matrix", "Problem-Solving", "Critical Thinking", "Goal Setting", "Habit Tracker",
+                         "Professional Development", "Weekly Schedule", "Project Management", "Task Breakdown"],
+        
+        "Education": ["Lesson Plan", "Course Outline", "Curriculum", "Educational Quiz", "Study Guide",
+                     "Teaching Material", "Assignment", "Workshop", "Test Questions", "Learning Objectives",
+                     "Educational Game", "Academic Resource", "Subject Summary", "Syllabus", "Tutorial"],
+        
+        "Design": ["Design Brief", "Color Palette", "Typography Guide", "Design System", "Logo Concept",
+                  "UI Element", "UX Flow", "Website Layout", "Print Material", "Product Packaging",
+                  "Illustration Concept", "Icon Set", "Brand Identity", "Style Tile", "Mood Board"],
+        
+        "Development": ["Code Review", "Technical Spec", "API Documentation", "Development Plan", "Code Architecture",
+                       "Database Schema", "Software Requirements", "Testing Strategy", "Bug Report", "Feature Spec",
+                       "Code Refactoring", "Algorithm", "Tech Stack", "System Architecture", "Code Snippet"],
+        
+        "Marketing": ["Marketing Plan", "Campaign Brief", "Ad Copy", "Landing Page", "Email Campaign",
+                     "Conversion Strategy", "Growth Hack", "Product Description", "Promotion", "Sales Script",
+                     "Value Proposition", "USP", "Elevator Pitch", "Customer Journey", "Messaging Framework"],
+        
+        "Finance": ["Budget Plan", "Financial Analysis", "Investment Strategy", "Expense Report", "Revenue Forecast",
+                   "Cash Flow", "Financial Model", "Cost Reduction", "Profit Optimization", "Tax Strategy",
+                   "Retirement Plan", "Debt Management", "Financial Education", "Savings Plan", "Equity Distribution"],
+        
+        "Health": ["Wellness Plan", "Diet Plan", "Fitness Routine", "Mental Health", "Sleep Improvement",
+                  "Meditation Script", "Nutrition Guide", "Health Goal", "Self-Care Routine", "Stress Management",
+                  "Recovery Plan", "Symptom Analysis", "Mindfulness Exercise", "Health Tracker", "Medical Information"],
+        
+        "Legal": ["Legal Analysis", "Contract Template", "Legal Response", "Compliance Check", "Privacy Statement",
+                 "Disclaimer", "Terms of Service", "Copyright Notice", "IP Strategy", "Legal Research",
+                 "Legal Letter", "Dispute Resolution", "Regulatory Filing", "Legal Defense", "Intellectual Property"],
+        
+        "Event": ["Event Plan", "Invitation", "Wedding Speech", "Toast", "Anniversary Message", "Party Theme",
+                 "Conference Agenda", "Event Marketing", "Catering Menu", "Venue Description", "Entertainment Plan",
+                 "Guest List", "Event Schedule", "Thank You Note", "Event Budget", "Virtual Event"],
+        
+        "Relationships": ["Relationship Advice", "Conflict Resolution", "Apology Letter", "Friendship Message",
+                         "Love Letter", "Dating Profile", "Breakup Letter", "Family Communication", "Networking Message",
+                         "Condolence Note", "Birthday Message", "Anniversary Note", "Congratulations Note", "Reconnection"],
+        
+        "Industry": ["Industry Analysis", "Sector Trend", "Market Forecast", "Industry Report", "Competitive Landscape",
+                    "Regulatory Impact", "Technology Adoption", "Industry Disruption", "Vertical Strategy", "Supply Chain",
+                    "Distribution Channel", "Industry Standards", "Industry Partnership", "Trade Association", "Industry Event"]
+    }
+    
+    # Combine base and extended categories
+    all_categories = {**base_categories, **extended_categories}
+    
+    # Multipliers to expand each tool category (adjectival prefixes)
+    tool_multipliers = [
+        "Advanced", "Custom", "Premium", "Enhanced", "Professional", "Intelligent", "Smart", "Dynamic",
+        "Interactive", "Personalized", "Strategic", "Comprehensive", "Automated", "High-Performance", "Next-Gen",
+        "Streamlined", "Optimized", "Scalable", "Innovative", "Creative", "Essential", "Ultimate", "Practical",
+        "Specialized", "Expert", "Efficient", "Versatile", "Powerful", "Flexible", "Multi-purpose"
+    ]
+    
+    # Format multipliers (output format variations)
+    format_multipliers = [
+        "Generator", "Builder", "Creator", "Designer", "Maker", "Assistant", "Helper", "Tool", "Solution",
+        "Expert", "Consultant", "Advisor", "Planner", "Architect", "Analyst", "Strategist", "Developer",
+        "Manager", "Optimizer", "Writer", "Guide", "Template", "Framework", "System", "Toolkit"
+    ]
+    
+    # Generate expanded tools by combining base tools with multipliers
+    expanded_categories = {}
+    for category, base_tools in all_categories.items():
+        expanded_tools = []
+        for base_tool in base_tools:
+            # Add the original tool with common suffixes
+            for format_mult in format_multipliers[:3]:  # Limit to top 3 formats
+                expanded_tools.append(f"{base_tool} {format_mult}")
+            
+            # Add tools with multipliers (limit to reduce overwhelming options)
+            for mult in tool_multipliers[:5]:  # Limit to top 5 multipliers
+                expanded_tools.append(f"{mult} {base_tool}")
+        
+        expanded_categories[category] = expanded_tools
+    
+    # Create specialized industry categories (new areas)
+    specialized_industries = {
+        "Healthcare": ["Patient Care", "Medical Record", "Clinical Trial", "Health Assessment", "Treatment Plan",
+                      "Healthcare Policy", "Medical Research", "Patient Education", "Telehealth", "Health Insurance",
+                      "Medical Device", "Healthcare Compliance", "Medical Diagnosis", "Patient Experience", "Wellness Program"],
+        
+        "E-commerce": ["Product Listing", "Customer Review", "E-commerce Copy", "Shipping Policy", "Return Policy",
+                       "Product Bundle", "Flash Sale", "Customer Engagement", "Shopping Experience", "Loyalty Program",
+                       "Product Recommendation", "Checkout Process", "Customer Retention", "Marketplace Strategy", "Pricing Model"],
+        
+        "Real Estate": ["Property Description", "Market Analysis", "Investment Property", "Rental Analysis", "Home Staging",
+                       "Property Marketing", "Neighborhood Guide", "Real Estate Listing", "Agent Bio", "Mortgage Information",
+                       "Home Inspection", "Lease Agreement", "Property Management", "HOA Communication", "Commercial Lease"],
+        
+        "Sustainability": ["Environmental Impact", "Sustainability Report", "Green Initiative", "Carbon Footprint", "ESG Strategy",
+                          "Circular Economy", "Sustainable Design", "Climate Action", "Conservation Plan", "Energy Efficiency",
+                          "Waste Reduction", "Water Conservation", "Sustainable Supply Chain", "Social Impact", "Eco Certification"],
+        
+        "Technology": ["Tech Specification", "Product Roadmap", "User Guide", "Tech Support", "Software Release",
+                      "Hardware Design", "Tech Solution", "IT Strategy", "Digital Transformation", "Tech Integration",
+                      "Tech Troubleshooting", "Cloud Migration", "Data Strategy", "Network Design", "Tech Evaluation"]
+    }
+    
+    # Add specialized industries to the expanded categories
+    for industry, tools in specialized_industries.items():
+        industry_tools = []
+        for tool in tools:
+            # Add the original tool with common suffixes
+            for format_mult in format_multipliers[:3]:  # Limit to top 3 formats
+                industry_tools.append(f"{tool} {format_mult}")
+            
+            # Add tools with multipliers (limit to reduce overwhelming options)
+            for mult in tool_multipliers[:3]:  # Limit to top 3 multipliers
+                industry_tools.append(f"{mult} {tool}")
+        
+        expanded_categories[industry] = industry_tools
+    
+    # Create flat list of all tools
+    all_tools = []
+    for category, tools in expanded_categories.items():
+        all_tools.extend(tools)
+    
+    return all_tools, expanded_categories
+
+
+# Add this to your imports
+import re
+from collections import Counter
+
+# Add this function after your other functions
+def analyze_content(text):
     # Basic text analysis
     word_count = len(re.findall(r'\w+', text))
     sentence_count = len(re.findall(r'[.!?]+', text)) + 1
@@ -80,7 +200,7 @@ def analyze_content(text):
     word_lengths = [len(word) for word in words]
     avg_word_length = sum(word_lengths) / len(word_lengths) if word_lengths else 0
     
-    # Sentiment analysis (simplified)
+    # Sentiment indicators (simplified)
     positive_words = ['good', 'great', 'excellent', 'best', 'positive', 'happy', 'wonderful', 'amazing']
     negative_words = ['bad', 'worst', 'terrible', 'negative', 'poor', 'awful', 'horrible']
     
@@ -89,10 +209,8 @@ def analyze_content(text):
     
     sentiment = "Positive" if positive_count > negative_count else "Negative" if negative_count > positive_count else "Neutral"
     
-    # Most common words (excluding common stopwords)
-    stopwords = ['the', 'a', 'an', 'in', 'to', 'for', 'of', 'and', 'is', 'are', 'was', 'were']
-    filtered_words = [word for word in words if word not in stopwords and len(word) > 2]
-    common_words = Counter(filtered_words).most_common(7)
+    # Most common words
+    common_words = Counter(words).most_common(5)
     
     return {
         "word_count": word_count,
@@ -100,427 +218,476 @@ def analyze_content(text):
         "paragraph_count": paragraph_count,
         "avg_word_length": round(avg_word_length, 2),
         "sentiment": sentiment,
-        "common_words": common_words,
-        "reading_time": round(word_count / 200, 1)  # Avg reading time in minutes
-    }
-
-def generate_ai_tools():
-    """Generate AI tools based on categories and multipliers"""
-    # Create base categories with tools
-    base_categories = {
-        "Writing": ["Blog Post", "Article", "Email", "Report", "Resume", "Cover Letter", "Social Media"],
-        "Creative": ["Story", "Poem", "Script", "Dialogue", "Character", "Setting", "Plot"],
-        "Business": ["Marketing Copy", "Pitch Deck", "Business Plan", "SWOT Analysis", "Strategy"],
-        "Technical": ["Code", "Documentation", "Tutorial", "Technical Guide", "API Design"],
-        "Education": ["Lesson Plan", "Course Outline", "Quiz", "Study Guide", "Research Paper"],
-        "Personal": ["Journal", "Reflection", "Goal Setting", "Self-improvement", "Daily Planner"]
+        "common_words": common_words
     }
     
-    # Modifiers to expand variations
-    modifiers = ["Advanced", "Custom", "Professional", "Smart", "Interactive", "Comprehensive"]
-    formats = ["Generator", "Creator", "Assistant", "Helper", "Tool", "Builder"]
-    
-    # Generate expanded list of tools
-    expanded_categories = {}
-    for category, tools in base_categories.items():
-        expanded_tools = []
-        for tool in tools:
-            expanded_tools.append(tool)
-            # Add variations with modifiers
-            for modifier in modifiers[:2]:
-                expanded_tools.append(f"{modifier} {tool}")
-            # Add variations with formats
-            for format in formats[:2]:
-                expanded_tools.append(f"{tool} {format}")
-        
-        expanded_categories[category] = expanded_tools
-    
-    # Create flat list for search
-    all_tools = []
-    for category, tools in expanded_categories.items():
-        all_tools.extend(tools)
-    
-    return all_tools, expanded_categories
+# Get all tools and categories
+ai_tools, tool_categories = generate_ai_tools()
 
+# Function to load prompt templates (dynamic generation)
+@st.cache_data
 def load_prompt_templates():
-    """Generate prompt templates for tools"""
     templates = {}
-    all_tools, _ = generate_ai_tools()
-    
-    for tool in all_tools:
+    for tool in ai_tools:
         templates[tool] = f"Generate content using the '{tool}' feature for: {{prompt}}. Ensure the output is high quality, relevant, and tailored to the user's needs."
-    
     return templates
 
+# Function to generate content with AI
 def generate_ai_content(prompt, api_key, model_name):
-    """Generate content with AI using specified model and parameters"""
     try:
         genai.configure(api_key=api_key)
         model = genai.GenerativeModel(model_name)
-        with st.spinner("🔮 AI is generating content..."):
-            response = model.generate_content(prompt, generation_config=st.session_state.model_params)
+        with st.spinner("🔮 AI is working its magic..."):
+            generation_config = {"temperature": 0.7, "top_p": 0.95, "top_k": 40, "max_output_tokens": 2048}
+            response = model.generate_content(prompt, generation_config=generation_config)
             return response.text
     except Exception as e:
         return f"Error: {str(e)}"
 
+# Function to save content to history
 def save_to_history(tool_name, prompt, output):
-    """Save generated content to history with unique ID"""
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    entry_id = str(uuid.uuid4())[:8]
-    analysis = analyze_content(output)
-    
-    st.session_state.history.insert(0, {
-        "id": entry_id,
-        "timestamp": timestamp,
-        "tool": tool_name,
-        "prompt": prompt,
-        "output": output,
-        "analysis": analysis,
-        "favorited": False
-    })
-    
-    # Keep history at manageable size
-    if len(st.session_state.history) > 30:
-        st.session_state.history = st.session_state.history[:30]
+    st.session_state.history.insert(0, {"timestamp": timestamp, "tool": tool_name, "prompt": prompt, "output": output})
+    if len(st.session_state.history) > 20:
+        st.session_state.history = st.session_state.history[:20]
 
-def toggle_favorite(item_id):
-    """Toggle favorite status for history item"""
-    for item in st.session_state.history:
-        if item.get("id") == item_id:
-            item["favorited"] = not item.get("favorited", False)
-            if item["favorited"] and item not in st.session_state.favorites:
-                st.session_state.favorites.append(item)
-            elif not item["favorited"] and item in st.session_state.favorites:
-                st.session_state.favorites.remove(item)
-            break
-
-def get_color_theme():
-    """Get current color theme class names"""
-    is_dark = st.session_state.current_theme == "dark"
-    return {
-        "main": "dark" if is_dark else "",
-        "box": "dark" if is_dark else "",
-        "item": "dark" if is_dark else "",
-        "banner": "dark" if is_dark else ""
-    }
-
-# Initialize tools and templates
-all_tools, tool_categories = generate_ai_tools()
-if not st.session_state.prompt_templates:
-    st.session_state.prompt_templates = load_prompt_templates()
-
-# Sidebar for configuration
+# Sidebar for API configuration
 with st.sidebar:
-    st.image("https://via.placeholder.com/200x60?text=AI+HUB", width=200)
+    st.image("aichip.jpg")
+    st.markdown("### 🔑 API Configuration")
+    api_key = st.text_input("Enter Google Gemini API Key:", type="password", value=st.session_state.api_key, help="Your API key is stored in the session and not saved.")
+    if api_key: st.session_state.api_key = api_key
     
-    # API Configuration
-    with st.expander("🔑 API Configuration", expanded=False):
-        api_key = st.text_input("Google Gemini API Key:", type="password", 
-                               value=st.session_state.api_key,
-                               help="Stored in session only")
-        if api_key: st.session_state.api_key = api_key
-        
-        # Model selection with expanded options
-        st.session_state.api_model = st.selectbox(
-            "AI Model:",
-            ["gemini-2.0-flash", "gemini-1.5-flash", "gemini-1.5-pro", "gemini-1.0-pro"],
-            index=0
-        )
-        
-        # Advanced model parameters
-        with st.expander("Model Parameters"):
-            col1, col2 = st.columns(2)
-            with col1:
-                st.session_state.model_params["temperature"] = st.slider(
-                    "Temperature:", min_value=0.0, max_value=1.0, 
-                    value=st.session_state.model_params["temperature"], step=0.05)
-                st.session_state.model_params["top_k"] = st.slider(
-                    "Top K:", min_value=1, max_value=100, 
-                    value=st.session_state.model_params["top_k"], step=1)
-            with col2:
-                st.session_state.model_params["top_p"] = st.slider(
-                    "Top P:", min_value=0.0, max_value=1.0, 
-                    value=st.session_state.model_params["top_p"], step=0.05)
-                st.session_state.model_params["max_output_tokens"] = st.slider(
-                    "Max Output:", min_value=100, max_value=8192, 
-                    value=st.session_state.model_params["max_output_tokens"], step=100)
+    # Model selection with Gemini models
+    st.session_state.api_model = st.selectbox(
+        "Select AI Model:",
+        ["gemini-2.0-flash", "gemini-1.5-flash", "gemini-1.5-pro","gemini-2.0-flash-lite","gemini-2.0-pro-exp-02-05",
+"gemini-2.0-flash-thinking-exp-01-21","gemini-1.5-flash-8b"],
+        index=0
+    )
     
-    # Tool search
-    st.sidebar.markdown("### 🔍 Find Tools")
-    search_term = st.text_input("Search tools:", key="sidebar_search")
-    filtered_tools = [tool for tool in all_tools if search_term.lower() in tool.lower()] if search_term else []
+    st.markdown("---")
+    search_term = st.text_input("🔍 Search for tools:")
+    filtered_tools = [tool for tool in ai_tools if search_term.lower() in tool.lower()] if search_term else ai_tools
     
-    if filtered_tools:
-        st.markdown(f"**{len(filtered_tools)} tools found**")
-        for i, tool in enumerate(filtered_tools[:10]):
-            if st.button(tool, key=f"sb_tool_{i}", use_container_width=True):
-                st.session_state.selected_tool = tool
-                st.rerun()
+    # Statistics
+    # Statistics
+    st.sidebar.markdown("### 📊 Stats")
+    st.sidebar.markdown(f"**Total Tools:** {len(ai_tools)}")
+    st.sidebar.markdown(f"**Categories:** {len(tool_categories)}")
     
-    # Favorites Section
-
+    # History button in sidebar
     st.sidebar.markdown("---")
-    st.sidebar.markdown("### ⭐ Favorites")
-    
-    if st.session_state.favorites:
-        for i, item in enumerate(st.session_state.favorites[:5]):
-            st.sidebar.markdown(f"**{item['tool']}** - {item['timestamp']}")
-    else:
-        st.sidebar.markdown("No favorites yet. Star your best creations!")
-        
-    # Theme Toggle
-    st.sidebar.markdown("---")
-    theme_col1, theme_col2 = st.sidebar.columns(2)
-    with theme_col1:
-        if st.button("🌞 Light", use_container_width=True):
-            st.session_state.current_theme = "light"
-            st.rerun()
-    with theme_col2:
-        if st.button("🌙 Dark", use_container_width=True):
-            st.session_state.current_theme = "dark"
-            st.rerun()
+    show_history = st.sidebar.button("📜 View History")
+    clear_history = st.sidebar.button("🗑️ Clear History")
+    if clear_history:
+        st.session_state.history = []
+        st.sidebar.success("History cleared!")
 
 # Main content area
-theme = get_color_theme()
-st.markdown(f"<div class='banner {theme['banner']}'>🚀 Create content with AI - Choose a tool to get started</div>", unsafe_allow_html=True)
+st.title("🧠 Ultimate AI Creator Hub")
+st.markdown("Create amazing content with AI-powered tools - all in one place!")
 
-# Tabs for organization
-tab1, tab2, tab3 = st.tabs(["🛠️ Tools", "📚 History", "⚙️ Workspace"])
+# Welcome message
+if not st.session_state.api_key:
+    st.info("👋 Welcome! Please enter your API key in the sidebar to get started.")
 
-# TOOLS TAB
+# Display history if requested
+if show_history and 'history' in st.session_state and len(st.session_state.history) > 0:
+    st.header("📜 Content History")
+    for i, item in enumerate(st.session_state.history):
+        with st.expander(f"{item['timestamp']} - {item['tool']}"):
+            st.markdown("**Prompt:**")
+            st.markdown(f"```\n{item['prompt']}\n```")
+            st.markdown("**Output:**")
+            st.markdown(item['output'])
+    st.markdown("---")
+
+# Load prompt templates if needed
+if not st.session_state.prompt_templates or len(st.session_state.prompt_templates) == 0:
+    st.session_state.prompt_templates = load_prompt_templates()
+
+# Tool Selection Section
+st.header("🛠️ Select Your Creation Tool")
+
+# Tool selection 
+tab1, tab2 = st.tabs(["📋 Categories", "🔍 Search Results"])
+
 with tab1:
-    # Top level search and quick access
-    st.markdown("### Quick Search")
-    main_search = st.text_input("Search for AI tools:", key="main_search_box")
+    selected_category = st.selectbox("Choose a category:", list(tool_categories.keys()))
     
-    col1, col2, col3 = st.columns(3)
-    with col1:
-        selected_tool = None
-        if main_search:
-            filtered_results = [tool for tool in all_tools if main_search.lower() in tool.lower()]
-            if filtered_results:
-                selected_tool = st.selectbox("Select tool:", filtered_results)
-        
-    # Categories display
-    st.markdown("### Tool Categories")
-    
-    # Display categories in columns
-    categories = list(tool_categories.keys())
-    cols = st.columns(3)
-    
-    selected_category = None
-    for i, category in enumerate(categories):
-        with cols[i % 3]:
-            if st.button(f"{category} ({len(tool_categories[category])})", key=f"cat_{i}", use_container_width=True):
-                selected_category = category
-    
-    # Show tools from selected category
+    # Only show tools from selected category
     if selected_category:
-        st.markdown(f"#### {selected_category} Tools")
-        tools_cols = st.columns(3)
-        for i, tool in enumerate(tool_categories[selected_category]):
-            with tools_cols[i % 3]:
-                if st.button(tool, key=f"tool_{i}", use_container_width=True, 
-                           help=f"Use {tool} to generate content"):
-                    selected_tool = tool
-    
-    # Form for generating content
-    if selected_tool:
-        st.markdown(f"### Using: {selected_tool}")
+        tools_in_category = tool_categories[selected_category]
+        st.markdown(f"### {selected_category} Tools ({len(tools_in_category)})")
         
-        with st.form(key=f"gen_form_{selected_tool}"):
-            # Get template
-            template = st.session_state.prompt_templates.get(selected_tool, "Generate content for: {prompt}")
-            
-            # Prompt builder
-            st.markdown("#### Enter your prompt")
-            prompt_text = st.text_area("Content description:", height=100, 
-                                     help="Describe what you want to generate")
-            
-            # Options
-            col1, col2 = st.columns(2)
-            with col1:
-                tone = st.selectbox("Tone:", ["Professional", "Casual", "Enthusiastic", 
-                                           "Formal", "Friendly", "Technical", "Creative"])
-            with col2:
-                length = st.selectbox("Length:", ["Short", "Medium", "Long", "Comprehensive"])
-            
-            # Final prompt construction
-            final_prompt = template.format(prompt=prompt_text)
-            final_prompt += f"\nTone: {tone}. Length: {length}."
-            
-            # Generate button
-            submitted = st.form_submit_button("✨ Generate Content")
-            
-            if submitted:
-                if not st.session_state.api_key:
-                    st.error("Please enter your API key in the sidebar first.")
-                elif not prompt_text:
-                    st.warning("Please enter a prompt.")
-                else:
-                    # Call the AI service
-                    output = generate_ai_content(final_prompt, st.session_state.api_key, st.session_state.api_model)
-                    
-                    # Display output
-                    st.markdown(f"<div class='output-box {theme['box']}'>", unsafe_allow_html=True)
-                    st.markdown("### Generated Content")
-                    st.markdown(output)
-                    st.markdown("</div>", unsafe_allow_html=True)
-                    
-                    # Save to history
-                    save_to_history(selected_tool, prompt_text, output)
+        # Create grid layout for tools
+        cols = st.columns(3)
+        for i, tool in enumerate(tools_in_category):
+            with cols[i % 3]:
+                if st.button(tool, key=f"cat_{tool}"):
+                    st.session_state.selected_tool = tool
 
-# HISTORY TAB
 with tab2:
-    st.markdown("### Content History")
-    
-    if not st.session_state.history:
-        st.info("No history yet. Generate some content to see it here.")
+    if search_term:
+        st.markdown(f"### Search Results for '{search_term}' ({len(filtered_tools)})")
+        
+        # Create grid layout for search results
+        cols = st.columns(3)
+        for i, tool in enumerate(filtered_tools[:30]):  # Limit to 30 results
+            with cols[i % 3]:
+                if st.button(tool, key=f"search_{tool}"):
+                    st.session_state.selected_tool = tool
     else:
-        for i, item in enumerate(st.session_state.history):
-            with st.expander(f"{item['tool']} - {item['timestamp']}"):
-                cols = st.columns([1, 6, 1])
-                with cols[0]:
-                    favorited = "⭐" if item.get("favorited", False) else "☆"
-                    if st.button(favorited, key=f"fav_{item['id']}"):
-                        toggle_favorite(item["id"])
-                        st.rerun()
-                
-                with cols[1]:
-                    st.markdown(f"**Prompt:** {item['prompt']}")
-                    st.markdown("**Output:**")
-                    st.markdown(item["output"])
-                
-                with cols[2]:
-                    # Download button and analysis
-                    if st.button("📊", key=f"stats_{item['id']}"):
-                        # Show analysis
-                        analysis = item.get("analysis", analyze_content(item["output"]))
-                        st.markdown("#### Content Analysis")
-                        st.markdown(f"""
-                        - Words: {analysis.get('word_count', 0)}
-                        - Sentences: {analysis.get('sentence_count', 0)}
-                        - Paragraphs: {analysis.get('paragraph_count', 0)}
-                        - Reading time: {analysis.get('reading_time', 0)} min
-                        - Sentiment: {analysis.get('sentiment', 'Neutral')}
-                        """)
-                        
-                        # Common words visualization
-                        if "common_words" in analysis and analysis["common_words"]:
-                            common_words = analysis["common_words"]
-                            df = pd.DataFrame(common_words, columns=["Word", "Count"])
-                            st.bar_chart(df.set_index("Word"))
+        st.info("Enter a search term in the sidebar to find specific tools.")
 
-# WORKSPACE TAB
-with tab3:
-    st.markdown("### Personal Workspace")
+# Content generation section
+st.header("✨ Create Content")
+# Add this under the 'Generate Content' section
+
+# Display selected tool or default
+selected_tool = st.session_state.get('selected_tool', 'Smart Content Creator')
+st.markdown(f"### Currently using: **{selected_tool}**")
+
+# Content prompt area
+user_prompt = st.text_area("What would you like to create?", height=100)
+
+# Advanced options expander
+# Advanced options expander
+with st.expander("⚙️ Advanced Options"):
+    # Document structure tabs
+    tabs = st.tabs(["Template", "Content Style", "Structure", "Format", "Generation"])
     
-    # Template Management
-    with st.expander("📝 Custom Templates", expanded=True):
-        st.markdown("Create and save your own prompt templates")
+    with tabs[0]:
+        template_edit = st.text_area(
+            "Customize prompt template (use {prompt} as placeholder for your input):",
+            value=st.session_state.prompt_templates.get(selected_tool, "Create {prompt}"),
+            height=100
+        )
+        st.session_state.prompt_templates[selected_tool] = template_edit
         
-        # Template creation form
-        with st.form("template_form"):
-            template_name = st.text_input("Template Name:")
-            template_text = st.text_area("Template (use {prompt} as placeholder):", 
-                                       value="Generate a {prompt} with the following characteristics:")
-            submit_template = st.form_submit_button("Save Template")
-            
-            if submit_template and template_name and template_text:
-                if "{prompt}" not in template_text:
-                    st.error("Template must include {prompt} placeholder")
-                else:
-                    st.session_state.workspace["templates"][template_name] = template_text
-                    st.success(f"Template '{template_name}' saved!")
-        
-        # Display saved templates
-        if st.session_state.workspace["templates"]:
-            st.markdown("#### Your Saved Templates")
-            for name, template in st.session_state.workspace["templates"].items():
-                with st.container():
-                    cols = st.columns([3, 1])
-                    with cols[0]:
-                        st.markdown(f"**{name}**")
-                        st.text(template)
-                    with cols[1]:
-                        if st.button("Use", key=f"use_{name}"):
-                            # Set this template as active
-                            st.session_state.active_template = template
-                            st.success(f"Using template: {name}")
-    
-    # Export/Import
-    with st.expander("💾 Export/Import", expanded=False):
-        col1, col2 = st.columns(2)
-        
+        # Template presets
+        st.divider()
+        col1, col2 = st.columns([3, 1])
         with col1:
-            st.markdown("#### Export Data")
-            export_options = st.multiselect("Select data to export:", 
-                                          ["History", "Templates", "Favorites"])
+            template_presets = {
+                "Standard": "Create {prompt}",
+                "Detailed Analysis": "Conduct a comprehensive analysis of {prompt}, including key insights, trends, and recommendations.",
+                "Creative Writing": "Write a creative and engaging piece about {prompt} with vivid descriptions and compelling narrative.",
+                "Business Report": "Generate a professional business report about {prompt} with executive summary, analysis, and actionable recommendations.",
+                "Technical Guide": "Create a detailed technical guide for {prompt} with step-by-step instructions, code examples, and troubleshooting tips."
+            }
+            selected_preset = st.selectbox("Template Presets:", list(template_presets.keys()))
+        with col2:
+            if st.button("Apply Preset"):
+                st.session_state.prompt_templates[selected_tool] = template_presets[selected_preset]
+                st.rerun()
+
+    
+    with tabs[1]:
+        # Writing style options
+        col1, col2 = st.columns(2)
+        with col1:
+            response_length = st.selectbox(
+                "Response Length:", ["Short", "Medium", "Long", "Very Short", "Concise", "Brief", "Detailed", "Extensive", "Summary", "In-depth", "Comprehensive", "Elaboration", "Thorough"]
+,index=1  # Default to Medium
+            )
+            tone = st.selectbox(
+                "Tone:",
+                ["Professional", "Casual", "Academic", "Persuasive", "Inspirational", 
+                 "Technical", "Conversational", "Humorous", "Formal", "Storytelling", 
+                 "Authoritative", "Empathetic", "Neutral", "Enthusiastic", "Thoughtful"]
+            )
+            voice = st.selectbox(
+                "Voice:",
+                ["Active", "Passive", "First Person", "Second Person", "Third Person", 
+                 "Objective", "Subjective", "Instructional", "Narrative", "Analytical"]
+            )
             
-            if st.button("Export Selected Data") and export_options:
-                export_data = {}
-                if "History" in export_options:
-                    export_data["history"] = st.session_state.history
-                if "Templates" in export_options:
-                    export_data["templates"] = st.session_state.workspace["templates"]
-                if "Favorites" in export_options:
-                    export_data["favorites"] = st.session_state.favorites
-                
-                # Convert to JSON
-                json_data = json.dumps(export_data, indent=2)
-                b64 = base64.b64encode(json_data.encode()).decode()
-                
-                # Create download link
-                href = f'<a href="data:application/json;base64,{b64}" download="ai_hub_export.json">Download Export File</a>'
-                st.markdown(href, unsafe_allow_html=True)
+        with col2:
+            audience = st.selectbox(
+                "Target Audience:",
+                ["General", "Technical", "Executive", "Academic", "Marketing", 
+                 "Education", "Healthcare", "Financial", "Legal", "Scientific",
+                 "Children", "Teenagers", "Senior Management", "Beginners", "Advanced"]
+            )
+            industry = st.selectbox(
+                "Industry Focus:",
+                ["General", "Technology", "Healthcare", "Finance", "Education", 
+                 "Entertainment", "Legal", "Marketing", "Science", "Engineering", 
+                 "Manufacturing", "Retail", "Government", "Nonprofit", "Energy"]
+            )
+        
+        # Language style 
+        st.divider()
+        col1, col2 = st.columns(2)
+        with col1:
+            language_style = st.selectbox(
+                "Language Style:",
+                ["Standard", "Simple", "Technical", "Poetic", "Journalistic", 
+                 "Business", "Academic", "Conversational", "Persuasive", "Narrative"]
+            )
+            emotion = st.select_slider(
+                "Emotional Intensity:",
+                options=["Neutral", "Subtle", "Moderate", "Strong", "Intense"],
+                value="Moderate"
+            )
+        with col2:
+            formality = st.select_slider(
+                "Formality Level:",
+                options=["Very Casual", "Casual", "Neutral", "Formal", "Very Formal"],
+                value="Neutral"
+            )
+            persona = st.selectbox(
+                "Writing Persona:",
+                ["Default", "Expert", "Teacher", "Coach", "Journalist", 
+                 "Storyteller", "Analyst", "Researcher", "Consultant", "Mentor"]
+            )
+    
+    with tabs[2]:
+        col1, col2 = st.columns(2)
+        with col1:
+            max_words = st.number_input("Maximum Word Count:", min_value=50, max_value=10000, value=500, step=50)
+            min_words = st.number_input("Minimum Word Count:", min_value=10, max_value=5000, value=100, step=50)
+            complexity = st.select_slider(
+                "Language Complexity:",
+                options=["Elementary", "Middle School", "High School", "College", "Graduate", "Expert", "Technical"],
+                value="College"
+            )
         
         with col2:
-            st.markdown("#### Import Data")
-            uploaded_file = st.file_uploader("Upload exported data file:", type=["json"])
-            
-            if uploaded_file is not None:
-                try:
-                    import_data = json.load(uploaded_file)
-                    
-                    if "history" in import_data:
-                        st.session_state.history.extend(import_data["history"])
-                    if "templates" in import_data:
-                        st.session_state.workspace["templates"].update(import_data["templates"])
-                    if "favorites" in import_data:
-                        st.session_state.favorites.extend(import_data["favorites"])
-                    
-                    st.success("Data imported successfully!")
-                except Exception as e:
-                    st.error(f"Error importing data: {str(e)}")
+            keyword_inclusion = st.text_area("Keywords to Include (comma separated):", height=68)
+            forbidden_words = st.text_area("Words to Avoid (comma separated):", height=68)
+            readability_target = st.slider("Readability Score Target:", 
+                                          min_value=0, max_value=100, value=60, step=5, 
+                                          help="Lower = more complex, Higher = simpler")
+        
+        # Structure options
+        st.divider()
+        col1, col2 = st.columns(2)
+        with col1:
+            structure_type = st.selectbox(
+                "Content Structure:",
+                ["Standard", "Problem-Solution", "Comparison", "Chronological", 
+                 "Cause-Effect", "Spatial", "Process", "Thesis-Led", "Data-Led", 
+                 "Argumentative", "Descriptive", "Exploratory", "Instructional"]
+            )
+            emphasis = st.selectbox(
+                "Content Emphasis:",
+                ["Balanced", "Data-Focused", "Process-Focused", "Outcome-Focused", 
+                 "Analysis-Focused", "Solution-Focused", "Context-Focused"]
+            )
+        with col2:
+            sections = st.multiselect(
+                "Required Sections:",
+                ["Introduction", "Background", "Methodology", "Results", "Discussion", 
+                 "Conclusion", "Executive Summary", "Recommendations", "References", 
+                 "Appendix", "FAQ", "Glossary", "Abstract", "Literature Review", 
+                 "Case Studies", "Implementation", "Limitations", "Future Work"]
+            )
+            argument_style = st.selectbox(
+                "Argument Style:",
+                ["Balanced", "Steelmanning", "Devil's Advocate", "Persuasive", 
+                 "Exploratory", "Socratic", "Analytical", "Comparative"]
+            )
     
-    # Settings
-    with st.expander("⚙️ Settings", expanded=False):
-        st.markdown("#### Application Settings")
+    with tabs[3]:
+        col1, col2 = st.columns(2)
+        with col1:
+            output_format = st.selectbox(
+                "Output Format:",
+                ["Standard Text", "Markdown", "HTML", "JSON", "CSV", "Outline", 
+                 "Bullet Points", "Q&A Format", "Table", "Script Format", 
+                 "Newsletter", "Blog Post", "Academic Paper", "Business Report", 
+                 "Technical Documentation", "Speech/Presentation"]
+            )
+            citation_style = st.selectbox(
+                "Citation Style:",
+                ["None", "APA", "MLA", "Chicago", "IEEE", "Harvard", "Vancouver", 
+                 "AMA", "ASA", "Bluebook", "CSE", "ACS", "NLM"]
+            )
         
-        # Reset options
-        reset_options = st.multiselect("Reset options:", 
-                                    ["History", "Templates", "Favorites", "All Settings"])
-        
-        if st.button("Reset Selected") and reset_options:
-            if "History" in reset_options or "All Settings" in reset_options:
-                st.session_state.history = []
-            if "Templates" in reset_options or "All Settings" in reset_options:
-                st.session_state.workspace["templates"] = {}
-            if "Favorites" in reset_options or "All Settings" in reset_options:
-                st.session_state.favorites = []
-            if "All Settings" in reset_options:
-                st.session_state.api_key = ""
-                st.session_state.model_params = {
-                    "temperature": 0.7, "top_p": 0.95, "top_k": 40, "max_output_tokens": 2048
-                }
+        with col2:
+            layout_style = st.selectbox(
+                "Layout Style:",
+                ["Standard", "Minimal", "Hierarchical", "Segmented", "Web-Optimized", 
+                 "Print-Optimized", "Mobile-Optimized", "Presentation", "Technical"]
+            )
+            visual_elements = st.multiselect(
+                "Visual Elements:",
+                ["None", "Tables", "Lists", "Blockquotes", "Code Blocks", "Headings", 
+                 "Sub-headings", "Bold Emphasis", "Italics", "Horizontal Rules", 
+                 "Indentation"]
+            )
             
-            st.success("Selected items have been reset!")
-            time.sleep(1)
-            st.rerun()
+        # Media and formatting
+        st.divider()
+        col1, col2 = st.columns(2)
+        with col1:
+            formatting_style = st.selectbox(
+                "Formatting Style:",
+                ["Standard", "Minimal", "Academic", "Web", "Print", "Journalistic", 
+                 "Technical Document", "Creative", "Business", "Scientific"]
+            )
+        with col2:
+            syntax_highlighting = st.selectbox(
+                "Code Syntax Highlighting:",
+                ["None", "Standard", "GitHub", "VSCode", "Atom", "Sublime"]
+            )
+    
+    with tabs[4]:
+        # Generation parameters
+        col1, col2 = st.columns(2)
+        with col1:
+            output_length = st.select_slider(
+                "Output Detail Level:",
+                options=["Minimal", "Brief", "Standard", "Detailed", "Comprehensive", "Exhaustive"],
+                value="Standard"
+            )
+            creativity = st.slider("Creativity:", min_value=0.0, max_value=1.0, value=0.7, step=0.1,
+                                help="Lower = more deterministic, Higher = more creative")
+        
+        with col2:
+            determinism = st.slider("Determinism:", min_value=0.0, max_value=1.0, value=0.3, step=0.1,
+                                help="Lower = more varied outputs, Higher = more consistent outputs")
+            reasoning_depth = st.select_slider(
+                "Reasoning Depth:",
+                options=["Basic", "Standard", "Advanced", "Expert", "Comprehensive"],
+                value="Standard",
+                help="Controls depth of logical analysis and reasoning in generated content"
+            )
+        
+        # Advanced AI parameters
+        st.divider()
+        col1, col2 = st.columns(2)
+        with col1:
+            factuality = st.slider("Factuality Weight:", min_value=0.0, max_value=1.0, value=0.8, step=0.1,
+                                help="Higher values prioritize factual accuracy over creativity")
+            expertise_level = st.select_slider(
+                "AI Expertise Level:",
+                options=["Generalist", "Field Expert", "Subject Specialist", "Domain Authority", "World-Class Expert"],
+                value="Field Expert",
+                help="Level of expertise the AI should demonstrate in the response"
+            )
+        
+        with col2:
+            context_relevance = st.slider("Context Relevance:", min_value=0.0, max_value=1.0, value=0.9, step=0.1,
+                                      help="Higher values keep content more focused on the specific prompt")
+            innovation_level = st.select_slider(
+                "Innovation Level:",
+                options=["Conservative", "Balanced", "Progressive", "Cutting-Edge", "Revolutionary"],
+                value="Balanced",
+                help="Controls how novel or traditional the ideas and approach should be"
+            )
+        
+        # Specialized content options
+        st.divider()
+        st.subheader("Specialized Content Options")
+        st.info("Select additional content features to include in generation")
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            tech_analysis = st.checkbox("Enable Technical Analysis", help="Add technical depth with specialized terminology")
+            data_viz = st.checkbox("Include Data Visualization", help="Add descriptions of charts/graphs where appropriate")
+            case_studies = st.checkbox("Add Case Studies", help="Include relevant examples and case studies")
+        
+        with col2:
+            research_focus = st.checkbox("Research Focus", help="Emphasize research findings and methodologies")
+            step_breakdown = st.checkbox("Step-by-Step Breakdown", help="Include detailed procedural explanations")
+            comparative = st.checkbox("Comparative Analysis", help="Include comparisons to alternatives or competitors")
+        
+        with col3:
+            future_trends = st.checkbox("Future Trends", help="Include predictions and future developments")
+            historical = st.checkbox("Historical Context", help="Add historical background and evolution")
+            expert_citations = st.checkbox("Expert Citations", help="Include references to subject matter experts")
 
-# Footer
-st.markdown("---")
-st.markdown(
-    "<div style='text-align: center; color: #888;'>AI Creator Hub • Version 1.0 • Powered by Google Gemini</div>", 
-    unsafe_allow_html=True
-)
+# Add style instructions to prompt based on selections
+style_instructions = {
+    "Response Length": response_length,
+    "tone": tone,
+    "voice": voice,
+    "audience": audience,
+    "industry": industry,
+    "max_words": max_words,
+    "min_words": min_words,
+    "output_format": output_format,
+    "structure_type": structure_type,
+    "sections": sections,
+    "output_length": output_length,
+    "creativity": creativity,
+    "reasoning_depth": reasoning_depth
+}
+
+# Store parameters to session state for use in prompt building
+st.session_state.style_instructions = style_instructions
+# Export/Import functionality
+st.sidebar.markdown("---")
+st.sidebar.markdown("### 💾 Export/Import History")
+
+# Export history
+if st.session_state.history and st.sidebar.button("📤 Export History"):
+    history_json = json.dumps(st.session_state.history)
+    b64_history = base64.b64encode(history_json.encode()).decode()
+    href = f'<a href="data:application/json;base64,{b64_history}" download="ai_content_history.json">Download History File</a>'
+    st.sidebar.markdown(href, unsafe_allow_html=True)
+
+# Import history
+uploaded_file = st.sidebar.file_uploader("Import History:", type=['json'])
+if uploaded_file is not None:
+    try:
+        imported_history = json.loads(uploaded_file.read())
+        if st.sidebar.button("📥 Load Imported History"):
+            st.session_state.history = imported_history
+            st.sidebar.success("History imported successfully!")
+    except Exception as e:
+        st.sidebar.error(f"Error importing history: {e}")
+
+# Generate button and output area
+if st.button("🚀 Generate Content", type="primary"):
+    if not st.session_state.api_key:
+        st.error("Please enter your API key in the sidebar first.")
+    elif not user_prompt:
+        st.warning("Please enter a prompt to generate content.")
+    else:
+        # Build prompt with template and style instructions
+        template = st.session_state.prompt_templates.get(selected_tool, "Create {prompt}")
+        formatted_prompt = template.replace("{prompt}", user_prompt)
+        
+        # Add style instructions to prompt
+        style_prompt = f"{formatted_prompt}\n\nStyle Guidelines:\n"
+        for key, value in st.session_state.style_instructions.items():
+            if value and value not in ["None", "Standard"] and (not isinstance(value, list) or len(value) > 0):
+                style_prompt += f"- {key.replace('_', ' ').title()}: {value}\n"
+        
+        # Generate content
+        output = generate_ai_content(style_prompt, st.session_state.api_key, st.session_state.api_model)
+        
+        # Display output
+        st.markdown("### 🎯 Generated Content")
+        with st.expander("Content Output", expanded=True):
+            st.markdown(output)
+        
+        # Save to history
+        save_to_history(selected_tool, user_prompt, output)
+              
+# Add theme selector
+st.sidebar.markdown("---")
+st.sidebar.markdown("### 🎨 App Theme")
+themes = ["Light", "Dark", "Blue", "Green", "Purple"]
+selected_theme = st.sidebar.selectbox("Select Theme:", themes, index=0)
+
+# Apply selected theme with custom CSS
+theme_colors = {
+    "Light": {"bg": "#f8f9fa", "accent": "#3b82f6"},
+    "Dark": {"bg": "#1e293b", "accent": "#8b5cf6"},
+    "Blue": {"bg": "#f0f9ff", "accent": "#0284c7"},
+    "Green": {"bg": "#f0fdf4", "accent": "#16a34a"},
+    "Purple": {"bg": "#faf5ff", "accent": "#9333ea"}
+}
+
+theme_css = f"""
+<style>
+    .main {{ background-color: {theme_colors[selected_theme]["bg"]} }}
+    .stButton>button {{ background: linear-gradient(90deg, {theme_colors[selected_theme]["accent"]}, {theme_colors[selected_theme]["accent"]}88) }}
+</style>
+"""
+st.sidebar.markdown(theme_css, unsafe_allow_html=True)
