@@ -573,57 +573,6 @@ style_instructions = {
 
 # Store parameters to session state for use in prompt building
 st.session_state.style_instructions = style_instructions
-    # Generate content
-    output = generate_ai_content(full_prompt, st.session_state.api_key, st.session_state.api_model)
-    
-    # Display output
-    st.markdown("### 🎉 Your AI-Generated Content")
-    with st.container(border=True):
-        st.markdown(output)
-    
-    # Download button
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    filename = f"{selected_tool.replace(' ', '_')}_{timestamp}.txt"
-    
-    st.download_button(
-        label="📥 Download as Text",
-        data=output,
-        file_name=filename,
-        mime="text/plain",
-    )
-    
-    # Save to history
-    save_to_history(selected_tool, user_prompt, output)
-    
-elif generate_pressed and not user_prompt:
-    st.warning("Please enter what you'd like to create.")
-elif generate_pressed and not st.session_state.api_key:
-    st.error("Please enter your API key in the sidebar.")
-
-# Footer
-st.markdown("---")
-st.markdown("""
-<div style="text-align: center">
-    <p>Ultimate AI Creator Hub | 2025 | The complete solution for AI-powered content creation</p>
-</div>
-""", unsafe_allow_html=True)
-
-# Add quick-access template section
-st.sidebar.markdown("---")
-st.sidebar.markdown("### 🔄 Quick Templates")
-quick_templates = [
-    "Write a blog post about",
-    "Create a marketing email for",
-    "Design a social media campaign for",
-    "Draft a business proposal for",
-    "Generate a creative story about"
-]
-
-selected_template = st.sidebar.selectbox("Templates:", quick_templates)
-if st.sidebar.button("📋 Use Template"):
-    st.session_state.template_text = selected_template
-    st.experimental_rerun()
-
 # Export/Import functionality
 st.sidebar.markdown("---")
 st.sidebar.markdown("### 💾 Export/Import History")
