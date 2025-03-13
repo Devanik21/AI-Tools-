@@ -26,7 +26,7 @@ def generate_ai_tools():
     base_categories = {
         "Writing": [
             "Resume", "Cover Letter", "Email", "Blog Post", "Content Rewrite", "Grammar Check", 
-            "Summary", "Academic Essay", "Letter", "Script", "Technical Writing", "Research Paper","Summarizer",
+            "Summary", "Academic Essay", "Letter", "Script", "Technical Writing", "Research Paper",
             "Whitepaper", "Thesis Statement", "Literature Review", "Citation", "Lab Report",
             "Case Study", "Editorial Guidelines", "Style Guide", "Professional Bio", "Executive Summary",
             "Project Proposal", "Meeting Minutes", "Documentation", "SOP", "Policy Draft",
