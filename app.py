@@ -730,10 +730,14 @@ with tab6:
     st.header("⚡ AI Code Wizard")
 
     # Automatically select the AI model for coding tasks
+    st.session_state.api_model = "gemini-2.0-flash-thinking-exp-01-21"
 
     # Choose AI task
     task = st.selectbox("What do you need help with?", 
-                    ["Generate Code", "Debug Code", "Optimize Code"], 
+                    ["Generate Code", "Debug Code", "Optimize Code", "Convert Code", "Explain Code",
+                     "Add Comments", "Find Security Issues", "Write Unit Tests", "Generate API Documentation",
+                     "Suggest Design Patterns", "Convert Pseudocode to Code", "Fix Compilation Errors",
+                     "Analyze Code Performance"], 
                     key="code_task_radio")
 
     # Code Input (Text or File)
@@ -752,8 +756,28 @@ with tab6:
                 prompt = f"Write clean, efficient code for: {code_input}"
             elif task == "Debug Code":
                 prompt = f"Find and fix errors in this code:\n\n{code_input}"
-            else:  # Optimize Code
+            elif task == "Optimize Code":
                 prompt = f"Refactor and optimize this code to improve efficiency:\n\n{code_input}"
+            elif task == "Convert Code":
+                prompt = f"Convert this code to another programming language:\n\n{code_input}"
+            elif task == "Explain Code":
+                prompt = f"Explain what this code does in simple terms:\n\n{code_input}"
+            elif task == "Add Comments":
+                prompt = f"Add detailed comments to this code for better understanding:\n\n{code_input}"
+            elif task == "Find Security Issues":
+                prompt = f"Analyze this code and highlight security vulnerabilities:\n\n{code_input}"
+            elif task == "Write Unit Tests":
+                prompt = f"Generate unit tests for this code:\n\n{code_input}"
+            elif task == "Generate API Documentation":
+                prompt = f"Create API documentation for this code:\n\n{code_input}"
+            elif task == "Suggest Design Patterns":
+                prompt = f"Suggest an appropriate design pattern for this code and explain why:\n\n{code_input}"
+            elif task == "Convert Pseudocode to Code":
+                prompt = f"Convert this pseudocode into actual code:\n\n{code_input}"
+            elif task == "Fix Compilation Errors":
+                prompt = f"Fix the compilation errors in this code:\n\n{code_input}"
+            elif task == "Analyze Code Performance":
+                prompt = f"Analyze the performance of this code and suggest improvements:\n\n{code_input}"
 
             # AI Code Processing
             ai_response = generate_ai_content(prompt, st.session_state.api_key, st.session_state.api_model)
@@ -762,7 +786,6 @@ with tab6:
             st.code(ai_response, language="python")  # Adjust language based on task
         else:
             st.warning("⚠️ Please enter some code or upload a file.")
-
 
 
 # Content generation section
