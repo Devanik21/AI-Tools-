@@ -60,7 +60,61 @@ def install_dependencies():
 # Run dependency check on startup
 install_dependencies()
 
-
+def extract_text_from_file(uploaded_file):
+    """
+    Extract text from various file formats (PDF, DOCX, TXT, CSV)
+    
+    Args:
+        uploaded_file: The file uploaded through st.file_uploader
+        
+    Returns:
+        str: Extracted text content from the file
+    """
+    import io
+    import pandas as pd
+    
+    file_type = uploaded_file.name.split('.')[-1].lower()
+    
+    try:
+        # TXT files
+        if file_type == 'txt':
+            content = uploaded_file.getvalue().decode('utf-8')
+            return content
+            
+        # CSV files
+        elif file_type == 'csv':
+            df = pd.read_csv(uploaded_file)
+            return df.to_string()
+            
+        # PDF files
+        elif file_type == 'pdf':
+            try:
+                import PyPDF2
+                pdf_reader = PyPDF2.PdfReader(io.BytesIO(uploaded_file.getvalue()))
+                text = ""
+                for page_num in range(len(pdf_reader.pages)):
+                    text += pdf_reader.pages[page_num].extract_text()
+                return text
+            except ImportError:
+                return "Error: PyPDF2 is not installed. Install with: pip install PyPDF2"
+                
+        # DOCX files
+        elif file_type == 'docx':
+            try:
+                import docx
+                doc = docx.Document(io.BytesIO(uploaded_file.getvalue()))
+                text = ""
+                for para in doc.paragraphs:
+                    text += para.text + "\n"
+                return text
+            except ImportError:
+                return "Error: python-docx is not installed. Install with: pip install python-docx"
+                
+        else:
+            return f"Unsupported file type: {file_type}"
+            
+    except Exception as e:
+        return f"Error processing file: {str(e)}"
 
 import pytesseract
 from PIL import Image
