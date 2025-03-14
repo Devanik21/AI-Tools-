@@ -17,4 +17,5 @@ matplotlib
 seaborn
 plotly
 scikit-learn
+python-docx 
 protobuf
