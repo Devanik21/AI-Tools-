@@ -421,79 +421,79 @@ with tab3:
             st.success("📈 AI Insights:")
             st.write(insights)
 
-        st.subheader("🔹 Choose a Column for Visualization")
-        selected_column = st.selectbox("Select a Column:", df.columns)
+        # Filter only integer columns for visualization
+        int_columns = df.select_dtypes(include=['int64', 'float64']).columns
 
-        # Visualization 1: Histogram
-        st.subheader("📊 1. Histogram")
-        fig, ax = plt.subplots()
-        sns.histplot(df[selected_column], kde=True, ax=ax)
-        st.pyplot(fig)
+        if len(int_columns) == 0:
+            st.warning("No numeric columns found for visualization!")
+        else:
+            st.subheader("🔹 Choose an Integer Column for Visualization")
+            selected_column = st.selectbox("Select a Column:", int_columns)
 
-        # Visualization 2: Boxplot
-        st.subheader("📦 2. Boxplot (Outliers Detection)")
-        fig, ax = plt.subplots()
-        sns.boxplot(x=df[selected_column], ax=ax)
-        st.pyplot(fig)
-
-        # Visualization 3: Scatter Plot (If at least 2 numerical columns exist)
-        numeric_cols = df.select_dtypes(include=['number']).columns
-        if len(numeric_cols) >= 2:
-            st.subheader("📍 3. Scatter Plot")
-            x_col = st.selectbox("Select X-axis:", numeric_cols, index=0)
-            y_col = st.selectbox("Select Y-axis:", numeric_cols, index=1)
+            # Visualization 1: Histogram
+            st.subheader("📊 1. Histogram")
             fig, ax = plt.subplots()
-            sns.scatterplot(x=df[x_col], y=df[y_col], ax=ax)
+            sns.histplot(df[selected_column], kde=True, ax=ax)
             st.pyplot(fig)
 
-        # Visualization 4: Correlation Heatmap
-        st.subheader("🔥 4. Correlation Heatmap")
-        fig, ax = plt.subplots(figsize=(8, 6))
-        sns.heatmap(df.corr(), annot=True, cmap="coolwarm", linewidths=0.5, ax=ax)
-        st.pyplot(fig)
-
-        # Visualization 5: Pairplot (For small datasets)
-        if len(df.columns) <= 5:
-            st.subheader("🔗 5. Pairplot (Feature Relationships)")
-            st.pyplot(sns.pairplot(df, diag_kind="kde"))
-
-        # Visualization 6: Bar Chart (Categorical Data)
-        categorical_cols = df.select_dtypes(include=['object']).columns
-        if len(categorical_cols) > 0:
-            st.subheader("📊 6. Bar Chart (Top Categories)")
-            cat_col = st.selectbox("Select a Categorical Column:", categorical_cols)
+            # Visualization 2: Boxplot
+            st.subheader("📦 2. Boxplot (Outliers Detection)")
             fig, ax = plt.subplots()
-            df[cat_col].value_counts().head(10).plot(kind="bar", ax=ax, color="royalblue")
+            sns.boxplot(x=df[selected_column], ax=ax)
             st.pyplot(fig)
 
-        # Visualization 7: Line Chart (Trend Analysis)
-        if len(numeric_cols) > 1:
-            st.subheader("📈 7. Line Chart (Trend Over Time)")
-            time_col = st.selectbox("Select Time Column (if available):", df.columns)
-            if pd.api.types.is_datetime64_any_dtype(df[time_col]):
-                fig, ax = plt.subplots()
-                df.set_index(time_col).plot(ax=ax, legend=False)
+            # Visualization 3: Correlation Heatmap (Only Integer Columns)
+            if len(int_columns) > 1:
+                st.subheader("🔥 3. Correlation Heatmap (Only Integers)")
+                fig, ax = plt.subplots(figsize=(8, 6))
+                sns.heatmap(df[int_columns].corr(), annot=True, cmap="coolwarm", linewidths=0.5, ax=ax)
                 st.pyplot(fig)
 
-        # Visualization 8: Pie Chart
-        st.subheader("🥧 8. Pie Chart (Category Distribution)")
-        if len(categorical_cols) > 0:
-            pie_col = st.selectbox("Select a Column for Pie Chart:", categorical_cols)
+            # Visualization 4: Bar Chart (Top Categories)
+            st.subheader("📊 4. Bar Chart (Frequency of Unique Integer Values)")
             fig, ax = plt.subplots()
-            df[pie_col].value_counts().head(5).plot.pie(autopct="%1.1f%%", ax=ax, startangle=90)
+            df[selected_column].value_counts().head(10).plot(kind="bar", ax=ax, color="royalblue")
             st.pyplot(fig)
 
-        # Visualization 9: Violin Plot (Distribution & Density)
-        st.subheader("🎻 9. Violin Plot (Density & Spread)")
-        fig, ax = plt.subplots()
-        sns.violinplot(x=df[selected_column], ax=ax)
-        st.pyplot(fig)
+            # Visualization 5: Line Chart (Trend Analysis)
+            if len(df[selected_column].unique()) > 10:
+                st.subheader("📈 5. Line Chart (Trend Over Data)")
+                fig, ax = plt.subplots()
+                df[selected_column].plot(ax=ax, legend=False)
+                st.pyplot(fig)
 
-        # Visualization 10: KDE Plot (Density Estimation)
-        st.subheader("📉 10. KDE Plot (Smooth Distribution)")
-        fig, ax = plt.subplots()
-        sns.kdeplot(df[selected_column], shade=True, ax=ax)
-        st.pyplot(fig)
+            # Visualization 6: Violin Plot (Distribution & Density)
+            st.subheader("🎻 6. Violin Plot (Density & Spread)")
+            fig, ax = plt.subplots()
+            sns.violinplot(x=df[selected_column], ax=ax)
+            st.pyplot(fig)
+
+            # Visualization 7: KDE Plot (Density Estimation)
+            st.subheader("📉 7. KDE Plot (Smooth Distribution)")
+            fig, ax = plt.subplots()
+            sns.kdeplot(df[selected_column], shade=True, ax=ax)
+            st.pyplot(fig)
+
+            # Visualization 8: Pairplot (Only Integer Columns)
+            if len(int_columns) > 1 and len(int_columns) <= 5:
+                st.subheader("🔗 8. Pairplot (Feature Relationships)")
+                st.pyplot(sns.pairplot(df[int_columns]))
+
+            # Visualization 9: Scatter Plot (If at least 2 integer columns exist)
+            if len(int_columns) >= 2:
+                st.subheader("📍 9. Scatter Plot (Two Integer Columns)")
+                x_col = st.selectbox("Select X-axis:", int_columns, index=0)
+                y_col = st.selectbox("Select Y-axis:", int_columns, index=1)
+                fig, ax = plt.subplots()
+                sns.scatterplot(x=df[x_col], y=df[y_col], ax=ax)
+                st.pyplot(fig)
+
+            # Visualization 10: Boxplot Comparison (All Integer Columns)
+            if len(int_columns) > 1:
+                st.subheader("📊 10. Boxplot Comparison (Multiple Integer Columns)")
+                fig, ax = plt.subplots()
+                sns.boxplot(data=df[int_columns], ax=ax)
+                st.pyplot(fig)
 
     # Plagiarism & Fact-Checking
     st.subheader("🔍 AI Plagiarism & Fact-Checking")
