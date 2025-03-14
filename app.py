@@ -68,8 +68,21 @@ def extract_text_from_audio(uploaded_file):
     """Converts speech from an audio file (MP3/WAV) to text using Google Speech Recognition."""
     recognizer = sr.Recognizer()
     
-    # Convert file to readable format
-    with sr.AudioFile(io.BytesIO(uploaded_file.read())) as source:
+    # Read the file into a binary stream
+    audio_bytes = uploaded_file.read()
+
+    # Convert MP3 to WAV if needed
+    try:
+        audio = AudioSegment.from_file(io.BytesIO(audio_bytes))  # Auto-detect format
+        audio = audio.set_channels(1).set_frame_rate(16000)  # Convert to mono, 16kHz
+        wav_bytes = io.BytesIO()
+        audio.export(wav_bytes, format="wav")
+        wav_bytes.seek(0)  # Move to start of file
+    except Exception as e:
+        return f"Error processing audio file: {str(e)}"
+
+    # Transcribe the converted WAV file
+    with sr.AudioFile(wav_bytes) as source:
         audio_data = recognizer.record(source)
 
     try:
