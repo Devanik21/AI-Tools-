@@ -381,34 +381,6 @@ def analyze_content(text):
 # Get all tools and categories
 ai_tools, tool_categories = generate_ai_tools()
 
-# Sidebar Search Implementation
-with st.sidebar:
-    st.header("🔍 Search Results")
-    search_term = st.text_input("Enter a search term:", key="search_input")
-
-    if "all_tools" not in st.session_state:
-        st.session_state.all_tools = []  # This should be updated dynamically with your 200+ tools
-
-    def get_filtered_tools(search_term):
-        """Filter tools based on search term dynamically from available tools."""
-        return [tool for tool in st.session_state.all_tools if search_term.lower() in tool.lower()]
-
-    if search_term:
-        filtered_tools = get_filtered_tools(search_term)
-
-        st.markdown(f"### Search Results for '{search_term}' ({len(filtered_tools)})")
-
-        # Create a grid layout for search results
-        cols = st.columns(2)  # Adjust as needed
-        for i, tool in enumerate(filtered_tools[:30]):  # Limit to 30 results
-            with cols[i % 2]:
-                if st.button(tool, key=f"search_{tool}"):
-                    st.session_state.selected_tool = tool
-    else:
-        st.info("Enter a search term above to find specific tools.")
-
-
-
 # Function to load prompt templates (dynamic generation)
 @st.cache_data
 def load_prompt_templates():
@@ -504,8 +476,8 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-tab1, tab3, tab4, tab5 , tab6 = st.tabs([
-    "📋 Categories",
+tab1, tab2, tab3, tab4, tab5 , tab6 = st.tabs([
+    "📋 Categories", "🔍 Search Results", 
     "📚 AI Research Assistant", "🤖 AI Chatbot", "🌍 AI Translator" , "⚡ AI Code Wizard"
 ])
 
@@ -525,6 +497,18 @@ with tab1:
                 if st.button(tool, key=f"cat_{tool}"):
                     st.session_state.selected_tool = tool
 
+with tab2:
+    if search_term:
+        st.markdown(f"### Search Results for '{search_term}' ({len(filtered_tools)})")
+        
+        # Create grid layout for search results
+        cols = st.columns(3)
+        for i, tool in enumerate(filtered_tools[:30]):  # Limit to 30 results
+            with cols[i % 3]:
+                if st.button(tool, key=f"search_{tool}"):
+                    st.session_state.selected_tool = tool
+    else:
+        st.info("Enter a search term in the sidebar to find specific tools.")
 
 with tab3:
     st.header("📚 AI Research Assistant")
@@ -814,8 +798,6 @@ st.markdown(f"### Currently using: **{selected_tool}**")
 
 # Content prompt area
 st.text_area("Extracted Content:", extracted_text[:5000], height=200, key="translator_text_area")
-
-
 
 
 # Advanced options expander
