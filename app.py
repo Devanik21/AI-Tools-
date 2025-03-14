@@ -540,8 +540,8 @@ with tab4:
     st.header("🤖 AI Chatbot with Universal File Upload")
 
     # File uploader
-    uploaded_file = st.file_uploader("Upload a file (PDF, DOCX, CSV, TXT)", 
-                                     type=["pdf", "docx", "csv", "txt"])
+    uploaded_file = st.file_uploader("Upload a file (PDF, DOCX, CSV, TXT, Image, Audio)", 
+                                     type=["pdf", "docx", "csv", "txt", "png", "jpg", "jpeg", "mp3", "wav"])
 
     extracted_text = ""  # Store extracted text
 
