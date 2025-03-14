@@ -130,6 +130,31 @@ def extract_text_from_audio(uploaded_file):
     except sr.RequestError:
         return "Could not request results from Google Speech Recognition."
 
+import fitz  # For PDF processing (PyMuPDF)
+import pandas as pd
+import docx
+
+def extract_text_from_file(uploaded_file):
+    """Extracts text from an uploaded file (PDF, DOCX, TXT, CSV)."""
+    file_type = uploaded_file.type
+    if file_type == "application/pdf":
+        # For PDFs
+        doc = fitz.open(stream=uploaded_file.read(), filetype="pdf")
+        return "\n".join([page.get_text("text") for page in doc])
+    elif file_type in ["application/vnd.openxmlformats-officedocument.wordprocessingml.document"]:
+        # For DOCX files
+        doc = docx.Document(uploaded_file)
+        return "\n".join([para.text for para in doc.paragraphs])
+    elif file_type in ["text/plain"]:
+        # For TXT files
+        return uploaded_file.read().decode("utf-8")
+    elif file_type in ["text/csv"]:
+        # For CSV files
+        df = pd.read_csv(uploaded_file)
+        return df.to_string(index=False)
+    else:
+        return "Unsupported file format."
+
 
 import re
 
