@@ -467,13 +467,19 @@ if not st.session_state.prompt_templates or len(st.session_state.prompt_template
 # Tool Selection Section
 st.header("🛠️ Select Your Creation Tool")
 
-tab_selection = st.selectbox("Choose a Tool:", [
+st.markdown("""
+    <style>
+    div[data-testid="stTabs"] button {
+        font-size: 16px !important;
+        padding: 10px !important;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
+tab1, tab2, tab3, tab4, tab5 = st.tabs([
     "📋 Categories", "🔍 Search Results", 
     "📚 AI Research Assistant", "🤖 AI Chatbot", "🌍 AI Translator"
 ])
-
-st.write(f"### **You selected: {tab_selection}**")
-
 
 
 with tab1:
