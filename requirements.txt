@@ -11,6 +11,7 @@ pandas
 matplotlib
 seaborn
 plotly
+python-docx
 scikit-learn
 pytesseract
 Pillow
