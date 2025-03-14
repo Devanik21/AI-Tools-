@@ -476,7 +476,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-tab1, tab2, tab3, tab4, tab5 = st.tabs([
+tab1, tab2, tab3, tab4, tab5 , tab6 = st.tabs([
     "📋 Categories", "🔍 Search Results", 
     "📚 AI Research Assistant", "🤖 AI Chatbot", "🌍 AI Translator" , "⚡ AI Code Wizard"
 ])
