@@ -29,10 +29,24 @@ if 'prompt_templates' not in st.session_state: st.session_state.prompt_templates
 
 import os
 import subprocess
+import sys
 
-# Check if FFmpeg is installed
-def install_ffmpeg():
+# Function to check & install system dependencies (Tesseract & FFmpeg)
+def install_dependencies():
     try:
+        # Check if Tesseract is installed
+        subprocess.run(["tesseract", "-v"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        print("✅ Tesseract is already installed.")
+    except FileNotFoundError:
+        print("⚠️ Tesseract not found. Installing now...")
+        if os.name == "nt":  # Windows
+            os.system("winget install -e --id UB-Mannheim.TesseractOCR")  # Requires Windows Package Manager
+        elif os.name == "posix":  # Linux & MacOS
+            os.system("sudo apt update && sudo apt install -y tesseract-ocr")
+        print("✅ Tesseract installed successfully.")
+
+    try:
+        # Check if FFmpeg is installed
         subprocess.run(["ffmpeg", "-version"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         print("✅ FFmpeg is already installed.")
     except FileNotFoundError:
@@ -43,8 +57,9 @@ def install_ffmpeg():
             os.system("sudo apt update && sudo apt install -y ffmpeg")
         print("✅ FFmpeg installed successfully.")
 
-# Run FFmpeg check on startup
-install_ffmpeg()
+# Run dependency check on startup
+install_dependencies()
+
 
 
 import pytesseract
