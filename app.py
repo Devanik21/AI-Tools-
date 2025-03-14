@@ -678,6 +678,8 @@ with tab4:
         st.write(response)
 
 
+import langcodes
+
 with tab5:
     st.header("🌍 AI-Powered Document Translator")
 
@@ -693,17 +695,17 @@ with tab5:
         st.success("✅ File processed successfully!")
         st.text_area("Extracted Content:", extracted_text[:5000], height=200, key="translator_extracted_text")
 
-    # Language selection for translation
-    languages = {
-        "English": "en", "French": "fr", "Spanish": "es", "Hindi": "hi",
-        "German": "de", "Chinese": "zh", "Japanese": "ja", "Arabic": "ar"
-    }
-    target_lang = st.selectbox("Select Target Language:", list(languages.keys()), key="translator_language_select")
+    # Fetch 200+ languages dynamically
+    all_languages = {langcodes.Language.make(language).display_name(): language for language in langcodes.LANGUAGE_NAMES}
+    
+    # Streamlit selectbox for choosing target language
+    target_lang = st.selectbox("Select Target Language:", list(all_languages.keys()), key="translator_language_select")
 
     # Translation button and display translation
     if st.button("Translate 🌍", key="translator_translate_btn"):
         if extracted_text:
-            prompt = f"Translate the following text to {target_lang}:\n\n{extracted_text[:5000]}"
+            lang_code = all_languages[target_lang]  # Convert display name to language code
+            prompt = f"Translate the following text to {target_lang} ({lang_code}):\n\n{extracted_text[:5000]}"
             translated_text = generate_ai_content(prompt, st.session_state.api_key, st.session_state.api_model)
             st.success("✅ Translation Complete:")
             st.write(translated_text)
