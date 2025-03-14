@@ -6,6 +6,12 @@ import json
 import time
 import os
 from datetime import datetime
+import fitz  # PyMuPDF for PDF text extraction
+import re
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
 
 # Configure Streamlit page
 st.set_page_config(page_title="Ultimate AI Creator Hub", page_icon="🧠", layout="wide", initial_sidebar_state="expanded")
@@ -51,6 +57,19 @@ def generate_ai_tools():
             "ROI Calculator", "KPI Framework"
         ]
     }
+# Function to extract text from PDF
+def extract_text_from_pdf(pdf_file):
+    """Extracts text from uploaded PDF"""
+    doc = fitz.open(pdf_file)
+    text = "\n".join([page.get_text() for page in doc])
+    return text
+
+# Function to extract citations
+def extract_references(text):
+    """Finds possible reference sections in research papers"""
+    references = re.findall(r"\[.*?\]|\(.*?\)", text)
+    return references if references else ["No references detected."]
+
     
     # Additional categories to reach 2000+ tools
     extended_categories = {
@@ -311,7 +330,8 @@ if not st.session_state.prompt_templates or len(st.session_state.prompt_template
 st.header("🛠️ Select Your Creation Tool")
 
 # Tool selection 
-tab1, tab2 = st.tabs(["📋 Categories", "🔍 Search Results"])
+tab1, tab2, tab3 = st.tabs(["📋 Categories", "🔍 Search Results", "📚 AI Research Assistant"])
+
 
 with tab1:
     selected_category = st.selectbox("Choose a category:", list(tool_categories.keys()))
@@ -340,6 +360,74 @@ with tab2:
                     st.session_state.selected_tool = tool
     else:
         st.info("Enter a search term in the sidebar to find specific tools.")
+
+with tab3:
+    st.header("📚 AI Research Assistant")
+    
+    # Paper Summarization Section
+    st.subheader("📑 Research Paper Summarization")
+    uploaded_file = st.file_uploader("Upload Research Paper (PDF)", type="pdf")
+
+    if uploaded_file:
+        pdf_text = extract_text_from_pdf(uploaded_file)
+        st.text_area("Extracted Text:", pdf_text[:2000], height=200)
+
+        if st.button("Summarize Paper ✨"):
+            summary_prompt = f"Summarize this research paper concisely:\n\n{pdf_text[:3000]}"
+            summary = generate_ai_content(summary_prompt, st.session_state.api_key, st.session_state.api_model)
+            st.success("📑 AI Summary:")
+            st.write(summary)
+
+    # Citation Generator
+    st.subheader("📖 Citation Generator")
+    citation_input = st.text_area("Paste Reference Text:")
+
+    if st.button("Generate Citations"):
+        citations = extract_references(citation_input)
+        citation_prompt = f"Convert these references into IEEE format:\n{citations}"
+        formatted_citations = generate_ai_content(citation_prompt, st.session_state.api_key, st.session_state.api_model)
+        st.success("📜 Formatted Citations:")
+        st.write(formatted_citations)
+
+    # Research Idea Expansion
+    st.subheader("🔬 Research Proposal Generator")
+    research_topic = st.text_input("Enter Research Idea:")
+
+    if st.button("Expand Idea 🚀"):
+        expansion_prompt = f"Develop a structured research proposal for: {research_topic}"
+        research_proposal = generate_ai_content(expansion_prompt, st.session_state.api_key, st.session_state.api_model)
+        st.success("📄 AI-Generated Research Proposal:")
+        st.write(research_proposal)
+
+    # Data Visualization
+    st.subheader("📊 AI Data Analysis & Visualization")
+    data_file = st.file_uploader("Upload CSV for AI Analysis", type="csv")
+
+    if data_file:
+        df = pd.read_csv(data_file)
+        st.write("📌 Data Preview:", df.head())
+
+        if st.button("Generate AI Insights"):
+            insights_prompt = f"Analyze this dataset and provide key insights:\n{df.describe().to_string()}"
+            insights = generate_ai_content(insights_prompt, st.session_state.api_key, st.session_state.api_model)
+            st.success("📈 AI Insights:")
+            st.write(insights)
+
+        st.subheader("🔹 Data Distribution Plot")
+        selected_column = st.selectbox("Choose Column:", df.columns)
+        fig, ax = plt.subplots()
+        sns.histplot(df[selected_column], kde=True, ax=ax)
+        st.pyplot(fig)
+
+    # Plagiarism & Fact-Checking
+    st.subheader("🔍 AI Plagiarism & Fact-Checking")
+    fact_check_input = st.text_area("Paste content to fact-check:")
+
+    if st.button("Check for Accuracy ✅"):
+        fact_check_prompt = f"Verify the accuracy of this information and detect any plagiarism:\n\n{fact_check_input}"
+        fact_check_result = generate_ai_content(fact_check_prompt, st.session_state.api_key, st.session_state.api_model)
+        st.success("🕵️ Fact-Check Report:")
+        st.write(fact_check_result)
 
 # Content generation section
 st.header("✨ Create Content")
