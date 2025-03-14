@@ -26,6 +26,14 @@ if 'api_model' not in st.session_state: st.session_state.api_model = "gemini-2.0
 if 'prompt_templates' not in st.session_state: st.session_state.prompt_templates = {}
 
 
+import re
+
+def extract_references(text):
+    """Extracts possible reference sections from research papers."""
+    references = re.findall(r"\[.*?\]|\(.*?\)", text)
+    return references if references else ["No references detected."]
+
+
 import fitz  # PyMuPDF for PDF text extraction
 
 def extract_text_from_pdf(uploaded_file):
