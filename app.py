@@ -467,7 +467,10 @@ if not st.session_state.prompt_templates or len(st.session_state.prompt_template
 # Tool Selection Section
 st.header("🛠️ Select Your Creation Tool")
 
-tab1, tab2, tab3, tab4, tab5 = st.tabs(["📋 Categories", "🔍 Search Results", "📚 AI Research Assistant", "🤖 AI Chatbot", "🌍 AI Translator"])
+tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
+    "📋 Categories", "🔍 Search Results", "📚 AI Research Assistant", 
+    "🤖 AI Chatbot", "🌍 AI Translator", "⚡ AI Code Wizard"
+])
 
 
 with tab1:
@@ -711,6 +714,47 @@ with tab5:
             st.write(translated_text)
         else:
             st.warning("⚠️ Please upload a document first!")
+
+
+
+with tab6:
+    st.header("⚡ AI Code Wizard")
+
+    # Automatically select the AI model for coding tasks
+    st.session_state.api_model = "gemini-2.0-flash-thinking-exp-01-21"
+
+    # Choose AI task
+    task = st.radio("What do you need help with?", 
+                    ["Generate Code", "Debug Code", "Optimize Code"], 
+                    key="code_task_radio")
+
+    # Code Input (Text or File)
+    code_input = st.text_area("Enter your code or request:", height=200, key="code_input")
+
+    uploaded_code = st.file_uploader("Upload a code file", type=["py", "js", "cpp", "java", "vhdl"], key="code_file_uploader")
+    
+    if uploaded_code:
+        code_input = uploaded_code.read().decode("utf-8")
+        st.text_area("Uploaded Code:", code_input, height=200, key="uploaded_code_display")
+
+    # AI Action Button
+    if st.button("✨ Magic Code AI", key="code_magic_button"):
+        if code_input.strip():
+            if task == "Generate Code":
+                prompt = f"Write clean, efficient code for: {code_input}"
+            elif task == "Debug Code":
+                prompt = f"Find and fix errors in this code:\n\n{code_input}"
+            else:  # Optimize Code
+                prompt = f"Refactor and optimize this code to improve efficiency:\n\n{code_input}"
+
+            # AI Code Processing
+            ai_response = generate_ai_content(prompt, st.session_state.api_key, st.session_state.api_model)
+
+            st.success("✨ AI Code Response:")
+            st.code(ai_response, language="python")  # Adjust language based on task
+        else:
+            st.warning("⚠️ Please enter some code or upload a file.")
+
 
 
 # Content generation section
