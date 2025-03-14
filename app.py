@@ -678,7 +678,7 @@ with tab4:
         st.write(response)
 
 
-import langcodes
+from iso639 import languages
 
 with tab5:
     st.header("🌍 AI-Powered Document Translator")
@@ -696,8 +696,8 @@ with tab5:
         st.text_area("Extracted Content:", extracted_text[:5000], height=200, key="translator_extracted_text")
 
     # Fetch 200+ languages dynamically
-    all_languages = {langcodes.Language.make(language).display_name(): language for language in langcodes.LANGUAGE_NAMES}
-    
+    all_languages = {lang.name: lang.part1 for lang in languages if lang.part1}  # Get name & ISO code
+
     # Streamlit selectbox for choosing target language
     target_lang = st.selectbox("Select Target Language:", list(all_languages.keys()), key="translator_language_select")
 
