@@ -656,47 +656,27 @@ with tab4:
 with tab5:
     st.header("🌍 AI-Powered Document Translator")
 
-    # File uploader
+    # File uploader for document translation
     uploaded_file = st.file_uploader("Upload a document (PDF, DOCX, TXT, CSV)", 
-                                     type=["pdf", "docx", "txt", "csv"])
+                                     type=["pdf", "docx", "txt", "csv"], key="translator_file_uploader")
 
     extracted_text = ""  # Store extracted text
 
-    # Function to extract text from files
-    def extract_text_from_file(uploaded_file):
-        """Extract text based on file type"""
-        import fitz  # PyMuPDF for PDFs
-        import pandas as pd
-        import docx
-
-        file_type = uploaded_file.type
-
-        if file_type == "application/pdf":
-            doc = fitz.open(stream=uploaded_file.read(), filetype="pdf")
-            return "\n".join([page.get_text("text") for page in doc])
-        elif file_type in ["application/vnd.openxmlformats-officedocument.wordprocessingml.document"]:
-            doc = docx.Document(uploaded_file)
-            return "\n".join([para.text for para in doc.paragraphs])
-        elif file_type in ["text/plain"]:
-            return uploaded_file.read().decode("utf-8")
-        elif file_type in ["text/csv"]:
-            df = pd.read_csv(uploaded_file)
-            return df.to_string(index=False)
-        return "Unsupported file format."
-
+    # Process the uploaded file and extract text
     if uploaded_file:
-        extracted_text = extract_text_from_file(uploaded_file)
+        extracted_text = extract_text_from_file(uploaded_file)  # Make sure this function is defined
         st.success("✅ File processed successfully!")
-        st.text_area("Extracted Content:", extracted_text[:5000], height=200)
+        st.text_area("Extracted Content:", extracted_text[:5000], height=200, key="translator_extracted_text")
 
-    # Language selection
+    # Language selection for translation
     languages = {
         "English": "en", "French": "fr", "Spanish": "es", "Hindi": "hi",
         "German": "de", "Chinese": "zh", "Japanese": "ja", "Arabic": "ar"
     }
-    target_lang = st.selectbox("Select Target Language:", list(languages.keys()))
+    target_lang = st.selectbox("Select Target Language:", list(languages.keys()), key="translator_language_select")
 
-    if st.button("Translate 🌍"):
+    # Translation button and display translation
+    if st.button("Translate 🌍", key="translator_translate_btn"):
         if extracted_text:
             prompt = f"Translate the following text to {target_lang}:\n\n{extracted_text[:5000]}"
             translated_text = generate_ai_content(prompt, st.session_state.api_key, st.session_state.api_model)
