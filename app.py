@@ -57,18 +57,6 @@ def generate_ai_tools():
             "ROI Calculator", "KPI Framework"
         ]
     }
-# Function to extract text from PDF
-def extract_text_from_pdf(pdf_file):
-    """Extracts text from uploaded PDF"""
-    doc = fitz.open(pdf_file)
-    text = "\n".join([page.get_text() for page in doc])
-    return text
-
-# Function to extract citations
-def extract_references(text):
-    """Finds possible reference sections in research papers"""
-    references = re.findall(r"\[.*?\]|\(.*?\)", text)
-    return references if references else ["No references detected."]
 
     
     # Additional categories to reach 2000+ tools
