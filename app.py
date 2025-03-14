@@ -381,26 +381,34 @@ def analyze_content(text):
 # Get all tools and categories
 ai_tools, tool_categories = generate_ai_tools()
 
-
-# Sidebar Search
+# Sidebar Search Implementation
 with st.sidebar:
     st.header("🔍 Search Results")
     search_term = st.text_input("Enter a search term:", key="search_input")
 
+    if "all_tools" not in st.session_state:
+        st.session_state.all_tools = []  # This should be updated dynamically with your 200+ tools
+
+    def get_filtered_tools(search_term):
+        """Filter tools based on search term dynamically from available tools."""
+        return [tool for tool in st.session_state.all_tools if search_term.lower() in tool.lower()]
+
     if search_term:
-        # Assuming filtered_tools contains results based on search_term
-        filtered_tools = get_filtered_tools(search_term)  # Implement this function
+        filtered_tools = get_filtered_tools(search_term)
 
         st.markdown(f"### Search Results for '{search_term}' ({len(filtered_tools)})")
-        
-        # Create grid layout for search results
-        cols = st.columns(2)  # Adjust grid layout (2 columns)
-        for i, tool in enumerate(filtered_tools[:20]):  # Limit to 20 results
-            with cols[i % 2]:  
+
+        # Create a grid layout for search results
+        cols = st.columns(2)  # Adjust as needed
+        for i, tool in enumerate(filtered_tools[:30]):  # Limit to 30 results
+            with cols[i % 2]:
                 if st.button(tool, key=f"search_{tool}"):
                     st.session_state.selected_tool = tool
     else:
         st.info("Enter a search term above to find specific tools.")
+
+
+
 # Function to load prompt templates (dynamic generation)
 @st.cache_data
 def load_prompt_templates():
