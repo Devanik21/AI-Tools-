@@ -11,9 +11,6 @@ import re
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-import pytesseract  # OCR for images
-from PIL import Image
-import speech_recognition as sr  # Audio to text
 
 
 # Configure Streamlit page
