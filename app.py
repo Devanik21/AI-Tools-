@@ -49,6 +49,15 @@ def extract_text_from_txt(uploaded_file):
     """Reads and returns text from a TXT file."""
     return uploaded_file.read().decode("utf-8")
 
+
+import docx  # Ensure you have python-docx installed
+
+# Function to extract text from DOCX files
+def extract_text_from_docx(uploaded_file):
+    """Reads and extracts text from a DOCX file."""
+    doc = docx.Document(uploaded_file)
+    return "\n".join([para.text for para in doc.paragraphs])  # Join paragraphs into a single text
+
 import re
 
 def extract_references(text):
