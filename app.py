@@ -25,6 +25,15 @@ if 'history' not in st.session_state: st.session_state.history = []
 if 'api_model' not in st.session_state: st.session_state.api_model = "gemini-2.0-flash"
 if 'prompt_templates' not in st.session_state: st.session_state.prompt_templates = {}
 
+import pytesseract
+from PIL import Image
+
+# Function to extract text from images (OCR)
+def extract_text_from_image(uploaded_file):
+    """Extracts text from an uploaded image file using OCR."""
+    image = Image.open(uploaded_file)
+    text = pytesseract.image_to_string(image)
+    return text if text.strip() else "No text detected in the image."
 
 
 
