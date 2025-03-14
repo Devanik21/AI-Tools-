@@ -36,6 +36,13 @@ def extract_text_from_image(uploaded_file):
     return text if text.strip() else "No text detected in the image."
 
 
+# Function to extract text from CSV files
+def extract_text_from_csv(uploaded_file):
+    """Reads a CSV file and returns its content as a formatted string."""
+    df = pd.read_csv(uploaded_file)
+    return df.to_string(index=False)  # Convert DataFrame to readable text
+
+
 
 # Function to extract text from TXT files
 def extract_text_from_txt(uploaded_file):
