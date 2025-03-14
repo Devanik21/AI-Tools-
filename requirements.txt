@@ -12,3 +12,5 @@ matplotlib
 seaborn
 plotly
 scikit-learn
+pytesseract
+Pillow
