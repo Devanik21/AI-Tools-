@@ -37,6 +37,11 @@ def extract_text_from_image(uploaded_file):
 
 
 
+# Function to extract text from TXT files
+def extract_text_from_txt(uploaded_file):
+    """Reads and returns text from a TXT file."""
+    return uploaded_file.read().decode("utf-8")
+
 import re
 
 def extract_references(text):
