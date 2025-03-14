@@ -25,6 +25,28 @@ if 'history' not in st.session_state: st.session_state.history = []
 if 'api_model' not in st.session_state: st.session_state.api_model = "gemini-2.0-flash"
 if 'prompt_templates' not in st.session_state: st.session_state.prompt_templates = {}
 
+
+
+import os
+import subprocess
+
+# Check if FFmpeg is installed
+def install_ffmpeg():
+    try:
+        subprocess.run(["ffmpeg", "-version"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        print("✅ FFmpeg is already installed.")
+    except FileNotFoundError:
+        print("⚠️ FFmpeg not found. Installing now...")
+        if os.name == "nt":  # Windows
+            os.system("winget install -e --id Gyan.FFmpeg")  # Requires Windows Package Manager
+        elif os.name == "posix":  # Linux & MacOS
+            os.system("sudo apt update && sudo apt install -y ffmpeg")
+        print("✅ FFmpeg installed successfully.")
+
+# Run FFmpeg check on startup
+install_ffmpeg()
+
+
 import pytesseract
 from PIL import Image
 
