@@ -714,7 +714,8 @@ selected_tool = st.session_state.get('selected_tool', 'Smart Content Creator')
 st.markdown(f"### Currently using: **{selected_tool}**")
 
 # Content prompt area
-user_prompt = st.text_area("What would you like to create?", height=100)
+st.text_area("Extracted Content:", extracted_text[:5000], height=200, key="translator_text_area")
+
 
 # Advanced options expander
 # Advanced options expander
