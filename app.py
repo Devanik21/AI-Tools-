@@ -409,7 +409,7 @@ with tab3:
 
     if uploaded_file:
         pdf_text = extract_text_from_pdf(uploaded_file)
-        st.text_area("Extracted Text:", pdf_text[:2000], height=200)
+        st.text_area("Extracted Text:", pdf_text[:6000], height=500)
 
         if st.button("Summarize Paper ✨"):
             summary_prompt = f"Summarize this research paper concisely:\n\n{pdf_text[:3000]}"
