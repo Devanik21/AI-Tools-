@@ -30,55 +30,6 @@ if 'api_model' not in st.session_state: st.session_state.api_model = "gemini-2.0
 if 'prompt_templates' not in st.session_state: st.session_state.prompt_templates = {}
 
 
-def generate_ai_content(prompt, api_key, model_name):
-    try:
-        genai.configure(api_key=api_key)
-        model = genai.GenerativeModel(model_name)
-        with st.spinner("🤖 AI is thinking..."):
-            generation_config = {"temperature": 0.7, "top_p": 0.95, "top_k": 40, "max_output_tokens": 2048}
-            response = model.generate_content(prompt, generation_config=generation_config)
-            return response.text
-    except Exception as e:
-        return f"Error: {str(e)}"
-
-# Function to extract text from PDF
-def extract_text_from_pdf(uploaded_file):
-    with fitz.open(stream=uploaded_file.read(), filetype="pdf") as doc:
-        text = "\n".join([page.get_text("text") for page in doc])
-    return text
-
-# Function to extract text from DOCX
-def extract_text_from_docx(uploaded_file):
-    doc = docx.Document(uploaded_file)
-    return "\n".join([para.text for para in doc.paragraphs])
-
-# Function to extract text from CSV
-def extract_text_from_csv(uploaded_file):
-    df = pd.read_csv(uploaded_file)
-    return df.to_string()
-
-# Function to extract text from TXT
-def extract_text_from_txt(uploaded_file):
-    return uploaded_file.read().decode("utf-8")
-
-# Function to extract text from Images (OCR)
-def extract_text_from_image(uploaded_file):
-    image = Image.open(uploaded_file)
-    text = pytesseract.image_to_string(image)
-    return text
-
-# Function to transcribe Audio to text
-def extract_text_from_audio(uploaded_file):
-    recognizer = sr.Recognizer()
-    with sr.AudioFile(uploaded_file) as source:
-        audio_data = recognizer.record(source)
-        try:
-            text = recognizer.recognize_google(audio_data)
-            return text
-        except sr.UnknownValueError:
-            return "Could not understand the audio."
-        except sr.RequestError:
-            return "Could not request results from Google Speech Recognition."
 
 
 import re
