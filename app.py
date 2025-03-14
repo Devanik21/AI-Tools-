@@ -58,6 +58,29 @@ def extract_text_from_docx(uploaded_file):
     doc = docx.Document(uploaded_file)
     return "\n".join([para.text for para in doc.paragraphs])  # Join paragraphs into a single text
 
+
+import speech_recognition as sr
+from pydub import AudioSegment
+import io
+
+# Function to extract text from audio files
+def extract_text_from_audio(uploaded_file):
+    """Converts speech from an audio file (MP3/WAV) to text using Google Speech Recognition."""
+    recognizer = sr.Recognizer()
+    
+    # Convert file to readable format
+    with sr.AudioFile(io.BytesIO(uploaded_file.read())) as source:
+        audio_data = recognizer.record(source)
+
+    try:
+        text = recognizer.recognize_google(audio_data)  # Uses Google Speech Recognition API
+        return text if text.strip() else "No speech detected in the audio."
+    except sr.UnknownValueError:
+        return "Could not understand the audio."
+    except sr.RequestError:
+        return "Could not request results from Google Speech Recognition."
+
+
 import re
 
 def extract_references(text):
