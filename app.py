@@ -60,61 +60,7 @@ def install_dependencies():
 # Run dependency check on startup
 install_dependencies()
 
-def extract_text_from_file(uploaded_file):
-    """
-    Extract text from various file formats (PDF, DOCX, TXT, CSV)
-    
-    Args:
-        uploaded_file: The file uploaded through st.file_uploader
-        
-    Returns:
-        str: Extracted text content from the file
-    """
-    import io
-    import pandas as pd
-    
-    file_type = uploaded_file.name.split('.')[-1].lower()
-    
-    try:
-        # TXT files
-        if file_type == 'txt':
-            content = uploaded_file.getvalue().decode('utf-8')
-            return content
-            
-        # CSV files
-        elif file_type == 'csv':
-            df = pd.read_csv(uploaded_file)
-            return df.to_string()
-            
-        # PDF files
-        elif file_type == 'pdf':
-            try:
-                import PyPDF2
-                pdf_reader = PyPDF2.PdfReader(io.BytesIO(uploaded_file.getvalue()))
-                text = ""
-                for page_num in range(len(pdf_reader.pages)):
-                    text += pdf_reader.pages[page_num].extract_text()
-                return text
-            except ImportError:
-                return "Error: PyPDF2 is not installed. Install with: pip install PyPDF2"
-                
-        # DOCX files
-        elif file_type == 'docx':
-            try:
-                import docx
-                doc = docx.Document(io.BytesIO(uploaded_file.getvalue()))
-                text = ""
-                for para in doc.paragraphs:
-                    text += para.text + "\n"
-                return text
-            except ImportError:
-                return "Error: python-docx is not installed. Install with: pip install python-docx"
-                
-        else:
-            return f"Unsupported file type: {file_type}"
-            
-    except Exception as e:
-        return f"Error processing file: {str(e)}"
+
 
 import pytesseract
 from PIL import Image
@@ -718,153 +664,28 @@ with tab5:
 
     # Process the uploaded file and extract text
     if uploaded_file:
-        extracted_text = extract_text_from_file(uploaded_file)
+        extracted_text = extract_text_from_file(uploaded_file)  # Make sure this function is defined
         st.success("✅ File processed successfully!")
         st.text_area("Extracted Content:", extracted_text[:5000], height=200, key="translator_extracted_text")
 
-    # Expanded language selection for translation (300+ languages)
+    # Language selection for translation
     languages = {
-        # Common languages
         "English": "en", "French": "fr", "Spanish": "es", "Hindi": "hi",
-        "German": "de", "Chinese (Simplified)": "zh-CN", "Japanese": "ja", "Arabic": "ar",
-        "Russian": "ru", "Portuguese": "pt", "Italian": "it", "Korean": "ko",
-        
-        # European languages
-        "Albanian": "sq", "Armenian": "hy", "Azerbaijani": "az", "Basque": "eu",
-        "Belarusian": "be", "Bosnian": "bs", "Bulgarian": "bg", "Catalan": "ca",
-        "Croatian": "hr", "Czech": "cs", "Danish": "da", "Dutch": "nl",
-        "Estonian": "et", "Finnish": "fi", "Galician": "gl", "Georgian": "ka",
-        "Greek": "el", "Hungarian": "hu", "Icelandic": "is", "Irish": "ga",
-        "Latvian": "lv", "Lithuanian": "lt", "Luxembourgish": "lb", "Macedonian": "mk", 
-        "Maltese": "mt", "Moldavian": "mo", "Norwegian": "no", "Occitan": "oc",
-        "Polish": "pl", "Romanian": "ro", "Romansh": "rm", "Sardinian": "sc",
-        "Serbian": "sr", "Slovak": "sk", "Slovenian": "sl", "Swedish": "sv",
-        "Turkish": "tr", "Ukrainian": "uk", "Welsh": "cy",
-        
-        # Asian languages
-        "Assamese": "as", "Baluchi": "bal", "Bengali": "bn", "Bhojpuri": "bho", 
-        "Bislama": "bi", "Brahui": "brh", "Burmese": "my", "Cebuano": "ceb", 
-        "Chinese (Traditional)": "zh-TW", "Chinese (Cantonese)": "yue", "Chuukese": "chk",
-        "Dhivehi": "dv", "Dzongkha": "dz", "Filipino/Tagalog": "fil", "Fijian": "fj",
-        "Gujarati": "gu", "Hmong": "hmn", "Indonesian": "id", "Javanese": "jv",
-        "Kannada": "kn", "Kashmiri": "ks", "Kazakh": "kk", "Khasi": "kha", 
-        "Khmer": "km", "Konkani": "kok", "Kyrgyz": "ky", "Lao": "lo",
-        "Lepcha": "lep", "Maithili": "mai", "Malay": "ms", "Malayalam": "ml", 
-        "Manipuri": "mni", "Marathi": "mr", "Mizo": "lus", "Mongolian": "mn",
-        "Nepali": "ne", "Niuean": "niu", "Odia": "or", "Palauan": "pau",
-        "Pampanga": "pam", "Punjabi": "pa", "Rohingya": "rhg", "Samoan": "sm",
-        "Santali": "sat", "Sindhi": "sd", "Sinhala": "si", "Tajik": "tg",
-        "Tamil": "ta", "Telugu": "te", "Tetum": "tet", "Thai": "th", 
-        "Tibetan": "bo", "Tokpisin": "tpi", "Tongan": "to", "Tulu": "tcy",
-        "Turkmen": "tk", "Tuvaluan": "tvl", "Urdu": "ur", "Uyghur": "ug",
-        "Uzbek": "uz", "Vietnamese": "vi",
-        
-        # Middle Eastern languages
-        "Amharic": "am", "Arabic (Egyptian)": "arz", "Arabic (Gulf)": "afb", 
-        "Arabic (Levantine)": "apc", "Arabic (Maghrebi)": "ary", "Arabic (Mesopotamian)": "acm",
-        "Aramaic": "arc", "Assyrian": "aii", "Dari": "prs", "Farsi/Persian": "fa",
-        "Hebrew": "he", "Kurdish (Kurmanji)": "kmr", "Kurdish (Sorani)": "ckb", 
-        "Pashto": "ps", "Phoenician": "phn", "Syriac": "syr", "Yiddish": "yi",
-        
-        # African languages
-        "Afrikaans": "af", "Akan": "ak", "Amharic": "am", "Bambara": "bm",
-        "Bemba": "bem", "Berber": "ber", "Chichewa": "ny", "Efik": "efi",
-        "Ewe": "ee", "Fulani": "ff", "Ga": "gaa", "Ganda": "lg",
-        "Hausa": "ha", "Igbo": "ig", "Kamba": "kam", "Kikuyu": "ki",
-        "Kinyarwanda": "rw", "Kirundi": "rn", "Kongo": "kg", "Lingala": "ln",
-        "Luba-Katanga": "lu", "Luganda": "lg", "Luo": "luo", "Malagasy": "mg",
-        "Mende": "men", "Ndebele": "nd", "Oromo": "om", "Sesotho": "st",
-        "Shona": "sn", "Somali": "so", "Swahili": "sw", "Swati": "ss",
-        "Tigrinya": "ti", "Tsonga": "ts", "Tswana": "tn", "Twi": "tw",
-        "Umbundu": "umb", "Wolof": "wo", "Xhosa": "xh", "Yoruba": "yo", "Zulu": "zu",
-        
-        # Indigenous American languages
-        "Aymara": "ay", "Guarani": "gn", "Inuktitut": "iu", "Kalaallisut": "kl",
-        "Mapudungun": "arn", "Mohawk": "moh", "Nahuatl": "nah", "Navajo": "nv",
-        "Quechua": "qu", "Yucatec Maya": "yua",
-        
-        # Pacific languages
-        "Bislama": "bi", "Chamorro": "ch", "Fijian": "fj", "Gilbertese": "gil",
-        "Hawaiian": "haw", "Kosraean": "kos", "Maori": "mi", "Marshallese": "mh",
-        "Nauruan": "na", "Palauan": "pau", "Rarotongan": "rar", "Tok Pisin": "tpi",
-        
-        # Constructed languages
-        "Esperanto": "eo", "Ido": "io", "Interlingua": "ia", "Interlingue": "ie",
-        "Klingon": "tlh", "Lojban": "jbo", "Toki Pona": "tok", "Volapük": "vo",
-        
-        # Historical & Classical languages
-        "Ancient Greek": "grc", "Avestan": "ae", "Coptic": "cop", "Gothic": "got",
-        "Latin": "la", "Middle English": "enm", "Old Church Slavonic": "chu", 
-        "Old English": "ang", "Old French": "fro", "Old Norse": "non", "Pali": "pi",
-        "Sanskrit": "sa"
+        "German": "de", "Chinese": "zh", "Japanese": "ja", "Arabic": "ar"
     }
-    
-    # Create columns for language selection and search
-    col1, col2 = st.columns([2, 1])
-    
-    with col1:
-        # Add a search box for languages
-        lang_search = st.text_input("Search language:", key="translator_language_search")
-        
-        # Filter languages based on search
-        if lang_search:
-            filtered_languages = {k: v for k, v in languages.items() 
-                                 if lang_search.lower() in k.lower()}
-        else:
-            filtered_languages = languages
-            
-        target_lang = st.selectbox("Select Target Language:", 
-                                 list(filtered_languages.keys()), 
-                                 key="translator_language_select")
-    
-    with col2:
-        st.write("## Language Count")
-        st.write(f"**{len(languages)} languages available**")
-        
-        # Add an option to see all available languages
-        if st.button("View All Languages", key="view_all_langs"):
-            st.write("### All Available Languages:")
-            # Display in 3 columns for better space usage
-            lang_cols = st.columns(3)
-            for i, lang in enumerate(sorted(languages.keys())):
-                lang_cols[i % 3].write(f"- {lang}")
+    target_lang = st.selectbox("Select Target Language:", list(languages.keys()), key="translator_language_select")
 
     # Translation button and display translation
     if st.button("Translate 🌍", key="translator_translate_btn"):
         if extracted_text:
-            lang_code = languages[target_lang]
-            prompt = f"Translate the following text to {target_lang} (language code: {lang_code}):\n\n{extracted_text[:5000]}"
-            
-            with st.spinner(f"Translating to {target_lang}..."):
-                translated_text = generate_ai_content(prompt, st.session_state.api_key, st.session_state.api_model)
-            
-            st.success(f"✅ Translation to {target_lang} Complete:")
-            
-            # Display translation with option to download
-            st.text_area("Translated Text:", translated_text, height=300, key="translated_output")
-            
-            # Generate download button for the translation
-            st.download_button(
-                label="Download Translation",
-                data=translated_text,
-                file_name=f"translation_{target_lang.lower().replace(' ', '_')}.txt",
-                mime="text/plain",
-                key="download_translation"
-            )
+            prompt = f"Translate the following text to {target_lang}:\n\n{extracted_text[:5000]}"
+            translated_text = generate_ai_content(prompt, st.session_state.api_key, st.session_state.api_model)
+            st.success("✅ Translation Complete:")
+            st.write(translated_text)
         else:
             st.warning("⚠️ Please upload a document first!")
-            
-    # Add information about translation capabilities
-    with st.expander("About Translation Capabilities"):
-        st.write("""
-        - **Document Translation**: Supports PDF, DOCX, TXT, and CSV files
-        - **300+ Languages**: Choose from over 300 world languages
-        - **AI-Powered**: Uses advanced AI models for high-quality translation
-        - **Context-Aware**: Maintains context and meaning across languages
-        - **Formatting Preservation**: Attempts to maintain original document formatting
-        """)
-        
-        
+
+
 # Content generation section
 st.header("✨ Create Content")
 # Add this under the 'Generate Content' section
