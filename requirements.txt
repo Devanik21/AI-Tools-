@@ -15,5 +15,3 @@ python-docx
 scikit-learn
 pytesseract
 Pillow
-speechrecognition 
-pydub
