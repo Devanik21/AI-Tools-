@@ -25,6 +25,18 @@ if 'history' not in st.session_state: st.session_state.history = []
 if 'api_model' not in st.session_state: st.session_state.api_model = "gemini-2.0-flash"
 if 'prompt_templates' not in st.session_state: st.session_state.prompt_templates = {}
 
+
+import fitz  # PyMuPDF for PDF text extraction
+
+def extract_text_from_pdf(uploaded_file):
+    """Extracts text from an uploaded PDF file."""
+    try:
+        with fitz.open(stream=uploaded_file.read(), filetype="pdf") as doc:
+            text = "\n".join([page.get_text("text") for page in doc])
+        return text
+    except Exception as e:
+        return f"Error extracting text: {str(e)}"
+
 # Function to generate expanded AI tools list
 @st.cache_data
 def generate_ai_tools():
