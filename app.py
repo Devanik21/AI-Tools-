@@ -11,6 +11,10 @@ import re
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+import docx
+import pytesseract  # OCR for images
+from PIL import Image
+import speech_recognition as sr  # Audio to text
 
 
 # Configure Streamlit page
@@ -24,6 +28,57 @@ if 'api_key' not in st.session_state: st.session_state.api_key = ""
 if 'history' not in st.session_state: st.session_state.history = []
 if 'api_model' not in st.session_state: st.session_state.api_model = "gemini-2.0-flash"
 if 'prompt_templates' not in st.session_state: st.session_state.prompt_templates = {}
+
+
+def generate_ai_content(prompt, api_key, model_name):
+    try:
+        genai.configure(api_key=api_key)
+        model = genai.GenerativeModel(model_name)
+        with st.spinner("🤖 AI is thinking..."):
+            generation_config = {"temperature": 0.7, "top_p": 0.95, "top_k": 40, "max_output_tokens": 2048}
+            response = model.generate_content(prompt, generation_config=generation_config)
+            return response.text
+    except Exception as e:
+        return f"Error: {str(e)}"
+
+# Function to extract text from PDF
+def extract_text_from_pdf(uploaded_file):
+    with fitz.open(stream=uploaded_file.read(), filetype="pdf") as doc:
+        text = "\n".join([page.get_text("text") for page in doc])
+    return text
+
+# Function to extract text from DOCX
+def extract_text_from_docx(uploaded_file):
+    doc = docx.Document(uploaded_file)
+    return "\n".join([para.text for para in doc.paragraphs])
+
+# Function to extract text from CSV
+def extract_text_from_csv(uploaded_file):
+    df = pd.read_csv(uploaded_file)
+    return df.to_string()
+
+# Function to extract text from TXT
+def extract_text_from_txt(uploaded_file):
+    return uploaded_file.read().decode("utf-8")
+
+# Function to extract text from Images (OCR)
+def extract_text_from_image(uploaded_file):
+    image = Image.open(uploaded_file)
+    text = pytesseract.image_to_string(image)
+    return text
+
+# Function to transcribe Audio to text
+def extract_text_from_audio(uploaded_file):
+    recognizer = sr.Recognizer()
+    with sr.AudioFile(uploaded_file) as source:
+        audio_data = recognizer.record(source)
+        try:
+            text = recognizer.recognize_google(audio_data)
+            return text
+        except sr.UnknownValueError:
+            return "Could not understand the audio."
+        except sr.RequestError:
+            return "Could not request results from Google Speech Recognition."
 
 
 import re
@@ -337,8 +392,7 @@ if not st.session_state.prompt_templates or len(st.session_state.prompt_template
 # Tool Selection Section
 st.header("🛠️ Select Your Creation Tool")
 
-# Tool selection 
-tab1, tab2, tab3 = st.tabs(["📋 Categories", "🔍 Search Results", "📚 AI Research Assistant"])
+tab1, tab2, tab3, tab4 = st.tabs(["📋 Categories", "🔍 Search Results", "📚 AI Research Assistant", "🤖 AI Chatbot"])
 
 
 with tab1:
@@ -504,6 +558,49 @@ with tab3:
         fact_check_result = generate_ai_content(fact_check_prompt, st.session_state.api_key, st.session_state.api_model)
         st.success("🕵️ Fact-Check Report:")
         st.write(fact_check_result)
+
+with tab4:
+    st.header("🤖 AI Chatbot with Universal File Upload")
+
+    # File uploader
+    uploaded_file = st.file_uploader("Upload a file (PDF, DOCX, CSV, TXT, Image, Audio)", 
+                                     type=["pdf", "docx", "csv", "txt", "png", "jpg", "jpeg", "mp3", "wav"])
+
+    extracted_text = ""  # Store extracted text
+
+    # Process uploaded file
+    if uploaded_file:
+        file_type = uploaded_file.type
+
+        if file_type == "application/pdf":
+            extracted_text = extract_text_from_pdf(uploaded_file)
+        elif file_type in ["application/vnd.openxmlformats-officedocument.wordprocessingml.document"]:
+            extracted_text = extract_text_from_docx(uploaded_file)
+        elif file_type in ["text/plain"]:
+            extracted_text = extract_text_from_txt(uploaded_file)
+        elif file_type in ["text/csv"]:
+            extracted_text = extract_text_from_csv(uploaded_file)
+        elif file_type in ["image/png", "image/jpeg"]:
+            extracted_text = extract_text_from_image(uploaded_file)
+        elif file_type in ["audio/mpeg", "audio/wav"]:
+            extracted_text = extract_text_from_audio(uploaded_file)
+
+        st.success("✅ File processed successfully!")
+        st.text_area("Extracted Content:", extracted_text[:2000], height=200)  # Preview first 2000 characters
+
+    # AI Chatbot Section
+    st.subheader("💬 Chat with AI")
+    user_input = st.text_area("Ask AI a question (Optional):")
+
+    if st.button("Ask AI 🤖"):
+        if extracted_text:
+            prompt = f"Based on this file's content:\n{extracted_text[:3000]}\n\nAnswer the user's question: {user_input}"
+        else:
+            prompt = user_input  # If no file, just use user query
+
+        response = generate_ai_content(prompt, st.session_state.api_key, st.session_state.api_model)
+        st.success("🧠 AI Response:")
+        st.write(response)
 
 # Content generation section
 st.header("✨ Create Content")
