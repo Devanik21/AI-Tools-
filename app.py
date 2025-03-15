@@ -661,15 +661,14 @@ with tab3:
             st.button("Save to Projects", help="Save this proposal to your projects collection")
 
 
-def tab4():
+with tab4:
     st.header("🤖 AI Chatbot with Universal File Upload")
 
     # File uploader
     uploaded_file = st.file_uploader("Upload a file (PDF, DOCX, CSV, TXT, Audio)", 
-                                    type=["pdf", "docx", "csv", "txt", "mp3", "wav"])
+                                     type=["pdf", "docx", "csv", "txt",  "mp3", "wav"])
 
     extracted_text = ""  # Store extracted text
-    df = None  # Store dataframe for CSV files
 
     # Process uploaded file
     if uploaded_file:
@@ -682,202 +681,14 @@ def tab4():
         elif file_type in ["text/plain"]:
             extracted_text = extract_text_from_txt(uploaded_file)
         elif file_type in ["text/csv"]:
-            df = pd.read_csv(uploaded_file)
             extracted_text = extract_text_from_csv(uploaded_file)
-            st.success("✅ CSV file processed successfully!")
         elif file_type in ["image/png", "image/jpeg"]:
             extracted_text = extract_text_from_image(uploaded_file)
         elif file_type in ["audio/mpeg", "audio/wav"]:
             extracted_text = extract_text_from_audio(uploaded_file)
 
         st.success("✅ File processed successfully!")
-        
-        # Show preview of extracted text
-        if extracted_text:
-            st.text_area("Extracted Content:", extracted_text[:2000], height=200)
-
-        # CSV Visualization Section
-        if file_type == "text/csv" and df is not None:
-            st.subheader("📊 CSV Data Visualization")
-            
-            # Display the dataframe
-            st.dataframe(df.head())
-            
-            # Get all columns and numeric columns
-            all_columns = df.columns.tolist()
-            numeric_columns = df.select_dtypes(include=['number']).columns.tolist()
-            
-            # Visualization type selector
-            viz_type = st.selectbox(
-                "Select Visualization Type",
-                ["Line Chart", "Bar Chart", "Scatter Plot", "Histogram", "Box Plot", 
-                 "Violin Plot", "Heatmap", "Pair Plot", "Area Chart", "Bubble Chart",
-                 "Pie Chart", "Radar Chart", "Sunburst Chart", "Tree Map", "Funnel Chart",
-                 "Density Plot", "Contour Plot", "3D Scatter", "Parallel Coordinates", 
-                 "Sankey Diagram", "Choropleth Map", "Time Series", "Candlestick Chart",
-                 "Donut Chart", "Strip Plot", "Swarm Plot", "Joint Plot", "Facet Grid",
-                 "Stacked Bar Chart", "Grouped Bar Chart"]
-            )
-            
-            # Column selectors based on visualization type
-            if viz_type in ["Heatmap", "Pair Plot", "Parallel Coordinates", "Correlation Matrix"]:
-                selected_columns = st.multiselect("Select columns for visualization", numeric_columns, default=numeric_columns[:min(5, len(numeric_columns))])
-            elif viz_type in ["Pie Chart", "Donut Chart", "Funnel Chart"]:
-                label_col = st.selectbox("Select label column", all_columns)
-                value_col = st.selectbox("Select value column", numeric_columns)
-                selected_columns = [label_col, value_col]
-            elif viz_type in ["Scatter Plot", "Bubble Chart", "Joint Plot"]:
-                x_axis = st.selectbox("Select X-axis", all_columns)
-                y_axis = st.selectbox("Select Y-axis", numeric_columns)
-                if viz_type == "Bubble Chart":
-                    size_col = st.selectbox("Select size column", numeric_columns)
-                    selected_columns = [x_axis, y_axis, size_col]
-                else:
-                    selected_columns = [x_axis, y_axis]
-            elif viz_type in ["3D Scatter"]:
-                x_axis = st.selectbox("Select X-axis", numeric_columns)
-                y_axis = st.selectbox("Select Y-axis", numeric_columns, index=min(1, len(numeric_columns)-1))
-                z_axis = st.selectbox("Select Z-axis", numeric_columns, index=min(2, len(numeric_columns)-1))
-                selected_columns = [x_axis, y_axis, z_axis]
-            elif viz_type in ["Histogram", "Density Plot", "Box Plot", "Violin Plot", "Strip Plot", "Swarm Plot"]:
-                selected_column = st.selectbox("Select column", numeric_columns)
-                group_by = st.selectbox("Group by (optional)", ["None"] + [col for col in all_columns if col not in numeric_columns or df[col].nunique() < 10])
-                selected_columns = [selected_column, None if group_by == "None" else group_by]
-            else:  # Line, Bar, Area charts
-                x_axis = st.selectbox("Select X-axis", all_columns)
-                y_axes = st.multiselect("Select Y-axis (multiple for comparison)", numeric_columns, default=[numeric_columns[0]] if numeric_columns else [])
-                selected_columns = [x_axis] + y_axes
-            
-            # Additional customization options
-            with st.expander("Customization Options"):
-                chart_title = st.text_input("Chart Title", f"{viz_type} of {', '.join(selected_columns[:2])}")
-                color_theme = st.selectbox("Color Theme", ["viridis", "plasma", "inferno", "magma", "cividis", "Blues", "Greens", "Reds", "Purples", "Set1", "Set2", "Set3", "Pastel1", "Pastel2"])
-                show_legend = st.checkbox("Show Legend", True)
-                
-                if viz_type in ["Line Chart", "Bar Chart", "Area Chart"]:
-                    stacked = st.checkbox("Stacked", False)
-                
-                if viz_type in ["Scatter Plot", "Bubble Chart", "3D Scatter"]:
-                    point_size = st.slider("Point Size", 10, 200, 80)
-                    
-                if viz_type in ["Heatmap"]:
-                    heatmap_cmap = st.selectbox("Heatmap Colormap", ["viridis", "plasma", "inferno", "magma", "cividis", "Blues", "Greens", "Reds"])
-                    
-            # Generate visualization button
-            if st.button("Generate Visualization"):
-                try:
-                    fig = plt.figure(figsize=(10, 6))
-                    
-                    # Create different visualizations based on type
-                    if viz_type == "Line Chart":
-                        for y_col in selected_columns[1:]:
-                            plt.plot(df[selected_columns[0]], df[y_col], marker='o', label=y_col)
-                        plt.xlabel(selected_columns[0])
-                        plt.ylabel("Value")
-                        if show_legend:
-                            plt.legend()
-                        plt.title(chart_title)
-                        st.pyplot(fig)
-                    
-                    elif viz_type == "Bar Chart":
-                        if len(selected_columns) > 1:
-                            if stacked:
-                                df.set_index(selected_columns[0])[selected_columns[1:]].plot(kind='bar', stacked=True, colormap=color_theme, figsize=(10, 6))
-                            else:
-                                df.set_index(selected_columns[0])[selected_columns[1:]].plot(kind='bar', colormap=color_theme, figsize=(10, 6))
-                            plt.title(chart_title)
-                            if show_legend:
-                                plt.legend(title=None)
-                            plt.xlabel(selected_columns[0])
-                            plt.ylabel("Value")
-                            st.pyplot(fig)
-                    
-                    elif viz_type == "Scatter Plot":
-                        plt.scatter(df[selected_columns[0]], df[selected_columns[1]], s=point_size, alpha=0.7, c=range(len(df)), cmap=color_theme)
-                        plt.colorbar(label='Index')
-                        plt.xlabel(selected_columns[0])
-                        plt.ylabel(selected_columns[1])
-                        plt.title(chart_title)
-                        st.pyplot(fig)
-                    
-                    elif viz_type == "Histogram":
-                        if selected_columns[1] is None:  # No grouping
-                            plt.hist(df[selected_columns[0]], bins=20, alpha=0.7, color='skyblue')
-                        else:  # With grouping
-                            for val in df[selected_columns[1]].unique():
-                                subset = df[df[selected_columns[1]] == val]
-                                plt.hist(subset[selected_columns[0]], bins=20, alpha=0.5, label=str(val))
-                            if show_legend:
-                                plt.legend(title=selected_columns[1])
-                        plt.xlabel(selected_columns[0])
-                        plt.ylabel("Frequency")
-                        plt.title(chart_title)
-                        st.pyplot(fig)
-                    
-                    elif viz_type == "Box Plot":
-                        if selected_columns[1] is None:  # No grouping
-                            sns.boxplot(y=df[selected_columns[0]], palette=color_theme)
-                        else:  # With grouping
-                            sns.boxplot(x=selected_columns[1], y=selected_columns[0], data=df, palette=color_theme)
-                        plt.title(chart_title)
-                        st.pyplot(fig)
-                    
-                    elif viz_type == "Heatmap":
-                        if len(selected_columns) > 1:
-                            corr_matrix = df[selected_columns].corr()
-                            sns.heatmap(corr_matrix, annot=True, cmap=heatmap_cmap, fmt=".2f", linewidths=0.5)
-                            plt.title(chart_title)
-                            st.pyplot(fig)
-                        else:
-                            st.warning("Please select at least 2 numeric columns for a heatmap.")
-                    
-                    elif viz_type == "Pie Chart":
-                        plt.pie(df[selected_columns[1]], labels=df[selected_columns[0]], autopct='%1.1f%%', startangle=90, shadow=True)
-                        plt.axis('equal')
-                        plt.title(chart_title)
-                        st.pyplot(fig)
-                    
-                    elif viz_type == "Area Chart":
-                        if len(selected_columns) > 1:
-                            df.set_index(selected_columns[0])[selected_columns[1:]].plot(kind='area', stacked=stacked, colormap=color_theme, alpha=0.7, figsize=(10, 6))
-                            plt.title(chart_title)
-                            if show_legend:
-                                plt.legend(title=None)
-                            plt.xlabel(selected_columns[0])
-                            plt.ylabel("Value")
-                            st.pyplot(fig)
-                    
-                    elif viz_type == "Violin Plot":
-                        if selected_columns[1] is None:  # No grouping
-                            sns.violinplot(y=df[selected_columns[0]], palette=color_theme)
-                        else:  # With grouping
-                            sns.violinplot(x=selected_columns[1], y=selected_columns[0], data=df, palette=color_theme)
-                        plt.title(chart_title)
-                        st.pyplot(fig)
-                    
-                    elif viz_type == "Pair Plot":
-                        if len(selected_columns) > 1:
-                            pair_fig = sns.pairplot(df[selected_columns], diag_kind='hist', kind='scatter')
-                            pair_fig.fig.suptitle(chart_title, y=1.02)
-                            st.pyplot(pair_fig.fig)
-                        else:
-                            st.warning("Please select at least 2 columns for a pair plot.")
-                    
-                    elif viz_type == "Bubble Chart":
-                        plt.scatter(df[selected_columns[0]], df[selected_columns[1]], s=df[selected_columns[2]]*point_size/max(df[selected_columns[2]]), alpha=0.7, c=range(len(df)), cmap=color_theme)
-                        plt.colorbar(label='Index')
-                        plt.xlabel(selected_columns[0])
-                        plt.ylabel(selected_columns[1])
-                        plt.title(chart_title)
-                        st.pyplot(fig)
-                    
-                    # Add more visualizations as needed...
-                    
-                    else:
-                        st.info(f"Visualization for {viz_type} is under development.")
-                
-                except Exception as e:
-                    st.error(f"Error generating visualization: {e}")
+        st.text_area("Extracted Content:", extracted_text[:2000], height=200)  # Preview first 2000 characters
 
     # AI Chatbot Section
     st.subheader("💬 Chat with AI")
@@ -892,6 +703,7 @@ def tab4():
         response = generate_ai_content(prompt, st.session_state.api_key, st.session_state.api_model)
         st.success("🧠 AI Response:")
         st.write(response)
+
 
 from iso639 import languages
 
