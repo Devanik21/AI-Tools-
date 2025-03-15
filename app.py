@@ -949,7 +949,7 @@ with tab4:
                                          background_color='white', 
                                          colormap='viridis', 
                                          max_words=200)
-                            wc.generate(extracted_text)
+                            wc.generate(" ".join(filtered_words))
                             
                             # Display
                             fig, ax = plt.subplots(figsize=(10, 5))
