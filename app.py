@@ -576,20 +576,22 @@ with tab3:
             citation_input = extract_text_from_pdf(citation_pdf)
             st.success("PDF processed for citations")
             
-    with citation_tabs[2]:
-        doi_input = st.text_input("Enter DOI (e.g., 10.1038/nature12373):")
-        if doi_input and st.button("Fetch DOI Metadata"):
-            # Implement DOI lookup API call
-            st.session_state.citation_input = f"DOI: {doi_input}"
-            citation_input = st.session_state.citation_input
-            st.success(f"Retrieved metadata for DOI: {doi_input}")
-    
-    citation_format = st.selectbox("Citation Format:", 
-        ["IEEE", "APA", "MLA", "Chicago", "Harvard", "BibTeX", "RIS"])
-    
-    if st.button("Generate Citations"):
-        citations = extract_references(citation_input)
-        citation_prompt = f"Convert these references into {citation_format} format:\n{citations}"
+with citation_tabs[2]:
+    doi_input = st.text_input("Enter DOI (e.g., 10.1038/nature12373):")
+    if doi_input and st.button("Fetch DOI Metadata"):
+        # Implement DOI lookup API call
+        st.session_state.citation_input = f"DOI: {doi_input}"
+        citation_input = st.session_state.citation_input
+        st.success(f"Retrieved metadata for DOI: {doi_input}")
+
+citation_format = st.selectbox("Citation Format:", 
+    ["IEEE", "APA", "MLA", "Chicago", "Harvard", "BibTeX", "RIS"])
+
+if st.button("Generate Citations"):
+    # Fix: Replace extract_references function call with direct processing
+    if citation_input:
+        # Process the citation input directly 
+        citation_prompt = f"Convert this reference into {citation_format} format:\n{citation_input}"
         
         with st.spinner("Formatting citations..."):
             formatted_citations = generate_ai_content(citation_prompt, st.session_state.api_key, st.session_state.api_model)
@@ -604,7 +606,8 @@ with tab3:
         with col2:
             if citation_format == "BibTeX":
                 st.download_button("Download BibTeX", formatted_citations, "references.bib")
-
+    else:
+        st.error("Please enter citation text or upload a document first.")
     # Research Idea Expansion - ENHANCED
     st.subheader("🔬 Research Proposal Generator")
     
