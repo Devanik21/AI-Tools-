@@ -664,6 +664,37 @@ with tab3:
 
 with tab4:
     st.header("🤖 AI Chatbot with Universal File Upload")
+    
+    # Import required libraries
+    import pandas as pd
+    import matplotlib.pyplot as plt
+    import plotly.express as px
+    from collections import Counter
+    import re
+    from io import StringIO
+    
+    # Try to import wordcloud or handle missing dependency
+    try:
+        from wordcloud import WordCloud, STOPWORDS
+    except ImportError:
+        st.warning("WordCloud is not installed. Install with: pip install wordcloud")
+        # Create dummy functions/classes to prevent errors
+        class WordCloud:
+            def __init__(self, **kwargs):
+                pass
+            def generate(self, text):
+                pass
+        STOPWORDS = set()
+    
+    # Try to import nltk or handle missing dependency
+    try:
+        import nltk
+        from nltk.util import ngrams
+    except ImportError:
+        st.warning("NLTK is not installed. Install with: pip install nltk")
+        # Create dummy functions to prevent errors
+        def ngrams(text, n):
+            return []
 
     # File uploader
     uploaded_file = st.file_uploader("Upload a file (PDF, DOCX, CSV, TXT, Audio)", 
@@ -976,8 +1007,8 @@ with tab4:
         response = generate_ai_content(prompt, st.session_state.api_key, st.session_state.api_model)
         st.success("🧠 AI Response:")
         st.write(response)
-
-
+        
+        
 from iso639 import languages
 
 with tab5:
