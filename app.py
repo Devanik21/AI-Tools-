@@ -522,6 +522,7 @@ with tab3:
     if uploaded_file:
         pdf_text = extract_text_from_pdf(uploaded_file)
         
+        # Add advanced PDF extraction options
         extraction_options = st.expander("Advanced Extraction Options")
         with extraction_options:
             extract_figures = st.checkbox("Extract Figures", value=False)
@@ -541,9 +542,11 @@ with tab3:
                 ["Undergraduate", "Graduate", "Expert"])
         
         if st.button("Summarize Paper ✨"):
+            # Enhanced prompt with options
             focus_str = ", ".join(focus_areas) if focus_areas else "all sections"
             summary_prompt = f"""Summarize this research paper {summary_type}. 
             Focus on {focus_str} at an {academic_level} level:
+            
             {pdf_text[:max_text_length]}"""
             
             with st.spinner("Generating summary..."):
@@ -552,17 +555,13 @@ with tab3:
             st.success("📑 AI Summary:")
             st.write(summary)
 
+            # Add export options
             col1, col2 = st.columns(2)
             with col1:
                 st.download_button("Download Summary", summary, "paper_summary.txt")
             with col2:
-                if st.button("Copy to Clipboard"):
-                    pyperclip.copy(summary)
-                    st.success("Copied to clipboard!")
-                
+                st.button("Copy to Clipboard", on_click=lambda: st.write("<script>navigator.clipboard.writeText(`" + summary.replace("`", "\\`") + "`);</script>", unsafe_allow_html=True))
 
-
-    
     # Citation Generator - ENHANCED
     st.subheader("📖 Citation Generator")
     
@@ -576,10 +575,11 @@ with tab3:
         if citation_pdf:
             citation_input = extract_text_from_pdf(citation_pdf)
             st.success("PDF processed for citations")
-        
+            
     with citation_tabs[2]:
         doi_input = st.text_input("Enter DOI (e.g., 10.1038/nature12373):")
         if doi_input and st.button("Fetch DOI Metadata"):
+            # Implement DOI lookup API call
             st.session_state.citation_input = f"DOI: {doi_input}"
             citation_input = st.session_state.citation_input
             st.success(f"Retrieved metadata for DOI: {doi_input}")
@@ -597,13 +597,14 @@ with tab3:
         st.success("📜 Formatted Citations:")
         st.code(formatted_citations)
         
+        # Add copy and export options
         col1, col2 = st.columns(2)
         with col1:
             st.download_button("Download Citations", formatted_citations, f"citations_{citation_format.lower()}.txt")
         with col2:
             if citation_format == "BibTeX":
                 st.download_button("Download BibTeX", formatted_citations, "references.bib")
-    
+
     # Research Idea Expansion - ENHANCED
     st.subheader("🔬 Research Proposal Generator")
     
@@ -633,6 +634,7 @@ with tab3:
         word_limit = st.number_input("Word Count Target", 300, 5000, 1000)
     
     if st.button("Generate Proposal 🚀"):
+        # Build advanced prompt with all parameters
         methods_str = ", ".join(methodologies) if methodologies else "any appropriate"
         
         expansion_prompt = f"""Develop a {proposal_type} for: {research_topic}
@@ -651,12 +653,278 @@ with tab3:
         st.success("📄 AI-Generated Research Proposal:")
         st.write(research_proposal)
         
+        # Export options
         col1, col2 = st.columns(2)
         with col1:
             st.download_button("Download Proposal", research_proposal, "research_proposal.docx")
         with col2:
             st.button("Save to Projects", help="Save this proposal to your projects collection")
 
+    # Data Visualization - ENHANCED
+    st.subheader("📊 AI Data Analysis & Visualization")
+    data_file = st.file_uploader("Upload CSV for AI Analysis", type=["csv", "xlsx", "xls"])
+    
+    if data_file:
+        # Handle multiple file types
+        if data_file.name.endswith('.csv'):
+            df = pd.read_csv(data_file)
+        else:  # Excel files
+            df = pd.read_excel(data_file)
+            
+        # Data cleaning options
+        cleaning_options = st.expander("Data Cleaning Options")
+        with cleaning_options:
+            handle_missing = st.checkbox("Handle Missing Values", value=True)
+            if handle_missing:
+                missing_strategy = st.radio("Strategy for Missing Values:", 
+                    ["Drop rows", "Fill with mean/mode", "Fill with zeros", "Interpolate"])
+                
+                if missing_strategy == "Drop rows":
+                    df = df.dropna()
+                elif missing_strategy == "Fill with mean/mode":
+                    # Numeric columns get mean, categorical get mode
+                    for col in df.columns:
+                        if pd.api.types.is_numeric_dtype(df[col]):
+                            df[col] = df[col].fillna(df[col].mean())
+                        else:
+                            df[col] = df[col].fillna(df[col].mode()[0])
+                elif missing_strategy == "Fill with zeros":
+                    df = df.fillna(0)
+                elif missing_strategy == "Interpolate":
+                    df = df.interpolate(method='linear', limit_direction='both')
+            
+            outlier_handling = st.checkbox("Handle Outliers", value=False)
+            if outlier_handling:
+                outlier_strategy = st.radio("Outlier Strategy:", 
+                    ["Remove outliers (Z-score)", "Cap outliers", "No outlier removal"])
+                
+                if outlier_strategy == "Remove outliers (Z-score)":
+                    # Z-score based outlier removal for numeric columns
+                    for col in df.select_dtypes(include=['int64', 'float64']).columns:
+                        z_scores = stats.zscore(df[col], nan_policy='omit')
+                        abs_z_scores = np.abs(z_scores)
+                        filtered_entries = (abs_z_scores < 3)  # Keep only entries with Z-score < 3
+                        df = df[filtered_entries]
+                elif outlier_strategy == "Cap outliers":
+                    # Cap outliers at 1.5 * IQR
+                    for col in df.select_dtypes(include=['int64', 'float64']).columns:
+                        q1 = df[col].quantile(0.25)
+                        q3 = df[col].quantile(0.75)
+                        iqr = q3 - q1
+                        lower_bound = q1 - 1.5 * iqr
+                        upper_bound = q3 + 1.5 * iqr
+                        df[col] = df[col].clip(lower_bound, upper_bound)
+        
+        # Data transformation options
+        transform_options = st.expander("Data Transformation")
+        with transform_options:
+            normalize_data = st.checkbox("Normalize Numeric Columns", value=False)
+            if normalize_data:
+                norm_method = st.radio("Normalization Method:", 
+                    ["Min-Max (0-1)", "Standard (Z-score)", "Log Transform"])
+                
+                if norm_method == "Min-Max (0-1)":
+                    for col in df.select_dtypes(include=['int64', 'float64']).columns:
+                        df[f"{col}_norm"] = (df[col] - df[col].min()) / (df[col].max() - df[col].min())
+                elif norm_method == "Standard (Z-score)":
+                    for col in df.select_dtypes(include=['int64', 'float64']).columns:
+                        df[f"{col}_norm"] = (df[col] - df[col].mean()) / df[col].std()
+                elif norm_method == "Log Transform":
+                    for col in df.select_dtypes(include=['int64', 'float64']).columns:
+                        # Handle zero/negative values
+                        min_val = df[col].min()
+                        if min_val <= 0:
+                            offset = abs(min_val) + 1
+                            df[f"{col}_log"] = np.log(df[col] + offset)
+                        else:
+                            df[f"{col}_log"] = np.log(df[col])
+            
+            feature_engineering = st.checkbox("Simple Feature Engineering", value=False)
+            if feature_engineering:
+                # Offer basic feature engineering options
+                date_cols = st.multiselect("Extract date components from columns:", df.columns)
+                for col in date_cols:
+                    try:
+                        df[col] = pd.to_datetime(df[col])
+                        df[f"{col}_year"] = df[col].dt.year
+                        df[f"{col}_month"] = df[col].dt.month
+                        df[f"{col}_day"] = df[col].dt.day
+                        df[f"{col}_dayofweek"] = df[col].dt.dayofweek
+                    except:
+                        st.warning(f"Could not convert {col} to datetime")
+                
+                interact_cols = st.multiselect("Create interaction terms between columns:", 
+                                              df.select_dtypes(include=['int64', 'float64']).columns)
+                if len(interact_cols) >= 2:
+                    for i in range(len(interact_cols)):
+                        for j in range(i+1, len(interact_cols)):
+                            col1 = interact_cols[i]
+                            col2 = interact_cols[j]
+                            df[f"{col1}_{col2}_interact"] = df[col1] * df[col2]
+        
+        # Advanced data preview with pagination
+        preview_container = st.container()
+        with preview_container:
+            st.write("📌 Data Preview:")
+            
+            # Pagination controls
+            page_size = st.select_slider("Rows per page:", options=[5, 10, 25, 50, 100])
+            total_pages = max(1, ceil(len(df) / page_size))
+            col1, col2, col3 = st.columns([1, 3, 1])
+            with col1:
+                if "current_page" not in st.session_state:
+                    st.session_state.current_page = 1
+                if st.button("◀️ Previous"):
+                    st.session_state.current_page = max(1, st.session_state.current_page - 1)
+            with col3:
+                if st.button("Next ▶️"):
+                    st.session_state.current_page = min(total_pages, st.session_state.current_page + 1)
+            with col2:
+                st.write(f"Page {st.session_state.current_page} of {total_pages}")
+                
+            # Display paginated dataframe
+            start_idx = (st.session_state.current_page - 1) * page_size
+            end_idx = min(start_idx + page_size, len(df))
+            st.dataframe(df.iloc[start_idx:end_idx], use_container_width=True)
+            
+            # Data summary
+            summary_expander = st.expander("View Data Summary Statistics")
+            with summary_expander:
+                st.write("📊 Summary Statistics:")
+                st.dataframe(df.describe(include='all').transpose(), use_container_width=True)
+                
+                # Missing values analysis
+                missing_data = df.isnull().sum()
+                if missing_data.sum() > 0:
+                    st.write("⚠️ Missing Values:")
+                    missing_df = pd.DataFrame({
+                        'Column': missing_data.index,
+                        'Missing Values': missing_data.values,
+                        'Percentage': (missing_data.values / len(df) * 100).round(2)
+                    })
+                    missing_df = missing_df[missing_df['Missing Values'] > 0].sort_values('Missing Values', ascending=False)
+                    st.dataframe(missing_df, use_container_width=True)
+                
+        # Visualization options
+        st.write("🎨 Generate Visualizations")
+        
+        viz_columns = st.multiselect("Select Columns to Visualize", df.columns.tolist())
+        
+        if viz_columns:
+            viz_type = st.selectbox("Visualization Type", 
+                ["Automatic (AI-suggested)", "Scatter Plot", "Line Chart", "Bar Chart", 
+                 "Histogram", "Box Plot", "Heatmap", "Pair Plot", "3D Plot"])
+            
+            if viz_type == "Automatic (AI-suggested)":
+                # Generate a prompt describing the data
+                columns_desc = ", ".join(viz_columns)
+                column_types = {col: str(df[col].dtype) for col in viz_columns}
+                column_types_str = ", ".join([f"{col} ({dtype})" for col, dtype in column_types.items()])
+                
+                prompt = f"""Based on these data columns: {column_types_str}
+                Recommend the 2-3 most insightful visualizations to create.
+                For each visualization, explain:
+                1. The type of plot
+                2. Which columns to use
+                3. Why this visualization would be insightful
+                
+                Sample data: 
+                {df[viz_columns].head(5).to_string()}
+                """
+                
+                if st.button("Suggest Visualizations"):
+                    with st.spinner("AI analyzing your data..."):
+                        ai_suggestion = generate_ai_content(prompt, st.session_state.api_key, st.session_state.api_model)
+                    
+                    st.success("🤖 AI Visualization Suggestions")
+                    st.write(ai_suggestion)
+            
+            # Create the selected visualization
+            col1, col2 = st.columns([3, 1])
+            with col2:
+                st.write("Plot Options")
+                plot_title = st.text_input("Plot Title", "Data Visualization")
+                plot_height = st.number_input("Plot Height", 400, 1200, 600)
+                plot_width = st.number_input("Plot Width", 400, 1200, 800)
+                color_scheme = st.selectbox("Color Palette", 
+                    ["viridis", "plasma", "inferno", "magma", "cividis", "Blues", "Greens", "Reds", "Purples"])
+                
+            with col1:
+                plot_container = st.container()
+                with plot_container:
+                    try:
+                        fig = None
+                        
+                        if viz_type == "Scatter Plot" and len(viz_columns) >= 2:
+                            x_col = st.selectbox("X-axis", viz_columns)
+                            y_col = st.selectbox("Y-axis", [col for col in viz_columns if col != x_col])
+                            color_col = st.selectbox("Color by (optional)", ["None"] + [col for col in viz_columns if col != x_col and col != y_col])
+                            
+                            if st.button("Generate Plot"):
+                                fig = plt.figure(figsize=(plot_width/100, plot_height/100))
+                                if color_col != "None":
+                                    scatter = plt.scatter(df[x_col], df[y_col], c=df[color_col], cmap=color_scheme, alpha=0.7)
+                                    plt.colorbar(scatter, label=color_col)
+                                else:
+                                    plt.scatter(df[x_col], df[y_col], alpha=0.7)
+                                plt.xlabel(x_col)
+                                plt.ylabel(y_col)
+                                plt.title(plot_title)
+                                plt.tight_layout()
+                                st.pyplot(fig)
+                        
+                        elif viz_type == "Line Chart" and len(viz_columns) >= 2:
+                            x_col = st.selectbox("X-axis", viz_columns)
+                            y_cols = st.multiselect("Y-axis (multiple allowed)", [col for col in viz_columns if col != x_col])
+                            
+                            if y_cols and st.button("Generate Plot"):
+                                fig = plt.figure(figsize=(plot_width/100, plot_height/100))
+                                for y_col in y_cols:
+                                    plt.plot(df[x_col], df[y_col], label=y_col)
+                                plt.xlabel(x_col)
+                                plt.ylabel("Value")
+                                plt.title(plot_title)
+                                plt.legend()
+                                plt.tight_layout()
+                                st.pyplot(fig)
+                        
+                        elif viz_type == "Bar Chart":
+                            x_col = st.selectbox("Categories (X-axis)", viz_columns)
+                            y_col = st.selectbox("Values (Y-axis)", [col for col in viz_columns if col != x_col])
+                            
+                            # Aggregate options
+                            aggregate = st.checkbox("Aggregate data", value=True)
+                            if aggregate:
+                                agg_func = st.selectbox("Aggregate function", ["sum", "mean", "count", "min", "max"])
+                                
+                                if st.button("Generate Plot"):
+                                    # Prepare aggregated data
+                                    agg_data = df.groupby(x_col)[y_col].agg(agg_func).sort_values(ascending=False).head(20)
+                                    
+                                    fig = plt.figure(figsize=(plot_width/100, plot_height/100))
+                                    plt.bar(agg_data.index, agg_data.values, color=plt.cm.get_cmap(color_scheme)(np.linspace(0, 1, len(agg_data))))
+                                    plt.xlabel(x_col)
+                                    plt.ylabel(f"{agg_func}({y_col})")
+                                    plt.title(plot_title)
+                                    plt.xticks(rotation=45, ha="right")
+                                    plt.tight_layout()
+                                    st.pyplot(fig)
+                    
+                        # Export options
+                        if fig:
+                            buffer = io.BytesIO()
+                            fig.savefig(buffer, format='png', dpi=300)
+                            buffer.seek(0)
+                            
+                            col1, col2 = st.columns(2)
+                            with col1:
+                                st.download_button("Download Plot (PNG)", buffer, "visualization.png")
+                            with col2:
+                                st.download_button("Download Plot Data (CSV)", df[viz_columns].to_csv(index=False).encode('utf-8'), "visualization_data.csv")
+                    
+                    except Exception as e:
+                        st.error(f"Error generating visualization: {str(e)}")
+                        st.info("Tips: Make sure you've selected compatible columns for this visualization type.")
 
 with tab4:
     st.header("🤖 AI Chatbot with Universal File Upload")
