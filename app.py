@@ -1222,13 +1222,6 @@ def generate_ai_content(prompt, api_key, model, temperature, max_tokens):
 with tab6:
     st.header("⚡ AI Code Wizard")
 
-    # Select AI model
-    model_options = {
-        "Gemini 2.0 Flash": "gemini-2.0-flash-thinking-exp-01-21",
-        "GPT-4 Turbo": "gpt-4-turbo",
-        "Claude 3 Opus": "claude-3-opus",
-    }
-    st.session_state.api_model = st.selectbox("Select AI Model", list(model_options.keys()), key="ai_model_selector")
 
     # AI Settings
     col1, col2 = st.columns(2)
