@@ -397,7 +397,7 @@ def generate_ai_content(prompt, api_key, model_name):
         genai.configure(api_key=api_key)
         model = genai.GenerativeModel(model_name)
         with st.spinner("🔮 AI is working its magic..."):
-            generation_config = {"temperature": 0.7, "top_p": 0.95, "top_k": 40, "max_output_tokens": 2048}
+            generation_config = {"temperature": 0.7, "top_p": 0.95, "top_k": 40, "max_output_tokens": 8192}
             response = model.generate_content(prompt, generation_config=generation_config)
             return response.text
     except Exception as e:
@@ -1207,7 +1207,7 @@ with tab5:
             st.warning("⚠️ Please upload a document first!")
 
 
-with tab6:
+tab6with :
     st.header("⚡ AI Code Wizard")
 
     # Automatically select the AI model for coding tasks
