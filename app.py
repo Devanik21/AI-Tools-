@@ -10,6 +10,7 @@ import fitz  # PyMuPDF for PDF text extraction
 import re
 import pandas as pd
 import matplotlib.pyplot as plt
+import plotly.express as px
 import seaborn as sns
 import pyperclip
 
