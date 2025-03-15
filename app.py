@@ -11,6 +11,7 @@ import re
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+import pyperclip
 
 
 # Configure Streamlit page
@@ -555,7 +556,12 @@ with tab3:
             with col1:
                 st.download_button("Download Summary", summary, "paper_summary.txt")
             with col2:
-                st.button("Copy to Clipboard", on_click=lambda: st.write("<script>navigator.clipboard.writeText(`" + summary.replace("`", "\\`") + "`");</script>", unsafe_allow_html=True))
+                if st.button("Copy to Clipboard"):
+                    pyperclip.copy(summary)
+                    st.success("Copied to clipboard!")
+                
+
+
     
     # Citation Generator - ENHANCED
     st.subheader("📖 Citation Generator")
