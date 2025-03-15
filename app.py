@@ -1069,7 +1069,6 @@ from PIL import Image
 import pdfplumber
 import tempfile
 
-st.set_page_config(page_title="AI Document Translator", layout="wide")
 
 st.header("🌍 AI-Powered Document Translator")
 
