@@ -8,6 +8,7 @@ watchdog>=3.0.0
 packaging>=23.1
 PyMuPDF
 iso-639
+pyperclip 
 langcodes
 pandas
 matplotlib
