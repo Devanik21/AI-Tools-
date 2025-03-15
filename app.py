@@ -391,16 +391,27 @@ def load_prompt_templates():
     return templates
 
 # Function to generate content with AI
-def generate_ai_content(prompt, api_key, model_name):
+temperature = st.slider("Temperature", 0.0, 1.0, 0.7, 0.1, help="Higher values make output more creative")
+
+def generate_ai_content(prompt, api_key, model_name, temperature):
     try:
         genai.configure(api_key=api_key)
         model = genai.GenerativeModel(model_name)
         with st.spinner("🔮 AI is working its magic..."):
-            generation_config = {"temperature": 0.7, "top_p": 0.95, "top_k": 40, "max_output_tokens": 2048}
+            generation_config = {
+                "temperature": temperature,  # Use dynamic temperature
+                "top_p": 0.95,
+                "top_k": 40,
+                "max_output_tokens": 2048
+            }
             response = model.generate_content(prompt, generation_config=generation_config)
             return response.text
     except Exception as e:
         return f"Error: {str(e)}"
+
+# Call the function with the dynamic temperature value
+response = generate_ai_content(prompt, api_key, model_name, temperature)
+
 
 # Function to save content to history
 def save_to_history(tool_name, prompt, output):
