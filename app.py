@@ -941,7 +941,8 @@ with tab4:
                     if extracted_text.strip():
                         words = re.findall(r'\w+', extracted_text.lower()) # Check filtering
                         stop_words = set(STOPWORDS)
-                        filtered_words = [w for w in words if w not in stop_words and len(w) > 2]
+                        filtered_words = [w for w in words if w not in stop_words and len(w) > 1]
+                        st.write("Filtered words:", filtered_words) 
                         
                         if filtered_words:  # Check if there are any words left after filtering
                             wordcloud_text = " ".join(filtered_words) 
@@ -961,6 +962,7 @@ with tab4:
                             st.info("Not enough meaningful words to generate a word cloud. Try uploading a file with more content.")
                     else:
                          st.warning("No text content detected. Please upload a file with more words.")
+                    
                     # Top words
                     st.write("#### Top Words")
                     stop_words = set(STOPWORDS)
