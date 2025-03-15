@@ -1054,109 +1054,119 @@ with tab4:
         st.success("🧠 AI Response:")
         st.write(response)
         
-import streamlit as st
+from iso639 import languages
+from langdetect import detect
 import pandas as pd
 import docx
 import json
-import speech_recognition as sr
-import pyttsx3
 from io import BytesIO
-from langdetect import detect
-from iso639 import languages
-from googletrans import Translator
-import pytesseract
-from PIL import Image
-import pdfplumber
-import tempfile
 
-
-
-with st.container():
+with tab5:
     st.header("🌍 AI-Powered Document Translator")
-
-with st.tab("Document Translator") as tab5:
-    # Multi-file uploader
-    uploaded_files = st.file_uploader("Upload documents (PDF, DOCX, TXT, CSV, PNG, JPG, MP3, WAV)", 
-                                    type=["pdf", "docx", "txt", "csv", "png", "jpg", "mp3", "wav"], 
-                                    accept_multiple_files=True, key="translator_file_uploader")
-
+    
+    # File uploader for document translation
+    uploaded_file = st.file_uploader(
+        "Upload a document (PDF, DOCX, TXT, CSV)", 
+        type=["pdf", "docx", "txt", "csv"], 
+        key="translator_file_uploader"
+    )
+    
     extracted_text = ""  # Store extracted text
-    translator = Translator()
-
-    def extract_text_from_file(file):
-        if file.type == "application/pdf":
-            with pdfplumber.open(file) as pdf:
-                return "\n".join([page.extract_text() for page in pdf.pages if page.extract_text()])
-        elif file.type == "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
-            doc = docx.Document(file)
-            return "\n".join([para.text for para in doc.paragraphs])
-        elif file.type.startswith("image"):
-            image = Image.open(file)
-            return pytesseract.image_to_string(image)
-        elif file.type.startswith("text"):
-            return file.getvalue().decode("utf-8")
-        elif file.type in ["audio/wav", "audio/mpeg"]:
-            recognizer = sr.Recognizer()
-            with tempfile.NamedTemporaryFile(delete=False) as temp_audio:
-                temp_audio.write(file.read())
-                temp_audio_path = temp_audio.name
-            with sr.AudioFile(temp_audio_path) as source:
-                audio = recognizer.record(source)
-            return recognizer.recognize_google(audio)
-        return ""
-
-    if uploaded_files:
-        for file in uploaded_files:
-            extracted_text += extract_text_from_file(file) + "\n"
-        st.success("✅ Files processed successfully!")
+    
+    # Process the uploaded file and extract text
+    if uploaded_file:
+        extracted_text = extract_text_from_file(uploaded_file)  # Ensure this function is defined
+        st.success("✅ File processed successfully!")
         st.text_area("Extracted Content:", extracted_text[:5000], height=200, key="translator_extracted_text")
 
-    # Detect language
+    # Auto-detect source language
+    detected_language = "Unknown"
     if extracted_text:
         try:
-            detected_lang_code = detect(extracted_text)
-            detected_lang_name = next((name for name, code in languages.items() if code == detected_lang_code), "Unknown")
-            st.info(f"🔍 Detected Language: **{detected_lang_name} ({detected_lang_code})**")
+            detected_language = detect(extracted_text)
+            detected_language_name = next((name for name, code in languages.items() if code == detected_language), "Unknown")
+            st.info(f"🔍 Detected Source Language: **{detected_language_name} ({detected_language})**")
         except:
             st.warning("⚠️ Could not detect language. Please specify manually.")
 
-    # Translation settings
+    # Advanced translation options
     with st.expander("Advanced Translation Options"):
-        translation_mode = st.selectbox("Translation Mode:", ["Full", "Summary", "Paraphrase", "Technical"], key="translator_mode")
-        tone = st.selectbox("Translation Tone:", ["Formal", "Informal", "Neutral", "Friendly", "Academic"], key="translator_tone")
-        output_format = st.selectbox("Output Format:", ["Plain Text", "Markdown", "HTML", "DOCX", "CSV", "JSON"], key="translator_format")
-        max_chars = st.slider("Max Characters:", 1000, 20000, 5000, step=500, key="translator_max_chars")
-        pronunciation = st.checkbox("Include Pronunciation", key="pronunciation")
-        audio_output = st.checkbox("Enable Text-to-Speech", key="audio_output")
+        translation_mode = st.selectbox(
+            "Translation Mode:", 
+            ["Full Translation", "Summary Translation", "Paraphrase Translation", "Technical Translation"], 
+            key="translator_mode"
+        )
+        tone = st.selectbox(
+            "Translation Tone:", 
+            ["Formal", "Informal", "Neutral", "Friendly", "Academic"], 
+            key="translator_tone"
+        )
+        output_format = st.selectbox(
+            "Output Format:", 
+            ["Plain Text", "Markdown", "HTML", "DOCX", "CSV", "JSON"], 
+            key="translator_format"
+        )
+        max_chars = st.slider(
+            "Max Characters to Translate:", 
+            min_value=1000, max_value=20000, value=5000, step=500, 
+            key="translator_max_chars"
+        )
+        parallel_translation = st.checkbox("Enable Parallel Translations (Compare Multiple Translations)", key="parallel_translation")
+        pronunciation = st.checkbox("Include Pronunciation (For Language Learning)", key="pronunciation")
 
-    # Language selection
-    all_languages = {lang.name: lang.part1 for lang in languages if lang.part1}
-    target_lang = st.selectbox("Select Target Language:", list(all_languages.keys()), key="translator_language_select")
+    # Fetch 200+ languages dynamically
+    all_languages = {lang.name: lang.part1 for lang in languages if lang.part1}  # Get name & ISO code
 
-    # Translate
+    # Streamlit selectbox for choosing target language
+    target_lang = st.selectbox(
+        "Select Target Language:", 
+        list(all_languages.keys()), 
+        key="translator_language_select"
+    )
+    
+    # Translation button and display translation
     if st.button("Translate 🌍", key="translator_translate_btn"):
         if extracted_text:
-            lang_code = all_languages[target_lang]
-            text_to_translate = extracted_text[:max_chars]
-            translated_text = translator.translate(text_to_translate, dest=lang_code).text
+            lang_code = all_languages[target_lang]  # Convert display name to language code
+            text_to_translate = extracted_text[:max_chars]  # Limit text length
+            
+            # Build an advanced prompt with options
+            prompt = (
+                f"Translation Mode: {translation_mode}\n"
+                f"Tone: {tone}\n"
+                f"Output Format: {output_format}\n"
+                f"Pronunciation: {'Yes' if pronunciation else 'No'}\n"
+                f"Translate the following text to {target_lang} ({lang_code}):\n\n{text_to_translate}"
+            )
+            
+            translated_text = generate_ai_content(prompt, st.session_state.api_key, st.session_state.api_model)
             st.success("✅ Translation Complete:")
             st.write(translated_text)
+            
+            # Parallel Translations (if enabled)
+            if parallel_translation:
+                st.subheader("🔄 Parallel Translations")
+                alternate_prompt = f"Provide an alternate translation for the text in {target_lang} ({lang_code}):\n\n{text_to_translate}"
+                alternate_translation = generate_ai_content(alternate_prompt, st.session_state.api_key, st.session_state.api_model)
+                
+                col1, col2 = st.columns(2)
+                with col1:
+                    st.markdown("### 🎯 Primary Translation")
+                    st.write(translated_text)
+                with col2:
+                    st.markdown("### 🛠 Alternate Translation")
+                    st.write(alternate_translation)
 
-            # Text-to-Speech
-            if audio_output:
-                engine = pyttsx3.init()
-                engine.say(translated_text)
-                engine.runAndWait()
-
-            # Export options
+            # Create downloadable DOCX file
             def create_docx(text):
                 doc = docx.Document()
                 doc.add_paragraph(text)
                 doc_stream = BytesIO()
                 doc.save(doc_stream)
-                doc_stream.seek(0)
+                doc_stream.seek(0)  # Move to the beginning of the file
                 return doc_stream
-
+            
+            # Create downloadable CSV file
             def create_csv(text):
                 csv_data = pd.DataFrame([[target_lang, text]], columns=["Language", "Translation"])
                 csv_stream = BytesIO()
@@ -1164,19 +1174,38 @@ with st.tab("Document Translator") as tab5:
                 csv_stream.seek(0)
                 return csv_stream
 
+            # Export and copy options
             col1, col2, col3, col4 = st.columns(4)
             with col1:
-                st.download_button("Download as TXT", translated_text, file_name=f"translation_{target_lang}.txt")
+                st.download_button(
+                    "Download as TXT", 
+                    translated_text, 
+                    file_name=f"translation_{target_lang}.txt"
+                )
             with col2:
                 docx_file = create_docx(translated_text)
-                st.download_button("Download as DOCX", docx_file, file_name=f"translation_{target_lang}.docx")
+                st.download_button(
+                    "Download as DOCX", 
+                    docx_file,  # ✅ Fixed: Pass binary stream instead of docx object
+                    file_name=f"translation_{target_lang}.docx"
+                )
             with col3:
                 csv_file = create_csv(translated_text)
-                st.download_button("Download as CSV", csv_file, file_name=f"translation_{target_lang}.csv")
+                st.download_button(
+                    "Download as CSV", 
+                    csv_file, 
+                    file_name=f"translation_{target_lang}.csv"
+                )
             with col4:
-                st.download_button("Download as JSON", json.dumps({"language": target_lang, "text": translated_text}), file_name=f"translation_{target_lang}.json")
+                st.download_button(
+                    "Download as JSON", 
+                    json.dumps({"language": target_lang, "text": translated_text}), 
+                    file_name=f"translation_{target_lang}.json"
+                )
+
         else:
             st.warning("⚠️ Please upload a document first!")
+
 
 with tab6:
     st.header("⚡ Advanced AI Code Wizard")
