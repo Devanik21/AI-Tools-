@@ -666,9 +666,10 @@ with tab4:
 
     # File uploader
     uploaded_file = st.file_uploader("Upload a file (PDF, DOCX, CSV, TXT, Audio)", 
-                                     type=["pdf", "docx", "csv", "txt",  "mp3", "wav"])
+                                    type=["pdf", "docx", "csv", "txt", "mp3", "wav"])
 
     extracted_text = ""  # Store extracted text
+    df = None  # Store dataframe for visualizations
 
     # Process uploaded file
     if uploaded_file:
@@ -680,8 +681,16 @@ with tab4:
             extracted_text = extract_text_from_docx(uploaded_file)
         elif file_type in ["text/plain"]:
             extracted_text = extract_text_from_txt(uploaded_file)
+            try:
+                # Try to parse as CSV in case it's a CSV saved as TXT
+                df = pd.read_csv(StringIO(extracted_text), sep=None, engine='python')
+            except:
+                # If not parseable as CSV, prepare for text visualizations
+                words = re.findall(r'\w+', extracted_text.lower())
+                word_freq = Counter(words)
         elif file_type in ["text/csv"]:
             extracted_text = extract_text_from_csv(uploaded_file)
+            df = pd.read_csv(uploaded_file)
         elif file_type in ["image/png", "image/jpeg"]:
             extracted_text = extract_text_from_image(uploaded_file)
         elif file_type in ["audio/mpeg", "audio/wav"]:
@@ -689,6 +698,254 @@ with tab4:
 
         st.success("✅ File processed successfully!")
         st.text_area("Extracted Content:", extracted_text[:2000], height=200)  # Preview first 2000 characters
+
+        # Visualization section for TXT and CSV
+        if file_type in ["text/plain", "text/csv"] and (df is not None or 'word_freq' in locals()):
+            st.subheader("📊 Data Visualizations")
+            
+            # Create tabs for different visualization categories
+            viz_tabs = st.tabs(["Basic Stats", "Distributions", "Correlations", "Time Series", "Text Analysis"])
+            
+            # CSV-specific visualizations
+            if df is not None:
+                with viz_tabs[0]:  # Basic Stats
+                    st.write("### Data Overview")
+                    st.dataframe(df.describe())
+                    
+                    col1, col2 = st.columns(2)
+                    with col1:
+                        st.write("### Missing Values")
+                        st.bar_chart(df.isnull().sum())
+                    with col2:
+                        st.write("### Data Types")
+                        st.write(pd.DataFrame(df.dtypes, columns=['Data Type']))
+                
+                with viz_tabs[1]:  # Distributions
+                    st.write("### Distributions")
+                    
+                    # Determine numeric columns
+                    numeric_cols = df.select_dtypes(include=['number']).columns.tolist()
+                    if numeric_cols:
+                        selected_col = st.selectbox("Select column for histogram:", numeric_cols)
+                        fig = px.histogram(df, x=selected_col, marginal="box")
+                        st.plotly_chart(fig, use_container_width=True)
+                        
+                        # Distribution comparison
+                        if len(numeric_cols) >= 2:
+                            cols_to_compare = st.multiselect("Select columns to compare distributions:", 
+                                                           numeric_cols, default=numeric_cols[:2])
+                            if cols_to_compare:
+                                fig = px.box(df, y=cols_to_compare)
+                                st.plotly_chart(fig, use_container_width=True)
+                    
+                    # Categorical distributions
+                    cat_cols = df.select_dtypes(include=['object']).columns.tolist()
+                    if cat_cols:
+                        selected_cat = st.selectbox("Select categorical column:", cat_cols)
+                        top_n = st.slider("Top N categories:", 5, 20, 10)
+                        value_counts = df[selected_cat].value_counts().head(top_n)
+                        fig = px.bar(x=value_counts.index, y=value_counts.values)
+                        st.plotly_chart(fig, use_container_width=True)
+                
+                with viz_tabs[2]:  # Correlations
+                    st.write("### Correlations")
+                    if len(numeric_cols) >= 2:
+                        corr_method = st.radio("Correlation method:", ["Pearson", "Spearman"])
+                        corr = df[numeric_cols].corr(method=corr_method.lower())
+                        
+                        fig = px.imshow(corr, text_auto=True, color_continuous_scale='RdBu_r')
+                        st.plotly_chart(fig, use_container_width=True)
+                        
+                        # Scatter plot for two variables
+                        st.write("### Scatter Plot")
+                        col1, col2 = st.columns(2)
+                        with col1:
+                            x_col = st.selectbox("X-axis:", numeric_cols, index=0)
+                        with col2:
+                            y_col = st.selectbox("Y-axis:", numeric_cols, index=min(1, len(numeric_cols)-1))
+                        
+                        color_col = st.selectbox("Color by (optional):", ["None"] + df.columns.tolist())
+                        if color_col == "None":
+                            fig = px.scatter(df, x=x_col, y=y_col)
+                        else:
+                            fig = px.scatter(df, x=x_col, y=y_col, color=color_col)
+                        st.plotly_chart(fig, use_container_width=True)
+                
+                with viz_tabs[3]:  # Time Series
+                    st.write("### Time Series Analysis")
+                    
+                    # Check for date columns
+                    date_cols = []
+                    for col in df.columns:
+                        try:
+                            pd.to_datetime(df[col])
+                            date_cols.append(col)
+                        except:
+                            pass
+                    
+                    if date_cols:
+                        date_col = st.selectbox("Select date column:", date_cols)
+                        
+                        # Convert to datetime
+                        df_ts = df.copy()
+                        df_ts[date_col] = pd.to_datetime(df_ts[date_col])
+                        
+                        # Select value column
+                        value_col = st.selectbox("Select value column:", numeric_cols)
+                        
+                        # Resample options
+                        resample_options = ['Original', 'Daily', 'Weekly', 'Monthly', 'Quarterly', 'Yearly']
+                        resample = st.selectbox("Resample frequency:", resample_options)
+                        
+                        # Prepare data based on resampling
+                        if resample == 'Original':
+                            plot_data = df_ts.sort_values(by=date_col)
+                        else:
+                            # Map selection to pandas frequency
+                            freq_map = {'Daily': 'D', 'Weekly': 'W', 'Monthly': 'M', 
+                                       'Quarterly': 'Q', 'Yearly': 'Y'}
+                            df_ts = df_ts.set_index(date_col)
+                            plot_data = df_ts[value_col].resample(freq_map[resample]).mean().reset_index()
+                        
+                        # Line chart
+                        fig = px.line(
+                            plot_data, 
+                            x=date_col if resample == 'Original' else 'index', 
+                            y=value_col
+                        )
+                        st.plotly_chart(fig, use_container_width=True)
+                    else:
+                        st.info("No date columns detected. To perform time series analysis, ensure one of your columns contains dates.")
+                
+                with viz_tabs[4]:  # Text Analysis
+                    st.write("### Text Analysis")
+                    
+                    # Check for text columns
+                    text_cols = df.select_dtypes(include=['object']).columns.tolist()
+                    
+                    if text_cols:
+                        text_col = st.selectbox("Select text column:", text_cols)
+                        
+                        # Word cloud
+                        st.write("#### Word Cloud")
+                        
+                        # Join all text
+                        all_text = " ".join(df[text_col].dropna().astype(str))
+                        
+                        if all_text.strip():
+                            # Generate word cloud
+                            wc = WordCloud(width=800, height=400, 
+                                          background_color='white', 
+                                          colormap='viridis', 
+                                          max_words=200)
+                            wc.generate(all_text)
+                            
+                            # Display
+                            fig, ax = plt.subplots(figsize=(10, 5))
+                            ax.imshow(wc, interpolation='bilinear')
+                            ax.axis('off')
+                            st.pyplot(fig)
+                            
+                            # Word frequency
+                            st.write("#### Top Words")
+                            stop_words = set(STOPWORDS)
+                            words = re.findall(r'\w+', all_text.lower())
+                            word_freq = Counter([w for w in words if w not in stop_words and len(w) > 2])
+                            top_words = pd.DataFrame(word_freq.most_common(20), columns=['Word', 'Count'])
+                            
+                            fig = px.bar(top_words, x='Word', y='Count')
+                            st.plotly_chart(fig, use_container_width=True)
+                    else:
+                        st.info("No text columns detected for text analysis.")
+            
+            # Text-specific visualizations for TXT files
+            elif 'word_freq' in locals():
+                with viz_tabs[0]:  # Basic Stats
+                    st.write("### Text Statistics")
+                    col1, col2, col3 = st.columns(3)
+                    with col1:
+                        st.metric("Total Words", len(words))
+                    with col2:
+                        st.metric("Unique Words", len(word_freq))
+                    with col3:
+                        st.metric("Total Characters", len(extracted_text))
+                
+                with viz_tabs[4]:  # Text Analysis
+                    st.write("### Text Analysis")
+                    
+                    # Word cloud
+                    st.write("#### Word Cloud")
+                    if extracted_text.strip():
+                        # Generate word cloud
+                        wc = WordCloud(width=800, height=400, 
+                                     background_color='white', 
+                                     colormap='viridis', 
+                                     max_words=200)
+                        wc.generate(extracted_text)
+                        
+                        # Display
+                        fig, ax = plt.subplots(figsize=(10, 5))
+                        ax.imshow(wc, interpolation='bilinear')
+                        ax.axis('off')
+                        st.pyplot(fig)
+                    
+                    # Top words
+                    st.write("#### Top Words")
+                    stop_words = set(STOPWORDS)
+                    filtered_words = [w for w in words if w not in stop_words and len(w) > 2]
+                    filtered_freq = Counter(filtered_words)
+                    top_words = pd.DataFrame(filtered_freq.most_common(20), columns=['Word', 'Count'])
+                    
+                    fig = px.bar(top_words, x='Word', y='Count')
+                    st.plotly_chart(fig, use_container_width=True)
+                    
+                    # Word length distribution
+                    st.write("#### Word Length Distribution")
+                    word_lengths = [len(w) for w in filtered_words]
+                    word_length_freq = Counter(word_lengths)
+                    length_df = pd.DataFrame(sorted(word_length_freq.items()), columns=['Length', 'Count'])
+                    
+                    fig = px.bar(length_df, x='Length', y='Count')
+                    st.plotly_chart(fig, use_container_width=True)
+                    
+                    # Sentiment analysis
+                    st.write("#### Sentiment Analysis")
+                    try:
+                        from nltk.sentiment import SentimentIntensityAnalyzer
+                        sia = SentimentIntensityAnalyzer()
+                        sentiment = sia.polarity_scores(extracted_text)
+                        
+                        sentiment_df = pd.DataFrame({
+                            'Metric': ['Negative', 'Neutral', 'Positive', 'Compound'],
+                            'Value': [sentiment['neg'], sentiment['neu'], sentiment['pos'], sentiment['compound']]
+                        })
+                        
+                        fig = px.bar(sentiment_df, x='Metric', y='Value', 
+                                   color='Metric', 
+                                   color_discrete_map={
+                                       'Negative': 'red',
+                                       'Neutral': 'gray',
+                                       'Positive': 'green',
+                                       'Compound': 'blue'
+                                   })
+                        st.plotly_chart(fig, use_container_width=True)
+                    except:
+                        st.info("Sentiment analysis requires NLTK with sentiment analysis models.")
+                    
+                    # N-gram analysis
+                    st.write("#### N-gram Analysis")
+                    n_value = st.slider("Select n-gram size:", 2, 5, 2)
+                    
+                    # Generate n-grams
+                    from nltk.util import ngrams
+                    n_grams = list(ngrams(filtered_words, n_value))
+                    n_gram_freq = Counter([' '.join(g) for g in n_grams])
+                    
+                    n_gram_df = pd.DataFrame(n_gram_freq.most_common(15), 
+                                           columns=[f'{n_value}-gram', 'Count'])
+                    
+                    fig = px.bar(n_gram_df, x=f'{n_value}-gram', y='Count')
+                    st.plotly_chart(fig, use_container_width=True)
 
     # AI Chatbot Section
     st.subheader("💬 Chat with AI")
