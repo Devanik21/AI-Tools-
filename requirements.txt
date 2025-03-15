@@ -7,6 +7,8 @@ python-dotenv>=1.0.0
 watchdog>=3.0.0
 packaging>=23.1
 PyMuPDF
+wordcloud
+nltk
 iso-639
 pyperclip 
 langcodes
