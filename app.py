@@ -1058,33 +1058,90 @@ from iso639 import languages
 
 with tab5:
     st.header("🌍 AI-Powered Document Translator")
-
+    
     # File uploader for document translation
-    uploaded_file = st.file_uploader("Upload a document (PDF, DOCX, TXT, CSV)", 
-                                     type=["pdf", "docx", "txt", "csv"], key="translator_file_uploader")
-
+    uploaded_file = st.file_uploader(
+        "Upload a document (PDF, DOCX, TXT, CSV)", 
+        type=["pdf", "docx", "txt", "csv"], 
+        key="translator_file_uploader"
+    )
+    
     extracted_text = ""  # Store extracted text
-
+    
     # Process the uploaded file and extract text
     if uploaded_file:
-        extracted_text = extract_text_from_file(uploaded_file)  # Make sure this function is defined
+        extracted_text = extract_text_from_file(uploaded_file)  # Ensure this function is defined
         st.success("✅ File processed successfully!")
         st.text_area("Extracted Content:", extracted_text[:5000], height=200, key="translator_extracted_text")
-
+    
+    # Advanced translation options
+    with st.expander("Advanced Translation Options"):
+        translation_mode = st.selectbox(
+            "Translation Mode:", 
+            ["Full Translation", "Summary Translation", "Paraphrase Translation"], 
+            key="translator_mode"
+        )
+        tone = st.selectbox(
+            "Translation Tone:", 
+            ["Formal", "Informal", "Neutral", "Friendly"], 
+            key="translator_tone"
+        )
+        output_format = st.selectbox(
+            "Output Format:", 
+            ["Plain Text", "Markdown", "HTML"], 
+            key="translator_format"
+        )
+        max_chars = st.slider(
+            "Max Characters to Translate:", 
+            min_value=1000, max_value=10000, value=5000, step=500, 
+            key="translator_max_chars"
+        )
+    
     # Fetch 200+ languages dynamically
     all_languages = {lang.name: lang.part1 for lang in languages if lang.part1}  # Get name & ISO code
-
+    
     # Streamlit selectbox for choosing target language
-    target_lang = st.selectbox("Select Target Language:", list(all_languages.keys()), key="translator_language_select")
-
+    target_lang = st.selectbox(
+        "Select Target Language:", 
+        list(all_languages.keys()), 
+        key="translator_language_select"
+    )
+    
     # Translation button and display translation
     if st.button("Translate 🌍", key="translator_translate_btn"):
         if extracted_text:
             lang_code = all_languages[target_lang]  # Convert display name to language code
-            prompt = f"Translate the following text to {target_lang} ({lang_code}):\n\n{extracted_text[:5000]}"
+            # Limit the text to translate to the max_chars value
+            text_to_translate = extracted_text[:max_chars]
+            # Build an advanced prompt that incorporates translation mode, tone, and output format
+            prompt = (
+                f"Translation Mode: {translation_mode}\n"
+                f"Tone: {tone}\n"
+                f"Output Format: {output_format}\n\n"
+                f"Translate the following text to {target_lang} ({lang_code}):\n\n{text_to_translate}"
+            )
             translated_text = generate_ai_content(prompt, st.session_state.api_key, st.session_state.api_model)
             st.success("✅ Translation Complete:")
             st.write(translated_text)
+            
+            # Export and copy options
+            col1, col2 = st.columns(2)
+            with col1:
+                st.download_button(
+                    "Download Translation", 
+                    translated_text, 
+                    file_name=f"translation_{target_lang}.txt"
+                )
+            with col2:
+                st.button(
+                    "Copy to Clipboard", 
+                    on_click=lambda: st.write(
+                        "<script>navigator.clipboard.writeText(`" 
+                        + translated_text.replace("`", "\\`") 
+                        + "`);</script>", 
+                        unsafe_allow_html=True
+                    )
+                )
         else:
             st.warning("⚠️ Please upload a document first!")
 
