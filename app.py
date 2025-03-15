@@ -1371,6 +1371,30 @@ with st.expander("⚙️ Advanced Options"):
             historical = st.checkbox("Historical Context", help="Add historical background and evolution")
             expert_citations = st.checkbox("Expert Citations", help="Include references to subject matter experts")
 
+
+
+
+# For the text column word cloud in CSV visualization
+if all_text.strip():
+    # Check if there are words after filtering
+    words = re.findall(r'\w+', all_text.lower())
+    filtered_words = [w for w in words if w not in stop_words and len(w) > 2]
+    
+    if filtered_words:  # Add this check
+        # Generate word cloud
+        wc = WordCloud(width=800, height=400, 
+                      background_color='white', 
+                      colormap='viridis', 
+                      max_words=200)
+        wc.generate(all_text)
+        
+        # Display
+        fig, ax = plt.subplots(figsize=(10, 5))
+        ax.imshow(wc, interpolation='bilinear')
+        ax.axis('off')
+        st.pyplot(fig)
+    else:
+        st.info("Not enough meaningful words to generate a word cloud after filtering.")
 # Add style instructions to prompt based on selections
 style_instructions = {
     "Response Length": response_length,
