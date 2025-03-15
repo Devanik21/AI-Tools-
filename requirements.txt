@@ -9,7 +9,9 @@ packaging>=23.1
 PyMuPDF
 wordcloud
 nltk
+base64
 iso-639
+docx2txt
 pyperclip 
 langcodes
 pandas
