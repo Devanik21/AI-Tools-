@@ -683,14 +683,29 @@ with tab4:
             extracted_text = extract_text_from_txt(uploaded_file)
             try:
                 # Try to parse as CSV in case it's a CSV saved as TXT
-                df = pd.read_csv(StringIO(extracted_text), sep=None, engine='python')
-            except:
+                if extracted_text.strip():  # Check if text is not empty
+                    df = pd.read_csv(StringIO(extracted_text), sep=None, engine='python')
+                else:
+                    words = re.findall(r'\w+', extracted_text.lower())
+                    word_freq = Counter(words)
+            except Exception as e:
+                st.warning(f"Could not parse as CSV: {str(e)}")
                 # If not parseable as CSV, prepare for text visualizations
                 words = re.findall(r'\w+', extracted_text.lower())
                 word_freq = Counter(words)
         elif file_type in ["text/csv"]:
             extracted_text = extract_text_from_csv(uploaded_file)
-            df = pd.read_csv(uploaded_file)
+            try:
+                # Reset file pointer to beginning before reading
+                uploaded_file.seek(0)
+                df = pd.read_csv(uploaded_file)
+                if df.empty:
+                    st.warning("The CSV file appears to be empty")
+            except Exception as e:
+                st.warning(f"Error parsing CSV: {str(e)}")
+                # Handle as text if CSV parsing fails
+                words = re.findall(r'\w+', extracted_text.lower())
+                word_freq = Counter(words)
         elif file_type in ["image/png", "image/jpeg"]:
             extracted_text = extract_text_from_image(uploaded_file)
         elif file_type in ["audio/mpeg", "audio/wav"]:
