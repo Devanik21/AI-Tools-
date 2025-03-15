@@ -12,6 +12,8 @@ translate
 nltk
 iso-639
 langdetect
+openai
+pygments
 docx2txt
 pyperclip 
 langcodes
