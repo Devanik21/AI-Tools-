@@ -1060,6 +1060,13 @@ import pandas as pd
 import docx
 import json
 
+from iso639 import languages
+from langdetect import detect
+import pandas as pd
+import docx
+import json
+from io import BytesIO
+
 with tab5:
     st.header("🌍 AI-Powered Document Translator")
     
@@ -1155,22 +1162,47 @@ with tab5:
                 with col2:
                     st.markdown("### 🛠 Alternate Translation")
                     st.write(alternate_translation)
+
+            # Create downloadable DOCX file
+            def create_docx(text):
+                doc = docx.Document()
+                doc.add_paragraph(text)
+                doc_stream = BytesIO()
+                doc.save(doc_stream)
+                doc_stream.seek(0)  # Move to the beginning of the file
+                return doc_stream
             
+            # Create downloadable CSV file
+            def create_csv(text):
+                csv_data = pd.DataFrame([[target_lang, text]], columns=["Language", "Translation"])
+                csv_stream = BytesIO()
+                csv_data.to_csv(csv_stream, index=False)
+                csv_stream.seek(0)
+                return csv_stream
+
             # Export and copy options
-            col1, col2, col3 = st.columns(3)
+            col1, col2, col3, col4 = st.columns(4)
             with col1:
                 st.download_button(
-                    "Download Translation", 
+                    "Download as TXT", 
                     translated_text, 
                     file_name=f"translation_{target_lang}.txt"
                 )
             with col2:
+                docx_file = create_docx(translated_text)
                 st.download_button(
                     "Download as DOCX", 
-                    docx.Document().add_paragraph(translated_text), 
+                    docx_file,  # ✅ Fixed: Pass binary stream instead of docx object
                     file_name=f"translation_{target_lang}.docx"
                 )
             with col3:
+                csv_file = create_csv(translated_text)
+                st.download_button(
+                    "Download as CSV", 
+                    csv_file, 
+                    file_name=f"translation_{target_lang}.csv"
+                )
+            with col4:
                 st.download_button(
                     "Download as JSON", 
                     json.dumps({"language": target_lang, "text": translated_text}), 
