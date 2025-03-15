@@ -1207,11 +1207,35 @@ with tab5:
             st.warning("⚠️ Please upload a document first!")
 
 
+import streamlit as st
+import chardet
+import pygments
+from pygments.lexers import guess_lexer, get_lexer_by_name
+from pygments.formatters import HtmlFormatter
+import base64
+
+# AI Function Placeholder
+def generate_ai_content(prompt, api_key, model, temperature, max_tokens):
+    return f"AI response for: {prompt}"  # Replace with actual API call
+
+# Streamlit App
 with tab6:
     st.header("⚡ AI Code Wizard")
 
-    # Automatically select the AI model for coding tasks
-    st.session_state.api_model = "gemini-2.0-flash-thinking-exp-01-21"
+    # Select AI model
+    model_options = {
+        "Gemini 2.0 Flash": "gemini-2.0-flash-thinking-exp-01-21",
+        "GPT-4 Turbo": "gpt-4-turbo",
+        "Claude 3 Opus": "claude-3-opus",
+    }
+    st.session_state.api_model = st.selectbox("Select AI Model", list(model_options.keys()), key="ai_model_selector")
+
+    # AI Settings
+    col1, col2 = st.columns(2)
+    with col1:
+        temperature = st.slider("Temperature (Creativity)", 0.0, 1.0, 0.5, 0.05)
+    with col2:
+        max_tokens = st.slider("Max Tokens (Response Length)", 100, 4000, 1000, 100)
 
     # Choose AI task
     task = st.selectbox("What do you need help with?", 
@@ -1224,47 +1248,56 @@ with tab6:
     # Code Input (Text or File)
     code_input = st.text_area("Enter your code or request:", height=200, key="code_input")
 
-    uploaded_code = st.file_uploader("Upload a code file", type=["py", "js", "cpp", "java", "vhdl"], key="code_file_uploader")
+    uploaded_code = st.file_uploader("Upload a code file", type=["py", "js", "cpp", "java", "vhdl", "c", "cs", "html", "sql"], key="code_file_uploader")
+
+    detected_language = "plaintext"
     
     if uploaded_code:
-        code_input = uploaded_code.read().decode("utf-8")
+        raw_bytes = uploaded_code.read()
+        detected_encoding = chardet.detect(raw_bytes)['encoding'] or 'utf-8'
+        code_input = raw_bytes.decode(detected_encoding)
+        
+        # Detect language
+        try:
+            lexer = guess_lexer(code_input)
+            detected_language = lexer.name.lower()
+        except Exception:
+            detected_language = "plaintext"
+
         st.text_area("Uploaded Code:", code_input, height=200, key="uploaded_code_display")
 
     # AI Action Button
     if st.button("✨ Magic Code AI", key="code_magic_button"):
         if code_input.strip():
-            if task == "Generate Code":
-                prompt = f"Write clean, efficient code for: {code_input}"
-            elif task == "Debug Code":
-                prompt = f"Find and fix errors in this code:\n\n{code_input}"
-            elif task == "Optimize Code":
-                prompt = f"Refactor and optimize this code to improve efficiency:\n\n{code_input}"
-            elif task == "Convert Code":
-                prompt = f"Convert this code to another programming language:\n\n{code_input}"
-            elif task == "Explain Code":
-                prompt = f"Explain what this code does in simple terms:\n\n{code_input}"
-            elif task == "Add Comments":
-                prompt = f"Add detailed comments to this code for better understanding:\n\n{code_input}"
-            elif task == "Find Security Issues":
-                prompt = f"Analyze this code and highlight security vulnerabilities:\n\n{code_input}"
-            elif task == "Write Unit Tests":
-                prompt = f"Generate unit tests for this code:\n\n{code_input}"
-            elif task == "Generate API Documentation":
-                prompt = f"Create API documentation for this code:\n\n{code_input}"
-            elif task == "Suggest Design Patterns":
-                prompt = f"Suggest an appropriate design pattern for this code and explain why:\n\n{code_input}"
-            elif task == "Convert Pseudocode to Code":
-                prompt = f"Convert this pseudocode into actual code:\n\n{code_input}"
-            elif task == "Fix Compilation Errors":
-                prompt = f"Fix the compilation errors in this code:\n\n{code_input}"
-            elif task == "Analyze Code Performance":
-                prompt = f"Analyze the performance of this code and suggest improvements:\n\n{code_input}"
+            prompt_mapping = {
+                "Generate Code": f"Write clean, efficient code for: {code_input}",
+                "Debug Code": f"Find and fix errors in this code:\n\n{code_input}",
+                "Optimize Code": f"Refactor and optimize this code to improve efficiency:\n\n{code_input}",
+                "Convert Code": f"Convert this code to another programming language:\n\n{code_input}",
+                "Explain Code": f"Explain what this code does in simple terms:\n\n{code_input}",
+                "Add Comments": f"Add detailed comments to this code for better understanding:\n\n{code_input}",
+                "Find Security Issues": f"Analyze this code and highlight security vulnerabilities:\n\n{code_input}",
+                "Write Unit Tests": f"Generate unit tests for this code:\n\n{code_input}",
+                "Generate API Documentation": f"Create API documentation for this code:\n\n{code_input}",
+                "Suggest Design Patterns": f"Suggest an appropriate design pattern for this code and explain why:\n\n{code_input}",
+                "Convert Pseudocode to Code": f"Convert this pseudocode into actual code:\n\n{code_input}",
+                "Fix Compilation Errors": f"Fix the compilation errors in this code:\n\n{code_input}",
+                "Analyze Code Performance": f"Analyze the performance of this code and suggest improvements:\n\n{code_input}",
+            }
 
-            # AI Code Processing
-            ai_response = generate_ai_content(prompt, st.session_state.api_key, st.session_state.api_model)
+            prompt = prompt_mapping[task]
+            selected_model = model_options[st.session_state.api_model]
+            ai_response = generate_ai_content(prompt, st.session_state.api_key, selected_model, temperature, max_tokens)
 
             st.success("✨ AI Code Response:")
-            st.code(ai_response, language="python")  # Adjust language based on task
+            st.code(ai_response, language=detected_language)
+
+            # Code Download
+            response_bytes = ai_response.encode("utf-8")
+            b64 = base64.b64encode(response_bytes).decode()
+            href = f'<a href="data:file/txt;base64,{b64}" download="ai_code_response.txt">📥 Download AI Response</a>'
+            st.markdown(href, unsafe_allow_html=True)
+            
         else:
             st.warning("⚠️ Please enter some code or upload a file.")
 
