@@ -783,7 +783,7 @@ with tab4:
         
     if clear_button:
         st.session_state.chat_history = []
-        st.experimental_rerun()
+        st.rerun()
         
     # Process user input
     if send_button and user_input:
