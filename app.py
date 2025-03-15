@@ -1207,7 +1207,7 @@ with tab5:
             st.warning("⚠️ Please upload a document first!")
 
 
-tab6with :
+with tab6:
     st.header("⚡ AI Code Wizard")
 
     # Automatically select the AI model for coding tasks
@@ -1267,7 +1267,6 @@ tab6with :
             st.code(ai_response, language="python")  # Adjust language based on task
         else:
             st.warning("⚠️ Please enter some code or upload a file.")
-
 
 # Content generation section
 st.header("✨ Create Content")
