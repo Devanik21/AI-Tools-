@@ -797,26 +797,31 @@ with tab4:
                 with viz_tabs[2]:  # Correlations
                     st.write("### Correlations")
                     if len(numeric_cols) >= 2:
-                        corr_method = st.radio("Correlation method:", ["Pearson", "Spearman"])
-                        corr = df[numeric_cols].corr(method=corr_method.lower())
-                        
-                        fig = px.imshow(corr, text_auto=True, color_continuous_scale='RdBu_r')
-                        st.plotly_chart(fig, use_container_width=True)
-                        
-                        # Scatter plot for two variables
-                        st.write("### Scatter Plot")
-                        col1, col2 = st.columns(2)
-                        with col1:
-                            x_col = st.selectbox("X-axis:", numeric_cols, index=0)
-                        with col2:
-                            y_col = st.selectbox("Y-axis:", numeric_cols, index=min(1, len(numeric_cols)-1))
-                        
-                        color_col = st.selectbox("Color by (optional):", ["None"] + df.columns.tolist())
-                        if color_col == "None":
-                            fig = px.scatter(df, x=x_col, y=y_col)
-                        else:
-                            fig = px.scatter(df, x=x_col, y=y_col, color=color_col)
-                        st.plotly_chart(fig, use_container_width=True)
+                        try:
+                            corr_method = st.radio("Correlation method:", ["Pearson", "Spearman"])
+                            corr = df[numeric_cols].corr(method=corr_method.lower())
+                            
+                            fig = px.imshow(corr, text_auto=True, color_continuous_scale='RdBu_r')
+                            st.plotly_chart(fig, use_container_width=True)
+                            
+                            # Scatter plot for two variables
+                            st.write("### Scatter Plot")
+                            col1, col2 = st.columns(2)
+                            with col1:
+                                x_col = st.selectbox("X-axis:", numeric_cols, index=0)
+                            with col2:
+                                y_col = st.selectbox("Y-axis:", numeric_cols, index=min(1, len(numeric_cols)-1))
+                            
+                            color_col = st.selectbox("Color by (optional):", ["None"] + df.columns.tolist())
+                            if color_col == "None":
+                                fig = px.scatter(df, x=x_col, y=y_col)
+                            else:
+                                fig = px.scatter(df, x=x_col, y=y_col, color=color_col)
+                            st.plotly_chart(fig, use_container_width=True)
+                        except Exception as e:
+                            st.error(f"Error creating correlation visualizations: {str(e)}")
+                    else:
+                        st.info("Need at least 2 numeric columns for correlation analysis.")
                 
                 with viz_tabs[3]:  # Time Series
                     st.write("### Time Series Analysis")
@@ -1007,7 +1012,6 @@ with tab4:
         response = generate_ai_content(prompt, st.session_state.api_key, st.session_state.api_model)
         st.success("🧠 AI Response:")
         st.write(response)
-        
         
 from iso639 import languages
 
