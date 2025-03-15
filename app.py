@@ -1207,94 +1207,96 @@ with tab5:
             st.warning("⚠️ Please upload a document first!")
 
 
-import streamlit as st
-import magic_ai_utils  # Hypothetical AI API utility module
-from pygments.lexers import guess_lexer_for_filename
-
-# App Title
-st.header("⚡ AI Code Wizard - Advanced Edition")
-
-# AI Model Selection
-ai_model = st.selectbox("Choose AI Model", [
-    "gemini-2.0-flash-thinking-exp-01-21",
-    "gpt-4-turbo",
-    "claude-3-haiku",
-    "mistral-7b"
-], key="ai_model_selection")
-
-# AI Task Selection
-task = st.radio("What do you need help with?", [
-    "Generate Code", "Debug Code", "Optimize Code", "Convert Code", "Explain Code",
-    "Add Comments", "Find Security Issues", "Write Unit Tests", "Generate API Documentation",
-    "Suggest Design Patterns", "Convert Pseudocode to Code", "Fix Compilation Errors",
-    "Analyze Code Performance", "Refactor for Readability", "Identify Code Smells"
-], key="code_task_radio")
-
-# Code Input (Text or File)
-code_input = st.text_area("Enter your code or request:", height=200, key="code_input")
-
-uploaded_code = st.file_uploader("Upload a code file", type=["py", "js", "cpp", "java", "vhdl", "c", "cs"], key="code_file_uploader")
-
-if uploaded_code:
-    file_name = uploaded_code.name
-    code_input = uploaded_code.read().decode("utf-8")
-    st.text_area("Uploaded Code:", code_input, height=200, key="uploaded_code_display")
-    code_language = guess_lexer_for_filename(file_name, code_input).name.lower()
-else:
-    code_language = "python"  # Default
-
-# AI Action Button
-if st.button("✨ Magic Code AI", key="code_magic_button"):
-    if code_input.strip():
-        prompts = {
-            "Generate Code": f"Write clean, efficient code for: {code_input}",
-            "Debug Code": f"Find and fix errors in this code:\n\n{code_input}",
-            "Optimize Code": f"Refactor and optimize this code to improve efficiency:\n\n{code_input}",
-            "Convert Code": f"Convert this code to another programming language:\n\n{code_input}",
-            "Explain Code": f"Explain what this code does in simple terms:\n\n{code_input}",
-            "Add Comments": f"Add detailed comments to this code for better understanding:\n\n{code_input}",
-            "Find Security Issues": f"Analyze this code and highlight security vulnerabilities:\n\n{code_input}",
-            "Write Unit Tests": f"Generate unit tests for this code:\n\n{code_input}",
-            "Generate API Documentation": f"Create API documentation for this code:\n\n{code_input}",
-            "Suggest Design Patterns": f"Suggest an appropriate design pattern for this code and explain why:\n\n{code_input}",
-            "Convert Pseudocode to Code": f"Convert this pseudocode into actual code:\n\n{code_input}",
-            "Fix Compilation Errors": f"Fix the compilation errors in this code:\n\n{code_input}",
-            "Analyze Code Performance": f"Analyze the performance of this code and suggest improvements:\n\n{code_input}",
-            "Refactor for Readability": f"Improve the readability and maintainability of this code:\n\n{code_input}",
-            "Identify Code Smells": f"Identify and explain any code smells present in this code:\n\n{code_input}"
-        }
-        
-        prompt = prompts.get(task, "Provide AI assistance for the following code:")
-        
-        # AI Code Processing
-        ai_response = magic_ai_utils.generate_ai_content(prompt, st.session_state.api_key, ai_model)
-
-        st.success("✨ AI Code Response:")
-        st.code(ai_response, language=code_language)
-    else:
-        st.warning("⚠️ Please enter some code or upload a file.")
-
-# Advanced Code Analysis
-if code_input.strip():
-    with st.expander("🔍 Advanced Code Analysis"):
-        complexity_score = magic_ai_utils.analyze_complexity(code_input)
-        security_score = magic_ai_utils.analyze_security(code_input)
-        
-        st.write(f"**Cyclomatic Complexity:** {complexity_score}")
-        st.write(f"**Security Score:** {security_score}")
-
-        if security_score < 5:
-            st.warning("⚠️ Security risk detected! Consider revising the code.")
-
-# Dark Mode Toggle
-st.sidebar.markdown("### 🌙 Toggle Dark Mode")
-dark_mode = st.sidebar.checkbox("Enable Dark Mode")
-if dark_mode:
-    st.markdown("""
-        <style>
-        body { background-color: #121212; color: white; }
-        </style>
-    """, unsafe_allow_html=True)
+with tab6:
+    st.header("⚡ Advanced AI Code Wizard")
+    
+    # Select AI Code Task
+    task = st.selectbox(
+        "Choose your AI Code Task", 
+        [
+            "Generate Code", 
+            "Debug Code", 
+            "Optimize Code", 
+            "Convert Code", 
+            "Explain Code",
+            "Add Comments",
+            "Find Security Issues",
+            "Write Unit Tests",
+            "Generate API Documentation",
+            "Suggest Design Patterns",
+            "Convert Pseudocode to Code",
+            "Fix Compilation Errors",
+            "Analyze Code Performance",
+            "Lint Code",
+            "Code Refactoring Suggestions",
+            "Explain Error Messages"
+        ], 
+        key="code_task_advanced"
+    )
+    
+    # Code Input: text area for manual input and/or file upload
+    code_input = st.text_area(
+        "Enter your code or describe your code request:", 
+        height=200, 
+        key="advanced_code_input"
+    )
+    
+    uploaded_code = st.file_uploader(
+        "Upload a code file", 
+        type=["py", "js", "cpp", "java", "vhdl", "c", "cs"], 
+        key="advanced_code_file_uploader"
+    )
+    
+    if uploaded_code:
+        try:
+            code_input = uploaded_code.read().decode("utf-8")
+            st.text_area("Uploaded Code:", code_input, height=200, key="uploaded_code_display_advanced")
+        except Exception as e:
+            st.error(f"Error reading uploaded file: {e}")
+    
+    # Advanced configuration panel for additional customizations
+    with st.expander("Advanced Configuration Options"):
+        language_options = ["Python", "JavaScript", "C++", "Java", "C#", "Other"]
+        source_language = st.selectbox("Source Code Language:", language_options, key="source_lang")
+        target_language = st.selectbox("Target Code Language (for conversion):", language_options, key="target_lang")
+        optimization_level = st.slider("Optimization Level:", 0, 10, 5, key="optimization_level")
+        add_comments = st.checkbox("Automatically add comments", value=True, key="add_comments")
+        generate_tests = st.checkbox("Generate unit tests", value=False, key="generate_tests")
+        lint_code = st.checkbox("Include linting suggestions", value=False, key="lint_code")
+    
+    # Execute AI Code Task
+    if st.button("Execute AI Code Task", key="advanced_code_execute"):
+        if code_input.strip():
+            # Build a detailed prompt that includes configuration settings
+            prompt = f"Task: {task}\n"
+            prompt += f"Source Language: {source_language}\n"
+            prompt += f"Target Language: {target_language}\n"
+            prompt += f"Optimization Level: {optimization_level}\n"
+            prompt += f"Add Comments: {'Yes' if add_comments else 'No'}\n"
+            prompt += f"Generate Unit Tests: {'Yes' if generate_tests else 'No'}\n"
+            prompt += f"Lint Code: {'Yes' if lint_code else 'No'}\n"
+            prompt += "Code:\n" + code_input
+            
+            with st.spinner("Processing your code with AI..."):
+                ai_response = generate_ai_content(prompt, st.session_state.api_key, st.session_state.api_model)
+            
+            st.success("AI Code Response:")
+            st.code(ai_response, language=source_language.lower())
+            
+            # Export options for the AI response
+            col1, col2 = st.columns(2)
+            with col1:
+                st.download_button("Download AI Response", ai_response, "ai_code_response.txt")
+            with col2:
+                st.button(
+                    "Copy to Clipboard", 
+                    on_click=lambda: st.write(
+                        "<script>navigator.clipboard.writeText(`" + ai_response.replace("`", "\\`") + "`);</script>", 
+                        unsafe_allow_html=True
+                    )
+                )
+        else:
+            st.warning("Please provide some code or a code description.")
 
 
 # Content generation section
