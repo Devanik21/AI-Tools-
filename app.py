@@ -1207,10 +1207,6 @@ with tab5:
             st.warning("⚠️ Please upload a document first!")
 
 
-from io import BytesIO
-import docx
-import json
-
 with tab6:
     st.header("⚡ Advanced AI Code Wizard")
     
@@ -1233,10 +1229,7 @@ with tab6:
             "Analyze Code Performance",
             "Lint Code",
             "Code Refactoring Suggestions",
-            "Explain Error Messages",
-            "Assess Code Complexity",
-            "Improve Readability",
-            "Suggest Alternative Approaches"
+            "Explain Error Messages"
         ], 
         key="code_task_advanced"
     )
@@ -1250,35 +1243,29 @@ with tab6:
     
     uploaded_code = st.file_uploader(
         "Upload a code file", 
-        type=["py", "js", "cpp", "java", "vhdl", "c", "cs", "ts", "go", "rb"], 
-        accept_multiple_files=True, 
+        type=["py", "js", "cpp", "java", "vhdl", "c", "cs"], 
         key="advanced_code_file_uploader"
     )
     
     if uploaded_code:
-        code_content = ""
-        for file in uploaded_code:
-            try:
-                code_content += file.read().decode("utf-8") + "\n\n"  # Read multiple files
-            except Exception as e:
-                st.error(f"Error reading {file.name}: {e}")
-        
-        code_input = code_content
-        st.text_area("Uploaded Code:", code_input, height=300, key="uploaded_code_display_advanced")
+        try:
+            code_input = uploaded_code.read().decode("utf-8")
+            st.text_area("Uploaded Code:", code_input, height=200, key="uploaded_code_display_advanced")
+        except Exception as e:
+            st.error(f"Error reading uploaded file: {e}")
     
     # Advanced configuration panel for additional customizations
-    with st.expander("⚙️ Advanced Configuration Options"):
-        language_options = ["Python", "JavaScript", "C++", "Java", "C#", "VHDL", "TypeScript", "Go", "Ruby", "Other"]
+    with st.expander("Advanced Configuration Options"):
+        language_options = ["Python", "JavaScript", "C++", "Java", "C#", "Other"]
         source_language = st.selectbox("Source Code Language:", language_options, key="source_lang")
         target_language = st.selectbox("Target Code Language (for conversion):", language_options, key="target_lang")
         optimization_level = st.slider("Optimization Level:", 0, 10, 5, key="optimization_level")
         add_comments = st.checkbox("Automatically add comments", value=True, key="add_comments")
         generate_tests = st.checkbox("Generate unit tests", value=False, key="generate_tests")
         lint_code = st.checkbox("Include linting suggestions", value=False, key="lint_code")
-        parallel_analysis = st.checkbox("Enable Parallel AI Code Suggestions", value=False, key="parallel_analysis")
-
+    
     # Execute AI Code Task
-    if st.button("🚀 Execute AI Code Task", key="advanced_code_execute"):
+    if st.button("Execute AI Code Task", key="advanced_code_execute"):
         if code_input.strip():
             # Build a detailed prompt that includes configuration settings
             prompt = f"Task: {task}\n"
@@ -1290,63 +1277,26 @@ with tab6:
             prompt += f"Lint Code: {'Yes' if lint_code else 'No'}\n"
             prompt += "Code:\n" + code_input
             
-            with st.spinner("🔍 AI is analyzing your code..."):
+            with st.spinner("Processing your code with AI..."):
                 ai_response = generate_ai_content(prompt, st.session_state.api_key, st.session_state.api_model)
             
-            st.success("✅ AI Code Response:")
+            st.success("AI Code Response:")
             st.code(ai_response, language=source_language.lower())
-
-            # Parallel AI Code Suggestions (if enabled)
-            if parallel_analysis:
-                st.subheader("🔄 Parallel AI Code Suggestions")
-                alt_prompt = f"Provide an alternative approach for the following code in {source_language}:\n\n{code_input}"
-                alternate_code = generate_ai_content(alt_prompt, st.session_state.api_key, st.session_state.api_model)
-                
-                col1, col2 = st.columns(2)
-                with col1:
-                    st.markdown("### 🎯 Primary AI Code Suggestion")
-                    st.code(ai_response, language=source_language.lower())
-                with col2:
-                    st.markdown("### 🛠 Alternative AI Code Suggestion")
-                    st.code(alternate_code, language=source_language.lower())
-
-            # Function to create downloadable DOCX file
-            def create_docx(text):
-                doc = docx.Document()
-                doc.add_paragraph(text)
-                doc_stream = BytesIO()
-                doc.save(doc_stream)
-                doc_stream.seek(0)  # Move to the beginning of the file
-                return doc_stream
             
-            # Function to create downloadable JSON file
-            def create_json(text):
-                json_data = json.dumps({"language": source_language, "code": text})
-                json_stream = BytesIO()
-                json_stream.write(json_data.encode())
-                json_stream.seek(0)
-                return json_stream
-
-            # Export and copy options
-            col1, col2, col3, col4 = st.columns(4)
+            # Export options for the AI response
+            col1, col2 = st.columns(2)
             with col1:
-                st.download_button("📥 Download as TXT", ai_response, file_name="ai_code_response.txt")
+                st.download_button("Download AI Response", ai_response, "ai_code_response.txt")
             with col2:
-                docx_file = create_docx(ai_response)
-                st.download_button("📥 Download as DOCX", docx_file, file_name="ai_code_response.docx")
-            with col3:
-                json_file = create_json(ai_response)
-                st.download_button("📥 Download as JSON", json_file, file_name="ai_code_response.json")
-            with col4:
                 st.button(
-                    "📋 Copy to Clipboard", 
+                    "Copy to Clipboard", 
                     on_click=lambda: st.write(
                         "<script>navigator.clipboard.writeText(`" + ai_response.replace("`", "\\`") + "`);</script>", 
                         unsafe_allow_html=True
                     )
                 )
         else:
-            st.warning("⚠️ Please provide some code or a code description.")
+            st.warning("Please provide some code or a code description.")
 
 
 # Content generation section
