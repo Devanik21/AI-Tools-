@@ -1054,328 +1054,97 @@ with tab4:
         st.success("🧠 AI Response:")
         st.write(response)
         
-import streamlit as st
 from iso639 import languages
-import pandas as pd
-from io import BytesIO
-import docx2txt
-import fitz  # PyMuPDF
-import re
-import base64
-import time
-from translate import Translator
 
-# Extract text function with enhanced handling for different file types
-def extract_text_from_file(file):
-    file_type = file.name.split('.')[-1].lower()
-    
-    try:
-        if file_type == 'pdf':
-            text = ""
-            with fitz.open(stream=file.read(), filetype="pdf") as doc:
-                for page in doc:
-                    text += page.get_text()
-                    # Extract images if needed
-                    # for img in page.get_images(full=True):
-                    #    pass  # Process images if needed
-            return text
-            
-        elif file_type == 'docx':
-            text = docx2txt.process(file)
-            return text
-            
-        elif file_type == 'txt':
-            return file.getvalue().decode('utf-8')
-            
-        elif file_type == 'csv':
-            df = pd.read_csv(file)
-            # Return first 5 columns and 10 rows for preview
-            preview_df = df.iloc[:10, :5]
-            return preview_df.to_string()
-            
-        else:
-            return "Unsupported file format"
-    except Exception as e:
-        return f"Error extracting text: {str(e)}"
-
-# Function to detect language (can be expanded with a proper language detection library)
-def detect_language(text):
-    # Placeholder for actual language detection
-    # In a real implementation, use a library like langdetect or fasttext
-    common_words = {
-        'the': 'en', 'a': 'en', 'is': 'en',
-        'le': 'fr', 'la': 'fr', 'est': 'fr',
-        'der': 'de', 'die': 'de', 'das': 'de',
-        'el': 'es', 'la': 'es', 'es': 'es'
-    }
-    
-    words = re.findall(r'\b\w+\b', text.lower())
-    counts = {}
-    
-    for word in words:
-        if word in common_words:
-            lang = common_words[word]
-            counts[lang] = counts.get(lang, 0) + 1
-    
-    if not counts:
-        return 'unknown'
-    
-    return max(counts, key=counts.get)
-
-# Enhanced AI translation with fallback to traditional translation API
-def translate_text(text, target_lang, translation_mode, tone, api_key=None, model=None):
-    if api_key and model:  # Use AI API if available
-        prompt = construct_translation_prompt(text, target_lang, translation_mode, tone)
-        return generate_ai_content(prompt, api_key, model)
-    else:  # Fallback to basic translation API
-        try:
-            translator = Translator(to_lang=target_lang)
-            # Break into chunks to avoid length limitations
-            chunk_size = 500
-            chunks = [text[i:i+chunk_size] for i in range(0, len(text), chunk_size)]
-            translated_chunks = []
-            
-            with st.spinner("Translating in chunks..."):
-                for chunk in chunks:
-                    translated_chunks.append(translator.translate(chunk))
-                    time.sleep(0.5)  # Avoid rate limiting
-                    
-            return ''.join(translated_chunks)
-        except Exception as e:
-            return f"Translation error: {str(e)}"
-
-# Construct prompts for AI translation
-def construct_translation_prompt(text, target_lang, mode, tone):
-    mode_instructions = {
-        "Full Translation": "Translate the entire text accurately preserving all details.",
-        "Summary Translation": "Translate the key points and main ideas as a summary.",
-        "Paraphrase Translation": "Translate while paraphrasing to use different wording."
-    }
-    
-    tone_instructions = {
-        "Formal": "Use formal language suitable for professional documents.",
-        "Informal": "Use casual, conversational language.",
-        "Neutral": "Use neutral language without strong formality or informality.",
-        "Friendly": "Use warm, approachable language."
-    }
-    
-    prompt = f"""
-    Translation Task:
-    - {mode_instructions.get(mode, "Translate accurately")}
-    - {tone_instructions.get(tone, "Use appropriate tone")}
-    - Target language: {target_lang}
-    
-    Text to translate:
-    {text}
-    """
-    return prompt
-
-# Download translations in various formats
-def get_download_link(content, filename, text):
-    b64 = base64.b64encode(content.encode()).decode()
-    href = f'<a href="data:file/txt;base64,{b64}" download="{filename}">{text}</a>'
-    return href
-
-# Main translation UI component
-def render_translator_tab():
+with tab5:
     st.header("🌍 AI-Powered Document Translator")
-    st.write("Translate documents with advanced AI capabilities and customization options")
     
-    col1, col2 = st.columns([2, 1])
+    # File uploader for document translation
+    uploaded_file = st.file_uploader(
+        "Upload a document (PDF, DOCX, TXT, CSV)", 
+        type=["pdf", "docx", "txt", "csv"], 
+        key="translator_file_uploader"
+    )
     
-    with col1:
-        # File uploader with multiple file support
-        uploaded_files = st.file_uploader(
-            "Upload documents (PDF, DOCX, TXT, CSV)", 
-            type=["pdf", "docx", "txt", "csv"], 
-            accept_multiple_files=True,
-            key="translator_file_uploader"
+    extracted_text = ""  # Store extracted text
+    
+    # Process the uploaded file and extract text
+    if uploaded_file:
+        extracted_text = extract_text_from_file(uploaded_file)  # Ensure this function is defined
+        st.success("✅ File processed successfully!")
+        st.text_area("Extracted Content:", extracted_text[:5000], height=200, key="translator_extracted_text")
+    
+    # Advanced translation options
+    with st.expander("Advanced Translation Options"):
+        translation_mode = st.selectbox(
+            "Translation Mode:", 
+            ["Full Translation", "Summary Translation", "Paraphrase Translation"], 
+            key="translator_mode"
         )
-        
-        # Process multiple files if uploaded
-        extracted_texts = {}
-        if uploaded_files:
-            for file in uploaded_files:
-                with st.spinner(f"Processing {file.name}..."):
-                    extracted_text = extract_text_from_file(file)
-                    extracted_texts[file.name] = extracted_text
-                    st.success(f"✅ {file.name} processed successfully!")
-            
-            # If files uploaded, let user select which one to translate
-            if extracted_texts:
-                selected_file = st.selectbox(
-                    "Select file to translate:", 
-                    list(extracted_texts.keys()),
-                    key="translator_file_select"
-                )
-                st.text_area(
-                    "Extracted Content:", 
-                    extracted_texts[selected_file][:3000] + ("..." if len(extracted_texts[selected_file]) > 3000 else ""), 
-                    height=200, 
-                    key="translator_extracted_text"
-                )
-        
-    with col2:
-        # Translation settings
-        with st.expander("Translation Settings", expanded=True):
-            # Get language list
-            all_languages = {lang.name: lang.part3 for lang in languages.iter_languages() if hasattr(lang, 'part3') and lang.part3}
-            # Sort languages alphabetically
-            sorted_languages = dict(sorted(all_languages.items()))
-            
-            # Auto-detect source language option
-            if extracted_texts and selected_file:
-                detected_lang_code = detect_language(extracted_texts[selected_file])
-                detected_lang = next((name for name, code in all_languages.items() if code == detected_lang_code), "Unknown")
-                st.info(f"Detected language: {detected_lang}")
-            
-            # Target language selection with search
-            target_lang_search = st.text_input("Search languages:", key="lang_search")
-            filtered_languages = {k: v for k, v in sorted_languages.items() 
-                                if not target_lang_search or target_lang_search.lower() in k.lower()}
-            
-            target_lang = st.selectbox(
-                "Target Language:", 
-                list(filtered_languages.keys()),
-                key="translator_language_select"
-            )
-            
-            translation_mode = st.radio(
-                "Translation Mode:", 
-                ["Full Translation", "Summary Translation", "Paraphrase Translation"],
-                horizontal=True,
-                key="translator_mode"
-            )
-            
-            tone = st.select_slider(
-                "Translation Tone:", 
-                options=["Formal", "Neutral", "Friendly", "Informal"],
-                value="Neutral",
-                key="translator_tone"
-            )
-            
-            output_format = st.selectbox(
-                "Output Format:", 
-                ["Plain Text", "Markdown", "HTML", "JSON"],
-                key="translator_format"
-            )
-            
-            # Advanced options
-            with st.expander("Advanced Options"):
-                preserve_formatting = st.toggle("Preserve Formatting", value=True)
-                glossary_terms = st.text_area("Custom Glossary (term:translation, one per line)")
-                max_chars = st.slider(
-                    "Max Characters:", 
-                    min_value=1000, max_value=20000, value=5000, step=500,
-                    key="translator_max_chars"
-                )
-        
-        # Translate button
-        translate_btn = st.button(
-            "Translate Document 🌍", 
-            type="primary",
-            key="translator_translate_btn"
+        tone = st.selectbox(
+            "Translation Tone:", 
+            ["Formal", "Informal", "Neutral", "Friendly"], 
+            key="translator_tone"
+        )
+        output_format = st.selectbox(
+            "Output Format:", 
+            ["Plain Text", "Markdown", "HTML"], 
+            key="translator_format"
+        )
+        max_chars = st.slider(
+            "Max Characters to Translate:", 
+            min_value=1000, max_value=10000, value=5000, step=500, 
+            key="translator_max_chars"
         )
     
-    # Display translation results
-    if translate_btn and extracted_texts and selected_file:
-        with st.spinner("Translating document..."):
-            text_to_translate = extracted_texts[selected_file][:max_chars]
-            lang_code = all_languages[target_lang]
-            
-            # Process glossary if provided
-            glossary = {}
-            if glossary_terms:
-                for line in glossary_terms.split('\n'):
-                    if ':' in line:
-                        term, translation = line.split(':', 1)
-                        glossary[term.strip()] = translation.strip()
-            
-            # Perform translation
-            translated_text = translate_text(
-                text_to_translate, 
-                lang_code, 
-                translation_mode, 
-                tone,
-                st.session_state.get('api_key'),
-                st.session_state.get('api_model')
+    # Fetch 200+ languages dynamically
+    all_languages = {lang.name: lang.part1 for lang in languages if lang.part1}  # Get name & ISO code
+    
+    # Streamlit selectbox for choosing target language
+    target_lang = st.selectbox(
+        "Select Target Language:", 
+        list(all_languages.keys()), 
+        key="translator_language_select"
+    )
+    
+    # Translation button and display translation
+    if st.button("Translate 🌍", key="translator_translate_btn"):
+        if extracted_text:
+            lang_code = all_languages[target_lang]  # Convert display name to language code
+            # Limit the text to translate to the max_chars value
+            text_to_translate = extracted_text[:max_chars]
+            # Build an advanced prompt that incorporates translation mode, tone, and output format
+            prompt = (
+                f"Translation Mode: {translation_mode}\n"
+                f"Tone: {tone}\n"
+                f"Output Format: {output_format}\n\n"
+                f"Translate the following text to {target_lang} ({lang_code}):\n\n{text_to_translate}"
             )
+            translated_text = generate_ai_content(prompt, st.session_state.api_key, st.session_state.api_model)
+            st.success("✅ Translation Complete:")
+            st.write(translated_text)
             
-            # Apply glossary terms if any
-            if glossary:
-                for term, translation in glossary.items():
-                    translated_text = translated_text.replace(term, translation)
-        
-        # Display results
-        st.success("✅ Translation Complete")
-        
-        # Format output according to selection
-        if output_format == "Markdown":
-            st.markdown(translated_text)
-        elif output_format == "HTML":
-            st.components.v1.html(translated_text, height=400)
-        elif output_format == "JSON":
-            import json
-            json_output = {
-                "source_language": detected_lang if 'detected_lang' in locals() else "unknown",
-                "target_language": target_lang,
-                "translation": translated_text,
-                "settings": {
-                    "mode": translation_mode,
-                    "tone": tone
-                }
-            }
-            st.json(json_output)
-        else:  # Plain text
-            st.text_area("Translation:", translated_text, height=400)
-        
-        # Export options
-        col1, col2, col3 = st.columns(3)
-        with col1:
-            st.download_button(
-                "📥 Download as TXT",
-                translated_text,
-                file_name=f"translation_{target_lang.lower().replace(' ', '_')}.txt"
-            )
-        
-        with col2:
-            if output_format == "HTML":
+            # Export and copy options
+            col1, col2 = st.columns(2)
+            with col1:
                 st.download_button(
-                    "📥 Download as HTML",
-                    translated_text,
-                    file_name=f"translation_{target_lang.lower().replace(' ', '_')}.html"
+                    "Download Translation", 
+                    translated_text, 
+                    file_name=f"translation_{target_lang}.txt"
                 )
-            else:
-                st.download_button(
-                    "📥 Download as DOCX",
-                    # This would need to be implemented with python-docx
-                    translated_text,
-                    file_name=f"translation_{target_lang.lower().replace(' ', '_')}.docx"
+            with col2:
+                st.button(
+                    "Copy to Clipboard", 
+                    on_click=lambda: st.write(
+                        "<script>navigator.clipboard.writeText(`" 
+                        + translated_text.replace("`", "\\`") 
+                        + "`);</script>", 
+                        unsafe_allow_html=True
+                    )
                 )
-        
-        with col3:
-            st.button(
-                "📋 Copy to Clipboard",
-                help="Copy translation to clipboard"
-                # JavaScript would need to be added for this functionality
-            )
-        
-        # Translation quality rating
-        st.write("How was the translation quality?")
-        rating = st.slider("Rating", 1, 5, 5)
-        if rating < 4:
-            st.text_area("Please tell us how we can improve:", height=100)
-        
-        # Translation metrics
-        st.info(f"Translated {len(text_to_translate)} characters to {target_lang}")
-        
-    # No file uploaded
-    elif translate_btn and not extracted_texts:
-        st.warning("⚠️ Please upload at least one document first!")
+        else:
+            st.warning("⚠️ Please upload a document first!")
 
-# Can be called from main app.py
-def init_translator_tab():
-    render_translator_tab()
 
 
 with tab6:
