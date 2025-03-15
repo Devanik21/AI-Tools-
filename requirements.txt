@@ -11,6 +11,7 @@ wordcloud
 translate
 nltk
 iso-639
+langdetect
 docx2txt
 pyperclip 
 langcodes
