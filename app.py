@@ -391,19 +391,17 @@ def load_prompt_templates():
     return templates
 
 # Function to generate content with AI
-# Function to generate content with AI
-def generate_ai_content(prompt, api_key, model_name, temperature=0.7):
+def generate_ai_content(prompt, api_key, model_name):
     try:
         genai.configure(api_key=api_key)
         model = genai.GenerativeModel(model_name)
         with st.spinner("🔮 AI is working its magic..."):
-            generation_config = {"temperature": temperature, "top_p": 0.95, "top_k": 40, "max_output_tokens": 2048}
+            generation_config = {"temperature": 0.7, "top_p": 0.95, "top_k": 40, "max_output_tokens": 2048}
             response = model.generate_content(prompt, generation_config=generation_config)
             return response.text
     except Exception as e:
         return f"Error: {str(e)}"
-    
-    
+
 # Function to save content to history
 def save_to_history(tool_name, prompt, output):
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -664,168 +662,48 @@ with tab3:
 
 
 with tab4:
-    st.header("🤖 Advanced AI Chatbot")
-    
-    # File upload section with preview
-    st.subheader("📄 Upload Files")
-    col1, col2 = st.columns([3, 2])
-    
-    with col1:
-        uploaded_file = st.file_uploader(
-            "Upload any file (PDF, DOCX, CSV, TXT, Images, Audio)",
-            type=["pdf", "docx", "csv", "txt", "png", "jpg", "jpeg", "mp3", "wav"],
-            help="Your file will be processed locally and not stored permanently"
-        )
-    
-    with col2:
-        file_options = st.expander("⚙️ File Processing Options")
-        with file_options:
-            chunk_size = st.slider("Chunk Size (chars)", 1000, 5000, 3000)
-            if "csv" in str(getattr(uploaded_file, 'type', '')):
-                csv_options = st.multiselect("CSV Analysis", 
-                                           ["Summary Statistics", "Detect Anomalies", "Extract Key Insights"])
-    
-    extracted_text = ""
-    file_preview = None
-    file_metadata = {}
-    
-    # Process uploaded file with progress and error handling
+    st.header("🤖 AI Chatbot with Universal File Upload")
+
+    # File uploader
+    uploaded_file = st.file_uploader("Upload a file (PDF, DOCX, CSV, TXT, Audio)", 
+                                     type=["pdf", "docx", "csv", "txt",  "mp3", "wav"])
+
+    extracted_text = ""  # Store extracted text
+
+    # Process uploaded file
     if uploaded_file:
-        try:
-            with st.spinner("Processing file..."):
-                file_type = uploaded_file.type
-                file_metadata = {
-                    "name": uploaded_file.name,
-                    "type": file_type,
-                    "size": f"{uploaded_file.size / 1024:.1f} KB"
-                }
-                
-                if file_type == "application/pdf":
-                    extracted_text = extract_text_from_pdf(uploaded_file)
-                    file_preview = extracted_text[:500]
-                elif "word" in file_type:
-                    extracted_text = extract_text_from_docx(uploaded_file)
-                    file_preview = extracted_text[:500]
-                elif "text/plain" in file_type:
-                    extracted_text = extract_text_from_txt(uploaded_file)
-                    file_preview = extracted_text[:500]
-                elif "csv" in file_type:
-                    df = pd.read_csv(uploaded_file)
-                    extracted_text = df.to_json()
-                    file_preview = df.head(5).to_html()
-                    if "Summary Statistics" in csv_options:
-                        file_preview += f"<h4>Summary Statistics</h4>{df.describe().to_html()}"
-                elif "image" in file_type:
-                    extracted_text = extract_text_from_image(uploaded_file)
-                    file_preview = f"<i>Image text extracted:</i><br>{extracted_text[:300]}"
-                elif "audio" in file_type:
-                    extracted_text = extract_text_from_audio(uploaded_file)
-                    file_preview = f"<i>Audio transcription:</i><br>{extracted_text[:300]}"
-                
-                st.success(f"✅ {uploaded_file.name} processed successfully!")
-        except Exception as e:
-            st.error(f"❌ Error processing file: {str(e)}")
-            st.info("Try a different file format or check if the file is corrupted")
-    
-    # Display file preview and metadata if available
-    if file_preview:
-        preview_expander = st.expander("📋 File Preview", expanded=True)
-        with preview_expander:
-            cols = st.columns(3)
-            cols[0].metric("File Name", file_metadata.get("name", "Unknown"))
-            cols[1].metric("File Type", file_metadata.get("type", "Unknown").split('/')[-1].upper())
-            cols[2].metric("File Size", file_metadata.get("size", "Unknown"))
-            
-            if "html" in file_preview:
-                st.write(file_preview, unsafe_allow_html=True)
-            else:
-                st.text_area("Content Preview:", file_preview, height=150)
-    
-    # Chat history management
-    if "chat_history" not in st.session_state:
-        st.session_state.chat_history = []
-    
-    # Chat interface
+        file_type = uploaded_file.type
+
+        if file_type == "application/pdf":
+            extracted_text = extract_text_from_pdf(uploaded_file)
+        elif file_type in ["application/vnd.openxmlformats-officedocument.wordprocessingml.document"]:
+            extracted_text = extract_text_from_docx(uploaded_file)
+        elif file_type in ["text/plain"]:
+            extracted_text = extract_text_from_txt(uploaded_file)
+        elif file_type in ["text/csv"]:
+            extracted_text = extract_text_from_csv(uploaded_file)
+        elif file_type in ["image/png", "image/jpeg"]:
+            extracted_text = extract_text_from_image(uploaded_file)
+        elif file_type in ["audio/mpeg", "audio/wav"]:
+            extracted_text = extract_text_from_audio(uploaded_file)
+
+        st.success("✅ File processed successfully!")
+        st.text_area("Extracted Content:", extracted_text[:2000], height=200)  # Preview first 2000 characters
+
+    # AI Chatbot Section
     st.subheader("💬 Chat with AI")
-    
-    # Chat options
-    chat_options = st.expander("⚙️ Chat Options")
-    with chat_options:
-        col1, col2 = st.columns(2)
-        with col1:
-            temperature = st.slider("Temperature", 0.0, 1.0, 0.7, 0.1, 
-                                  help="Higher values make output more creative")
-        with col2:
-            response_type = st.selectbox("Response Style", 
-                                       ["Balanced", "Concise", "Detailed", "Creative", "Technical"])
-    
-    # Display chat history
-    chat_container = st.container()
-    with chat_container:
-        for i, chat in enumerate(st.session_state.chat_history):
-            div_style = "padding: 10px; border-radius: 10px; margin-bottom: 10px;"
-            
-            if chat["role"] == "user":
-                st.markdown(f"""<div style="{div_style} background-color: #e6f7ff;">
-                             <b>You:</b><br>{chat["content"]}</div>""", unsafe_allow_html=True)
-            else:
-                st.markdown(f"""<div style="{div_style} background-color: #f0f0f0;">
-                             <b>AI:</b><br>{chat["content"]}</div>""", unsafe_allow_html=True)
-    
-    # User input
-    user_input = st.text_area("Ask your question:", key="user_question", height=100)
-    
-    col1, col2 = st.columns([1, 4])
-    with col1:
-        send_button = st.button("Send 🚀", use_container_width=True)
-    with col2:
-        clear_button = st.button("Clear Chat 🧹", use_container_width=False)
-        
-    if clear_button:
-        st.session_state.chat_history = []
-        st.rerun()
-        
-    # Process user input
-    if send_button and user_input:
-        # Save user message to history
-        st.session_state.chat_history.append({"role": "user", "content": user_input})
-        
-        # Prepare context from file content if available
+    user_input = st.text_area("Ask AI a question (Optional):")
+
+    if st.button("Ask AI 🤖"):
         if extracted_text:
-            # Create context depending on file type
-            if "csv" in str(getattr(uploaded_file, 'type', '')):
-                context = f"Data analysis based on CSV with columns: {', '.join(pd.read_csv(uploaded_file).columns)}"
-            else:
-                # Chunk large text to stay within token limits
-                context = extracted_text[:chunk_size]
-                
-            prompt = f"""Context from uploaded file:
-            {context}
-            
-            User question: {user_input}
-            
-            Provide a {response_type.lower()} response."""
+            prompt = f"Based on this file's content:\n{extracted_text[:3000]}\n\nAnswer the user's question: {user_input}"
         else:
-            prompt = user_input
-            
-        with st.spinner("AI is thinking..."):
-            try:
-                response = generate_ai_content(
-                    prompt, 
-                    st.session_state.api_key, 
-                    st.session_state.api_model,
-                    temperature=temperature
-                )
-                
-                # Save AI response to history
-                st.session_state.chat_history.append({"role": "assistant", "content": response})
-                
-                # Force UI refresh to show the new message
-                st.experimental_rerun()
-                
-            except Exception as e:
-                st.error(f"Error generating response: {str(e)}")
-                st.info("Check your API key or try again with a different question")
+            prompt = user_input  # If no file, just use user query
+
+        response = generate_ai_content(prompt, st.session_state.api_key, st.session_state.api_model)
+        st.success("🧠 AI Response:")
+        st.write(response)
+
 
 from iso639 import languages
 
