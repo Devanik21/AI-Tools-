@@ -1091,65 +1091,95 @@ with tab5:
 
 
 with tab6:
-    st.header("⚡ AI Code Wizard")
-
-    # Automatically select the AI model for coding tasks
-    st.session_state.api_model = "gemini-2.0-flash-thinking-exp-01-21"
-
-    # Choose AI task
-    task = st.selectbox("What do you need help with?", 
-                    ["Generate Code", "Debug Code", "Optimize Code", "Convert Code", "Explain Code",
-                     "Add Comments", "Find Security Issues", "Write Unit Tests", "Generate API Documentation",
-                     "Suggest Design Patterns", "Convert Pseudocode to Code", "Fix Compilation Errors",
-                     "Analyze Code Performance"], 
-                    key="code_task_radio")
-
-    # Code Input (Text or File)
-    code_input = st.text_area("Enter your code or request:", height=200, key="code_input")
-
-    uploaded_code = st.file_uploader("Upload a code file", type=["py", "js", "cpp", "java", "vhdl"], key="code_file_uploader")
+    st.header("⚡ Advanced AI Code Wizard")
+    
+    # Select AI Code Task
+    task = st.selectbox(
+        "Choose your AI Code Task", 
+        [
+            "Generate Code", 
+            "Debug Code", 
+            "Optimize Code", 
+            "Convert Code", 
+            "Explain Code",
+            "Add Comments",
+            "Find Security Issues",
+            "Write Unit Tests",
+            "Generate API Documentation",
+            "Suggest Design Patterns",
+            "Convert Pseudocode to Code",
+            "Fix Compilation Errors",
+            "Analyze Code Performance",
+            "Lint Code",
+            "Code Refactoring Suggestions",
+            "Explain Error Messages"
+        ], 
+        key="code_task_advanced"
+    )
+    
+    # Code Input: text area for manual input and/or file upload
+    code_input = st.text_area(
+        "Enter your code or describe your code request:", 
+        height=200, 
+        key="advanced_code_input"
+    )
+    
+    uploaded_code = st.file_uploader(
+        "Upload a code file", 
+        type=["py", "js", "cpp", "java", "vhdl", "c", "cs"], 
+        key="advanced_code_file_uploader"
+    )
     
     if uploaded_code:
-        code_input = uploaded_code.read().decode("utf-8")
-        st.text_area("Uploaded Code:", code_input, height=200, key="uploaded_code_display")
-
-    # AI Action Button
-    if st.button("✨ Magic Code AI", key="code_magic_button"):
+        try:
+            code_input = uploaded_code.read().decode("utf-8")
+            st.text_area("Uploaded Code:", code_input, height=200, key="uploaded_code_display_advanced")
+        except Exception as e:
+            st.error(f"Error reading uploaded file: {e}")
+    
+    # Advanced configuration panel for additional customizations
+    with st.expander("Advanced Configuration Options"):
+        language_options = ["Python", "JavaScript", "C++", "Java", "C#", "Other"]
+        source_language = st.selectbox("Source Code Language:", language_options, key="source_lang")
+        target_language = st.selectbox("Target Code Language (for conversion):", language_options, key="target_lang")
+        optimization_level = st.slider("Optimization Level:", 0, 10, 5, key="optimization_level")
+        add_comments = st.checkbox("Automatically add comments", value=True, key="add_comments")
+        generate_tests = st.checkbox("Generate unit tests", value=False, key="generate_tests")
+        lint_code = st.checkbox("Include linting suggestions", value=False, key="lint_code")
+    
+    # Execute AI Code Task
+    if st.button("Execute AI Code Task", key="advanced_code_execute"):
         if code_input.strip():
-            if task == "Generate Code":
-                prompt = f"Write clean, efficient code for: {code_input}"
-            elif task == "Debug Code":
-                prompt = f"Find and fix errors in this code:\n\n{code_input}"
-            elif task == "Optimize Code":
-                prompt = f"Refactor and optimize this code to improve efficiency:\n\n{code_input}"
-            elif task == "Convert Code":
-                prompt = f"Convert this code to another programming language:\n\n{code_input}"
-            elif task == "Explain Code":
-                prompt = f"Explain what this code does in simple terms:\n\n{code_input}"
-            elif task == "Add Comments":
-                prompt = f"Add detailed comments to this code for better understanding:\n\n{code_input}"
-            elif task == "Find Security Issues":
-                prompt = f"Analyze this code and highlight security vulnerabilities:\n\n{code_input}"
-            elif task == "Write Unit Tests":
-                prompt = f"Generate unit tests for this code:\n\n{code_input}"
-            elif task == "Generate API Documentation":
-                prompt = f"Create API documentation for this code:\n\n{code_input}"
-            elif task == "Suggest Design Patterns":
-                prompt = f"Suggest an appropriate design pattern for this code and explain why:\n\n{code_input}"
-            elif task == "Convert Pseudocode to Code":
-                prompt = f"Convert this pseudocode into actual code:\n\n{code_input}"
-            elif task == "Fix Compilation Errors":
-                prompt = f"Fix the compilation errors in this code:\n\n{code_input}"
-            elif task == "Analyze Code Performance":
-                prompt = f"Analyze the performance of this code and suggest improvements:\n\n{code_input}"
-
-            # AI Code Processing
-            ai_response = generate_ai_content(prompt, st.session_state.api_key, st.session_state.api_model)
-
-            st.success("✨ AI Code Response:")
-            st.code(ai_response, language="python")  # Adjust language based on task
+            # Build a detailed prompt that includes configuration settings
+            prompt = f"Task: {task}\n"
+            prompt += f"Source Language: {source_language}\n"
+            prompt += f"Target Language: {target_language}\n"
+            prompt += f"Optimization Level: {optimization_level}\n"
+            prompt += f"Add Comments: {'Yes' if add_comments else 'No'}\n"
+            prompt += f"Generate Unit Tests: {'Yes' if generate_tests else 'No'}\n"
+            prompt += f"Lint Code: {'Yes' if lint_code else 'No'}\n"
+            prompt += "Code:\n" + code_input
+            
+            with st.spinner("Processing your code with AI..."):
+                ai_response = generate_ai_content(prompt, st.session_state.api_key, st.session_state.api_model)
+            
+            st.success("AI Code Response:")
+            st.code(ai_response, language=source_language.lower())
+            
+            # Export options for the AI response
+            col1, col2 = st.columns(2)
+            with col1:
+                st.download_button("Download AI Response", ai_response, "ai_code_response.txt")
+            with col2:
+                st.button(
+                    "Copy to Clipboard", 
+                    on_click=lambda: st.write(
+                        "<script>navigator.clipboard.writeText(`" + ai_response.replace("`", "\\`") + "`);</script>", 
+                        unsafe_allow_html=True
+                    )
+                )
         else:
-            st.warning("⚠️ Please enter some code or upload a file.")
+            st.warning("Please provide some code or a code description.")
 
 
 # Content generation section
