@@ -885,28 +885,39 @@ with tab4:
                         all_text = " ".join(df[text_col].dropna().astype(str))
                         
                         if all_text.strip():
-                            # Generate word cloud
-                            wc = WordCloud(width=800, height=400, 
-                                          background_color='white', 
-                                          colormap='viridis', 
-                                          max_words=200)
-                            wc.generate(all_text)
+                            # Check if there are words after filtering
+                            words = re.findall(r'\w+', all_text.lower())
+                            stop_words = set(STOPWORDS)
+                            filtered_words = [w for w in words if w not in stop_words and len(w) > 2]
                             
-                            # Display
-                            fig, ax = plt.subplots(figsize=(10, 5))
-                            ax.imshow(wc, interpolation='bilinear')
-                            ax.axis('off')
-                            st.pyplot(fig)
+                            if filtered_words:  # Add this check
+                                # Generate word cloud
+                                wc = WordCloud(width=800, height=400, 
+                                              background_color='white', 
+                                              colormap='viridis', 
+                                              max_words=200)
+                                wc.generate(all_text)
+                                
+                                # Display
+                                fig, ax = plt.subplots(figsize=(10, 5))
+                                ax.imshow(wc, interpolation='bilinear')
+                                ax.axis('off')
+                                st.pyplot(fig)
+                            else:
+                                st.info("Not enough meaningful words to generate a word cloud after filtering.")
                             
                             # Word frequency
                             st.write("#### Top Words")
                             stop_words = set(STOPWORDS)
                             words = re.findall(r'\w+', all_text.lower())
                             word_freq = Counter([w for w in words if w not in stop_words and len(w) > 2])
-                            top_words = pd.DataFrame(word_freq.most_common(20), columns=['Word', 'Count'])
                             
-                            fig = px.bar(top_words, x='Word', y='Count')
-                            st.plotly_chart(fig, use_container_width=True)
+                            if word_freq:
+                                top_words = pd.DataFrame(word_freq.most_common(20), columns=['Word', 'Count'])
+                                fig = px.bar(top_words, x='Word', y='Count')
+                                st.plotly_chart(fig, use_container_width=True)
+                            else:
+                                st.info("No significant words found for frequency analysis.")
                     else:
                         st.info("No text columns detected for text analysis.")
             
@@ -928,76 +939,102 @@ with tab4:
                     # Word cloud
                     st.write("#### Word Cloud")
                     if extracted_text.strip():
-                        # Generate word cloud
-                        wc = WordCloud(width=800, height=400, 
-                                     background_color='white', 
-                                     colormap='viridis', 
-                                     max_words=200)
-                        wc.generate(extracted_text)
+                        # Check filtering
+                        stop_words = set(STOPWORDS)
+                        filtered_words = [w for w in words if w not in stop_words and len(w) > 2]
                         
-                        # Display
-                        fig, ax = plt.subplots(figsize=(10, 5))
-                        ax.imshow(wc, interpolation='bilinear')
-                        ax.axis('off')
-                        st.pyplot(fig)
+                        if filtered_words:  # Check if there are any words left after filtering
+                            # Generate word cloud
+                            wc = WordCloud(width=800, height=400, 
+                                         background_color='white', 
+                                         colormap='viridis', 
+                                         max_words=200)
+                            wc.generate(extracted_text)
+                            
+                            # Display
+                            fig, ax = plt.subplots(figsize=(10, 5))
+                            ax.imshow(wc, interpolation='bilinear')
+                            ax.axis('off')
+                            st.pyplot(fig)
+                        else:
+                            st.info("Not enough meaningful words to generate a word cloud. Try uploading a file with more content.")
                     
                     # Top words
                     st.write("#### Top Words")
                     stop_words = set(STOPWORDS)
                     filtered_words = [w for w in words if w not in stop_words and len(w) > 2]
-                    filtered_freq = Counter(filtered_words)
-                    top_words = pd.DataFrame(filtered_freq.most_common(20), columns=['Word', 'Count'])
                     
-                    fig = px.bar(top_words, x='Word', y='Count')
-                    st.plotly_chart(fig, use_container_width=True)
+                    if filtered_words:
+                        filtered_freq = Counter(filtered_words)
+                        top_words = pd.DataFrame(filtered_freq.most_common(20), columns=['Word', 'Count'])
+                        
+                        fig = px.bar(top_words, x='Word', y='Count')
+                        st.plotly_chart(fig, use_container_width=True)
+                    else:
+                        st.info("No significant words found for frequency analysis.")
                     
                     # Word length distribution
                     st.write("#### Word Length Distribution")
-                    word_lengths = [len(w) for w in filtered_words]
-                    word_length_freq = Counter(word_lengths)
-                    length_df = pd.DataFrame(sorted(word_length_freq.items()), columns=['Length', 'Count'])
-                    
-                    fig = px.bar(length_df, x='Length', y='Count')
-                    st.plotly_chart(fig, use_container_width=True)
+                    if filtered_words:
+                        word_lengths = [len(w) for w in filtered_words]
+                        word_length_freq = Counter(word_lengths)
+                        length_df = pd.DataFrame(sorted(word_length_freq.items()), columns=['Length', 'Count'])
+                        
+                        fig = px.bar(length_df, x='Length', y='Count')
+                        st.plotly_chart(fig, use_container_width=True)
+                    else:
+                        st.info("No significant words found for length analysis.")
                     
                     # Sentiment analysis
                     st.write("#### Sentiment Analysis")
-                    try:
-                        from nltk.sentiment import SentimentIntensityAnalyzer
-                        sia = SentimentIntensityAnalyzer()
-                        sentiment = sia.polarity_scores(extracted_text)
-                        
-                        sentiment_df = pd.DataFrame({
-                            'Metric': ['Negative', 'Neutral', 'Positive', 'Compound'],
-                            'Value': [sentiment['neg'], sentiment['neu'], sentiment['pos'], sentiment['compound']]
-                        })
-                        
-                        fig = px.bar(sentiment_df, x='Metric', y='Value', 
-                                   color='Metric', 
-                                   color_discrete_map={
-                                       'Negative': 'red',
-                                       'Neutral': 'gray',
-                                       'Positive': 'green',
-                                       'Compound': 'blue'
-                                   })
-                        st.plotly_chart(fig, use_container_width=True)
-                    except:
-                        st.info("Sentiment analysis requires NLTK with sentiment analysis models.")
+                    if extracted_text.strip():
+                        try:
+                            from nltk.sentiment import SentimentIntensityAnalyzer
+                            sia = SentimentIntensityAnalyzer()
+                            sentiment = sia.polarity_scores(extracted_text)
+                            
+                            sentiment_df = pd.DataFrame({
+                                'Metric': ['Negative', 'Neutral', 'Positive', 'Compound'],
+                                'Value': [sentiment['neg'], sentiment['neu'], sentiment['pos'], sentiment['compound']]
+                            })
+                            
+                            fig = px.bar(sentiment_df, x='Metric', y='Value', 
+                                       color='Metric', 
+                                       color_discrete_map={
+                                           'Negative': 'red',
+                                           'Neutral': 'gray',
+                                           'Positive': 'green',
+                                           'Compound': 'blue'
+                                       })
+                            st.plotly_chart(fig, use_container_width=True)
+                        except:
+                            st.info("Sentiment analysis requires NLTK with sentiment analysis models.")
+                    else:
+                        st.info("No text content for sentiment analysis.")
                     
                     # N-gram analysis
                     st.write("#### N-gram Analysis")
-                    n_value = st.slider("Select n-gram size:", 2, 5, 2)
-                    
-                    # Generate n-grams
-                    from nltk.util import ngrams
-                    n_grams = list(ngrams(filtered_words, n_value))
-                    n_gram_freq = Counter([' '.join(g) for g in n_grams])
-                    
-                    n_gram_df = pd.DataFrame(n_gram_freq.most_common(15), 
-                                           columns=[f'{n_value}-gram', 'Count'])
-                    
-                    fig = px.bar(n_gram_df, x=f'{n_value}-gram', y='Count')
-                    st.plotly_chart(fig, use_container_width=True)
+                    if filtered_words:
+                        n_value = st.slider("Select n-gram size:", 2, 5, 2)
+                        
+                        # Generate n-grams
+                        try:
+                            from nltk.util import ngrams
+                            n_grams = list(ngrams(filtered_words, n_value))
+                            n_gram_freq = Counter([' '.join(g) for g in n_grams])
+                            
+                            if n_gram_freq:
+                                n_gram_df = pd.DataFrame(n_gram_freq.most_common(15), 
+                                                       columns=[f'{n_value}-gram', 'Count'])
+                                
+                                fig = px.bar(n_gram_df, x=f'{n_value}-gram', y='Count')
+                                st.plotly_chart(fig, use_container_width=True)
+                            else:
+                                st.info(f"Not enough data to generate {n_value}-grams.")
+                        except Exception as e:
+                            st.error(f"Error in n-gram analysis: {str(e)}")
+                    else:
+                        st.info("Not enough text content for n-gram analysis.")
 
     # AI Chatbot Section
     st.subheader("💬 Chat with AI")
@@ -1371,30 +1408,6 @@ with st.expander("⚙️ Advanced Options"):
             historical = st.checkbox("Historical Context", help="Add historical background and evolution")
             expert_citations = st.checkbox("Expert Citations", help="Include references to subject matter experts")
 
-
-
-
-# For the text column word cloud in CSV visualization
-if all_text.strip():
-    # Check if there are words after filtering
-    words = re.findall(r'\w+', all_text.lower())
-    filtered_words = [w for w in words if w not in stop_words and len(w) > 2]
-    
-    if filtered_words:  # Add this check
-        # Generate word cloud
-        wc = WordCloud(width=800, height=400, 
-                      background_color='white', 
-                      colormap='viridis', 
-                      max_words=200)
-        wc.generate(all_text)
-        
-        # Display
-        fig, ax = plt.subplots(figsize=(10, 5))
-        ax.imshow(wc, interpolation='bilinear')
-        ax.axis('off')
-        st.pyplot(fig)
-    else:
-        st.info("Not enough meaningful words to generate a word cloud after filtering.")
 # Add style instructions to prompt based on selections
 style_instructions = {
     "Response Length": response_length,
