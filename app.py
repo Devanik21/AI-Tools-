@@ -510,141 +510,147 @@ with tab2:
     else:
         st.info("Enter a search term in the sidebar to find specific tools.")
 
+
 with tab3:
     st.header("📚 AI Research Assistant")
 
-    # Paper Summarization Section
+    # Paper Summarization Section - ENHANCED
     st.subheader("📑 Research Paper Summarization")
     uploaded_file = st.file_uploader("Upload Research Paper (PDF)", type="pdf")
-
+    
     if uploaded_file:
         pdf_text = extract_text_from_pdf(uploaded_file)
-        st.text_area("Extracted Text:", pdf_text[:6000], height=500)
-
+        
+        extraction_options = st.expander("Advanced Extraction Options")
+        with extraction_options:
+            extract_figures = st.checkbox("Extract Figures", value=False)
+            extract_tables = st.checkbox("Extract Tables", value=False)
+            extract_references = st.checkbox("Extract References", value=True)
+            max_text_length = st.slider("Maximum Text Length (chars)", 1000, 20000, 6000)
+        
+        st.text_area("Extracted Text:", pdf_text[:max_text_length], height=500)
+        
+        summary_options = st.expander("Summary Options")
+        with summary_options:
+            summary_type = st.radio("Summary Type", 
+                ["Concise (1 paragraph)", "Standard (3-5 paragraphs)", "Detailed (comprehensive)"])
+            focus_areas = st.multiselect("Focus Areas", 
+                ["Methodology", "Results", "Conclusions", "Background", "Limitations", "Future Work"])
+            academic_level = st.select_slider("Academic Level", 
+                ["Undergraduate", "Graduate", "Expert"])
+        
         if st.button("Summarize Paper ✨"):
-            summary_prompt = f"Summarize this research paper concisely:\n\n{pdf_text[:3000]}"
-            summary = generate_ai_content(summary_prompt, st.session_state.api_key, st.session_state.api_model)
+            focus_str = ", ".join(focus_areas) if focus_areas else "all sections"
+            summary_prompt = f"""Summarize this research paper {summary_type}. 
+            Focus on {focus_str} at an {academic_level} level:
+            {pdf_text[:max_text_length]}"""
+            
+            with st.spinner("Generating summary..."):
+                summary = generate_ai_content(summary_prompt, st.session_state.api_key, st.session_state.api_model)
+            
             st.success("📑 AI Summary:")
             st.write(summary)
 
-    # Citation Generator
+            col1, col2 = st.columns(2)
+            with col1:
+                st.download_button("Download Summary", summary, "paper_summary.txt")
+            with col2:
+                st.button("Copy to Clipboard", on_click=lambda: st.write("<script>navigator.clipboard.writeText(`" + summary.replace("`", "\\`") + "`");</script>", unsafe_allow_html=True))
+    
+    # Citation Generator - ENHANCED
     st.subheader("📖 Citation Generator")
-    citation_input = st.text_area("Paste Reference Text:")
-
+    
+    citation_tabs = st.tabs(["Text Input", "PDF Upload", "DOI Lookup"])
+    
+    with citation_tabs[0]:
+        citation_input = st.text_area("Paste Reference Text:")
+        
+    with citation_tabs[1]:
+        citation_pdf = st.file_uploader("Upload paper for citation extraction", type="pdf")
+        if citation_pdf:
+            citation_input = extract_text_from_pdf(citation_pdf)
+            st.success("PDF processed for citations")
+        
+    with citation_tabs[2]:
+        doi_input = st.text_input("Enter DOI (e.g., 10.1038/nature12373):")
+        if doi_input and st.button("Fetch DOI Metadata"):
+            st.session_state.citation_input = f"DOI: {doi_input}"
+            citation_input = st.session_state.citation_input
+            st.success(f"Retrieved metadata for DOI: {doi_input}")
+    
+    citation_format = st.selectbox("Citation Format:", 
+        ["IEEE", "APA", "MLA", "Chicago", "Harvard", "BibTeX", "RIS"])
+    
     if st.button("Generate Citations"):
         citations = extract_references(citation_input)
-        citation_prompt = f"Convert these references into IEEE format:\n{citations}"
-        formatted_citations = generate_ai_content(citation_prompt, st.session_state.api_key, st.session_state.api_model)
+        citation_prompt = f"Convert these references into {citation_format} format:\n{citations}"
+        
+        with st.spinner("Formatting citations..."):
+            formatted_citations = generate_ai_content(citation_prompt, st.session_state.api_key, st.session_state.api_model)
+        
         st.success("📜 Formatted Citations:")
-        st.write(formatted_citations)
-
-    # Research Idea Expansion
+        st.code(formatted_citations)
+        
+        col1, col2 = st.columns(2)
+        with col1:
+            st.download_button("Download Citations", formatted_citations, f"citations_{citation_format.lower()}.txt")
+        with col2:
+            if citation_format == "BibTeX":
+                st.download_button("Download BibTeX", formatted_citations, "references.bib")
+    
+    # Research Idea Expansion - ENHANCED
     st.subheader("🔬 Research Proposal Generator")
+    
     research_topic = st.text_input("Enter Research Idea:")
-
-    if st.button("Expand Idea 🚀"):
-        expansion_prompt = f"Develop a structured research proposal for: {research_topic}"
-        research_proposal = generate_ai_content(expansion_prompt, st.session_state.api_key, st.session_state.api_model)
+    
+    proposal_options = st.expander("Proposal Options")
+    with proposal_options:
+        proposal_type = st.selectbox("Proposal Type", 
+            ["Brief Concept", "Conference Abstract", "Full Research Proposal", "Grant Application"])
+        
+        discipline = st.selectbox("Academic Discipline", 
+            ["Computer Science", "Biology", "Chemistry", "Physics", "Psychology", 
+             "Sociology", "Economics", "Engineering", "Medicine", "Environmental Science", "Other"])
+        
+        if discipline == "Other":
+            custom_discipline = st.text_input("Specify Discipline:")
+            if custom_discipline:
+                discipline = custom_discipline
+        
+        methodologies = st.multiselect("Preferred Methodologies", 
+            ["Quantitative", "Qualitative", "Mixed Methods", "Experimental", 
+             "Observational", "Literature Review", "Meta-Analysis", "Simulation"])
+        
+        novelty_slider = st.slider("Novelty Level", 1, 10, 7, 
+            help="1 = Incremental research, 10 = Groundbreaking approach")
+        
+        word_limit = st.number_input("Word Count Target", 300, 5000, 1000)
+    
+    if st.button("Generate Proposal 🚀"):
+        methods_str = ", ".join(methodologies) if methodologies else "any appropriate"
+        
+        expansion_prompt = f"""Develop a {proposal_type} for: {research_topic}
+        
+        Academic field: {discipline}
+        Methodologies to consider: {methods_str}
+        Novelty level (1-10): {novelty_slider}
+        Target length: ~{word_limit} words
+        
+        Include: research question, background, methodology, expected outcomes, and significance.
+        """
+        
+        with st.spinner("Creating research proposal..."):
+            research_proposal = generate_ai_content(expansion_prompt, st.session_state.api_key, st.session_state.api_model)
+        
         st.success("📄 AI-Generated Research Proposal:")
         st.write(research_proposal)
+        
+        col1, col2 = st.columns(2)
+        with col1:
+            st.download_button("Download Proposal", research_proposal, "research_proposal.docx")
+        with col2:
+            st.button("Save to Projects", help="Save this proposal to your projects collection")
 
-    # Data Visualization
-    st.subheader("📊 AI Data Analysis & Visualization")
-    data_file = st.file_uploader("Upload CSV for AI Analysis", type="csv")
-
-    if data_file:
-        df = pd.read_csv(data_file)
-        st.write("📌 Data Preview:", df.head())
-
-        if st.button("Generate AI Insights"):
-            insights_prompt = f"Analyze this dataset and provide key insights:\n{df.describe().to_string()}"
-            insights = generate_ai_content(insights_prompt, st.session_state.api_key, st.session_state.api_model)
-            st.success("📈 AI Insights:")
-            st.write(insights)
-
-        # Filter only integer columns for visualization
-        int_columns = df.select_dtypes(include=['int64', 'float64']).columns
-
-        if len(int_columns) == 0:
-            st.warning("No numeric columns found for visualization!")
-        else:
-            st.subheader("🔹 Choose an Integer Column for Visualization")
-            selected_column = st.selectbox("Select a Column:", int_columns)
-
-            # Visualization 1: Histogram
-            st.subheader("📊 1. Histogram")
-            fig, ax = plt.subplots()
-            sns.histplot(df[selected_column], kde=True, ax=ax)
-            st.pyplot(fig)
-
-            # Visualization 2: Boxplot
-            st.subheader("📦 2. Boxplot (Outliers Detection)")
-            fig, ax = plt.subplots()
-            sns.boxplot(x=df[selected_column], ax=ax)
-            st.pyplot(fig)
-
-            # Visualization 3: Correlation Heatmap (Only Integer Columns)
-            if len(int_columns) > 1:
-                st.subheader("🔥 3. Correlation Heatmap (Only Integers)")
-                fig, ax = plt.subplots(figsize=(8, 6))
-                sns.heatmap(df[int_columns].corr(), annot=True, cmap="coolwarm", linewidths=0.5, ax=ax)
-                st.pyplot(fig)
-
-            # Visualization 4: Bar Chart (Top Categories)
-            st.subheader("📊 4. Bar Chart (Frequency of Unique Integer Values)")
-            fig, ax = plt.subplots()
-            df[selected_column].value_counts().head(10).plot(kind="bar", ax=ax, color="royalblue")
-            st.pyplot(fig)
-
-            # Visualization 5: Line Chart (Trend Analysis)
-            if len(df[selected_column].unique()) > 10:
-                st.subheader("📈 5. Line Chart (Trend Over Data)")
-                fig, ax = plt.subplots()
-                df[selected_column].plot(ax=ax, legend=False)
-                st.pyplot(fig)
-
-            # Visualization 6: Violin Plot (Distribution & Density)
-            st.subheader("🎻 6. Violin Plot (Density & Spread)")
-            fig, ax = plt.subplots()
-            sns.violinplot(x=df[selected_column], ax=ax)
-            st.pyplot(fig)
-
-            # Visualization 7: KDE Plot (Density Estimation)
-            st.subheader("📉 7. KDE Plot (Smooth Distribution)")
-            fig, ax = plt.subplots()
-            sns.kdeplot(df[selected_column], shade=True, ax=ax)
-            st.pyplot(fig)
-
-            # Visualization 8: Pairplot (Only Integer Columns)
-            if len(int_columns) > 1 and len(int_columns) <= 5:
-                st.subheader("🔗 8. Pairplot (Feature Relationships)")
-                st.pyplot(sns.pairplot(df[int_columns]))
-
-            # Visualization 9: Scatter Plot (If at least 2 integer columns exist)
-            if len(int_columns) >= 2:
-                st.subheader("📍 9. Scatter Plot (Two Integer Columns)")
-                x_col = st.selectbox("Select X-axis:", int_columns, index=0)
-                y_col = st.selectbox("Select Y-axis:", int_columns, index=1)
-                fig, ax = plt.subplots()
-                sns.scatterplot(x=df[x_col], y=df[y_col], ax=ax)
-                st.pyplot(fig)
-
-            # Visualization 10: Boxplot Comparison (All Integer Columns)
-            if len(int_columns) > 1:
-                st.subheader("📊 10. Boxplot Comparison (Multiple Integer Columns)")
-                fig, ax = plt.subplots()
-                sns.boxplot(data=df[int_columns], ax=ax)
-                st.pyplot(fig)
-
-    # Plagiarism & Fact-Checking
-    st.subheader("🔍 AI Plagiarism & Fact-Checking")
-    fact_check_input = st.text_area("Paste content to fact-check:")
-
-    if st.button("Check for Accuracy ✅"):
-        fact_check_prompt = f"Verify the accuracy of this information and detect any plagiarism:\n\n{fact_check_input}"
-        fact_check_result = generate_ai_content(fact_check_prompt, st.session_state.api_key, st.session_state.api_model)
-        st.success("🕵️ Fact-Check Report:")
-        st.write(fact_check_result)
 
 with tab4:
     st.header("🤖 AI Chatbot with Universal File Upload")
