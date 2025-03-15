@@ -391,17 +391,19 @@ def load_prompt_templates():
     return templates
 
 # Function to generate content with AI
-def generate_ai_content(prompt, api_key, model_name):
+# Function to generate content with AI
+def generate_ai_content(prompt, api_key, model_name, temperature=0.7):
     try:
         genai.configure(api_key=api_key)
         model = genai.GenerativeModel(model_name)
         with st.spinner("🔮 AI is working its magic..."):
-            generation_config = {"temperature": 0.7, "top_p": 0.95, "top_k": 40, "max_output_tokens": 2048}
+            generation_config = {"temperature": temperature, "top_p": 0.95, "top_k": 40, "max_output_tokens": 2048}
             response = model.generate_content(prompt, generation_config=generation_config)
             return response.text
     except Exception as e:
         return f"Error: {str(e)}"
-
+    
+    
 # Function to save content to history
 def save_to_history(tool_name, prompt, output):
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -751,7 +753,7 @@ with tab4:
     with chat_options:
         col1, col2 = st.columns(2)
         with col1:
-            temperature = st.slider("Temperature:", min_value=0.0, max_value=1.0, value=0.7, step=0.1,
+            temperature = st.slider("Temperature", 0.0, 1.0, 0.7, 0.1, 
                                   help="Higher values make output more creative")
         with col2:
             response_type = st.selectbox("Response Style", 
