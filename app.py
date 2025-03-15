@@ -1206,22 +1206,19 @@ with tab5:
         else:
             st.warning("⚠️ Please upload a document first!")
 
-
 import streamlit as st
 import chardet
 import pygments
-from pygments.lexers import guess_lexer, get_lexer_by_name
-from pygments.formatters import HtmlFormatter
+from pygments.lexers import guess_lexer
 import base64
 
 # AI Function Placeholder
-def generate_ai_content(prompt, api_key, model, temperature, max_tokens):
+def generate_ai_content(prompt, api_key, temperature, max_tokens):
     return f"AI response for: {prompt}"  # Replace with actual API call
 
 # Streamlit App
 with tab6:
     st.header("⚡ AI Code Wizard")
-
 
     # AI Settings
     col1, col2 = st.columns(2)
@@ -1279,8 +1276,7 @@ with tab6:
             }
 
             prompt = prompt_mapping[task]
-            selected_model = model_options[st.session_state.api_model]
-            ai_response = generate_ai_content(prompt, st.session_state.api_key, selected_model, temperature, max_tokens)
+            ai_response = generate_ai_content(prompt, st.session_state.api_key, temperature, max_tokens)
 
             st.success("✨ AI Code Response:")
             st.code(ai_response, language=detected_language)
