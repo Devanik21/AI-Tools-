@@ -1207,66 +1207,94 @@ with tab5:
             st.warning("⚠️ Please upload a document first!")
 
 
-with tab6:
-    st.header("⚡ AI Code Wizard")
+import streamlit as st
+import magic_ai_utils  # Hypothetical AI API utility module
+from pygments.lexers import guess_lexer_for_filename
 
-    # Automatically select the AI model for coding tasks
-    st.session_state.api_model = "gemini-2.0-flash-thinking-exp-01-21"
+# App Title
+st.header("⚡ AI Code Wizard - Advanced Edition")
 
-    # Choose AI task
-    task = st.selectbox("What do you need help with?", 
-                    ["Generate Code", "Debug Code", "Optimize Code", "Convert Code", "Explain Code",
-                     "Add Comments", "Find Security Issues", "Write Unit Tests", "Generate API Documentation",
-                     "Suggest Design Patterns", "Convert Pseudocode to Code", "Fix Compilation Errors",
-                     "Analyze Code Performance"], 
-                    key="code_task_radio")
+# AI Model Selection
+ai_model = st.selectbox("Choose AI Model", [
+    "gemini-2.0-flash-thinking-exp-01-21",
+    "gpt-4-turbo",
+    "claude-3-haiku",
+    "mistral-7b"
+], key="ai_model_selection")
 
-    # Code Input (Text or File)
-    code_input = st.text_area("Enter your code or request:", height=200, key="code_input")
+# AI Task Selection
+task = st.radio("What do you need help with?", [
+    "Generate Code", "Debug Code", "Optimize Code", "Convert Code", "Explain Code",
+    "Add Comments", "Find Security Issues", "Write Unit Tests", "Generate API Documentation",
+    "Suggest Design Patterns", "Convert Pseudocode to Code", "Fix Compilation Errors",
+    "Analyze Code Performance", "Refactor for Readability", "Identify Code Smells"
+], key="code_task_radio")
 
-    uploaded_code = st.file_uploader("Upload a code file", type=["py", "js", "cpp", "java", "vhdl"], key="code_file_uploader")
-    
-    if uploaded_code:
-        code_input = uploaded_code.read().decode("utf-8")
-        st.text_area("Uploaded Code:", code_input, height=200, key="uploaded_code_display")
+# Code Input (Text or File)
+code_input = st.text_area("Enter your code or request:", height=200, key="code_input")
 
-    # AI Action Button
-    if st.button("✨ Magic Code AI", key="code_magic_button"):
-        if code_input.strip():
-            if task == "Generate Code":
-                prompt = f"Write clean, efficient code for: {code_input}"
-            elif task == "Debug Code":
-                prompt = f"Find and fix errors in this code:\n\n{code_input}"
-            elif task == "Optimize Code":
-                prompt = f"Refactor and optimize this code to improve efficiency:\n\n{code_input}"
-            elif task == "Convert Code":
-                prompt = f"Convert this code to another programming language:\n\n{code_input}"
-            elif task == "Explain Code":
-                prompt = f"Explain what this code does in simple terms:\n\n{code_input}"
-            elif task == "Add Comments":
-                prompt = f"Add detailed comments to this code for better understanding:\n\n{code_input}"
-            elif task == "Find Security Issues":
-                prompt = f"Analyze this code and highlight security vulnerabilities:\n\n{code_input}"
-            elif task == "Write Unit Tests":
-                prompt = f"Generate unit tests for this code:\n\n{code_input}"
-            elif task == "Generate API Documentation":
-                prompt = f"Create API documentation for this code:\n\n{code_input}"
-            elif task == "Suggest Design Patterns":
-                prompt = f"Suggest an appropriate design pattern for this code and explain why:\n\n{code_input}"
-            elif task == "Convert Pseudocode to Code":
-                prompt = f"Convert this pseudocode into actual code:\n\n{code_input}"
-            elif task == "Fix Compilation Errors":
-                prompt = f"Fix the compilation errors in this code:\n\n{code_input}"
-            elif task == "Analyze Code Performance":
-                prompt = f"Analyze the performance of this code and suggest improvements:\n\n{code_input}"
+uploaded_code = st.file_uploader("Upload a code file", type=["py", "js", "cpp", "java", "vhdl", "c", "cs"], key="code_file_uploader")
 
-            # AI Code Processing
-            ai_response = generate_ai_content(prompt, st.session_state.api_key, st.session_state.api_model)
+if uploaded_code:
+    file_name = uploaded_code.name
+    code_input = uploaded_code.read().decode("utf-8")
+    st.text_area("Uploaded Code:", code_input, height=200, key="uploaded_code_display")
+    code_language = guess_lexer_for_filename(file_name, code_input).name.lower()
+else:
+    code_language = "python"  # Default
 
-            st.success("✨ AI Code Response:")
-            st.code(ai_response, language="python")  # Adjust language based on task
-        else:
-            st.warning("⚠️ Please enter some code or upload a file.")
+# AI Action Button
+if st.button("✨ Magic Code AI", key="code_magic_button"):
+    if code_input.strip():
+        prompts = {
+            "Generate Code": f"Write clean, efficient code for: {code_input}",
+            "Debug Code": f"Find and fix errors in this code:\n\n{code_input}",
+            "Optimize Code": f"Refactor and optimize this code to improve efficiency:\n\n{code_input}",
+            "Convert Code": f"Convert this code to another programming language:\n\n{code_input}",
+            "Explain Code": f"Explain what this code does in simple terms:\n\n{code_input}",
+            "Add Comments": f"Add detailed comments to this code for better understanding:\n\n{code_input}",
+            "Find Security Issues": f"Analyze this code and highlight security vulnerabilities:\n\n{code_input}",
+            "Write Unit Tests": f"Generate unit tests for this code:\n\n{code_input}",
+            "Generate API Documentation": f"Create API documentation for this code:\n\n{code_input}",
+            "Suggest Design Patterns": f"Suggest an appropriate design pattern for this code and explain why:\n\n{code_input}",
+            "Convert Pseudocode to Code": f"Convert this pseudocode into actual code:\n\n{code_input}",
+            "Fix Compilation Errors": f"Fix the compilation errors in this code:\n\n{code_input}",
+            "Analyze Code Performance": f"Analyze the performance of this code and suggest improvements:\n\n{code_input}",
+            "Refactor for Readability": f"Improve the readability and maintainability of this code:\n\n{code_input}",
+            "Identify Code Smells": f"Identify and explain any code smells present in this code:\n\n{code_input}"
+        }
+        
+        prompt = prompts.get(task, "Provide AI assistance for the following code:")
+        
+        # AI Code Processing
+        ai_response = magic_ai_utils.generate_ai_content(prompt, st.session_state.api_key, ai_model)
+
+        st.success("✨ AI Code Response:")
+        st.code(ai_response, language=code_language)
+    else:
+        st.warning("⚠️ Please enter some code or upload a file.")
+
+# Advanced Code Analysis
+if code_input.strip():
+    with st.expander("🔍 Advanced Code Analysis"):
+        complexity_score = magic_ai_utils.analyze_complexity(code_input)
+        security_score = magic_ai_utils.analyze_security(code_input)
+        
+        st.write(f"**Cyclomatic Complexity:** {complexity_score}")
+        st.write(f"**Security Score:** {security_score}")
+
+        if security_score < 5:
+            st.warning("⚠️ Security risk detected! Consider revising the code.")
+
+# Dark Mode Toggle
+st.sidebar.markdown("### 🌙 Toggle Dark Mode")
+dark_mode = st.sidebar.checkbox("Enable Dark Mode")
+if dark_mode:
+    st.markdown("""
+        <style>
+        body { background-color: #121212; color: white; }
+        </style>
+    """, unsafe_allow_html=True)
 
 
 # Content generation section
