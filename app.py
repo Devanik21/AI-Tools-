@@ -751,7 +751,7 @@ with tab4:
     with chat_options:
         col1, col2 = st.columns(2)
         with col1:
-            temperature = st.slider("Temperature", 0.0, 1.0, 0.7, 0.1, 
+            temperature = st.slider("Temperature:", min_value=0.0, max_value=1.0, value=0.7, step=0.1,
                                   help="Higher values make output more creative")
         with col2:
             response_type = st.selectbox("Response Style", 
