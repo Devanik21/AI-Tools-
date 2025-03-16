@@ -466,44 +466,22 @@ if show_history and 'history' in st.session_state and len(st.session_state.histo
 if not st.session_state.prompt_templates or len(st.session_state.prompt_templates) == 0:
     st.session_state.prompt_templates = load_prompt_templates()
 
-import streamlit as st
+# Tool Selection Section
+st.header("🛠️ Select Your Creation Tool")
 
-# Add custom CSS for scrollable tabs
 st.markdown("""
     <style>
-    div[data-testid="stTabs"] {
-        overflow-x: auto !important;
-        display: flex;
-        flex-wrap: nowrap;
-        scrollbar-width: thin;
-        scrollbar-color: #ccc transparent;
-    }
     div[data-testid="stTabs"] button {
-        flex-shrink: 0;
         font-size: 16px !important;
         padding: 10px !important;
-        white-space: nowrap;
     }
     </style>
 """, unsafe_allow_html=True)
 
-# Header
-st.header("🛠️ Select Your Creation Tool")
-
-# Define tabs
-tabs = [
-    "📋 Categories", "🔍 Search Results", "📚 AI Research Assistant", "🤖 AI Chatbot", 
-    "🌍 AI Translator", "⚡ AI Code Wizard"
-]
-
-# Create tabs
-tab_objects = st.tabs(tabs)  # This returns a list of tab objects
-
-# Loop through each tab and assign content dynamically
-for i, tab in enumerate(tab_objects):
-    with tab:
-        st.header(tabs[i])  # Display tab title as header
-        st.write(f"You selected: {tabs[i]}")  # Display dynamic content
+tab1, tab2, tab3, tab4, tab5 , tab6 = st.tabs([
+    "📋 Categories", "🔍 Search Results", 
+    "📚 AI Research Assistant", "🤖 AI Chatbot", "🌍 AI Translator" , "⚡ AI Code Wizard"
+])
 
 
 with tab1:
