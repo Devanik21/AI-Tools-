@@ -480,9 +480,13 @@ st.markdown("""
 
 import streamlit as st
 
-st.header("🛠️ Select Your Creation Tool")
+# Sample tool categories for demonstration
+tool_categories = {
+    "Category 1": ["Tool A", "Tool B", "Tool C"],
+    "Category 2": ["Tool D", "Tool E", "Tool F"],
+}
 
-# Define the tool names (same as the tab names)
+# List of tool names (same as your original tab names)
 tool_names = [
     "📋 Categories", 
     "🔍 Search Results", 
@@ -492,28 +496,40 @@ tool_names = [
     "⚡ AI Code Wizard"
 ]
 
-# Create a selectbox for tool selection
+# Use a selectbox to choose the tool instead of tabs
 selected_tool = st.selectbox("Choose your tool:", tool_names)
 
-# Use the selected tool and assign it to the appropriate variable
+# Check which tool was selected and display its content
 if selected_tool == "📋 Categories":
-    tab1 = selected_tool
-    st.write("You selected Categories")
+    selected_category = st.selectbox("Choose a category:", list(tool_categories.keys()))
+    
+    # Only show tools from the selected category
+    if selected_category:
+        tools_in_category = tool_categories[selected_category]
+        st.markdown(f"### {selected_category} Tools ({len(tools_in_category)})")
+        
+        # Create a grid layout for tools
+        cols = st.columns(3)
+        for i, tool in enumerate(tools_in_category):
+            with cols[i % 3]:
+                if st.button(tool, key=f"cat_{tool}"):
+                    st.session_state.selected_tool = tool
+
 elif selected_tool == "🔍 Search Results":
-    tab2 = selected_tool
-    st.write("You selected Search Results")
+    st.write("Search Results content goes here...")
+
 elif selected_tool == "📚 AI Research Assistant":
-    tab3 = selected_tool
-    st.write("You selected AI Research Assistant")
+    st.write("AI Research Assistant content goes here...")
+
 elif selected_tool == "🤖 AI Chatbot":
-    tab4 = selected_tool
-    st.write("You selected AI Chatbot")
+    st.write("AI Chatbot content goes here...")
+
 elif selected_tool == "🌍 AI Translator":
-    tab5 = selected_tool
-    st.write("You selected AI Translator")
+    st.write("AI Translator content goes here...")
+
 elif selected_tool == "⚡ AI Code Wizard":
-    tab6 = selected_tool
-    st.write("You selected AI Code Wizard")
+    st.write("AI Code Wizard content goes here...")
+
 
 
 with tab1:
