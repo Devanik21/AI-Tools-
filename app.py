@@ -469,11 +469,21 @@ if not st.session_state.prompt_templates or len(st.session_state.prompt_template
 # Tool Selection Section
 st.header("🛠️ Select Your Creation Tool")
 
+# Add custom CSS for scrollable tabs
 st.markdown("""
     <style>
+    div[data-testid="stTabs"] {
+        overflow-x: auto !important;
+        display: flex;
+        flex-wrap: nowrap;
+        scrollbar-width: thin;
+        scrollbar-color: #ccc transparent;
+    }
     div[data-testid="stTabs"] button {
+        flex-shrink: 0;
         font-size: 16px !important;
         padding: 10px !important;
+        white-space: nowrap;
     }
     </style>
 """, unsafe_allow_html=True)
