@@ -1296,6 +1296,7 @@ import numpy as np
 from sklearn.ensemble import IsolationForest
 from sklearn.feature_selection import mutual_info_regression, mutual_info_classif
 
+
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -1437,10 +1438,16 @@ with tab7:
                 sns.scatterplot(x=df.index, y=df[selected_anomaly_cols[0]], hue=df["Anomaly"], palette={1: "blue", -1: "red"}, ax=ax)
                 st.pyplot(fig)
 
-            # 12. Feature Importance (Mutual Information)
+            # 12. Feature Importance (Mutual Information) with Date Handling
             st.subheader("⭐ Feature Importance (Mutual Information)")
             if categorical_columns:
                 target_col = st.selectbox("Select target column", categorical_columns)
+                
+                # Convert date columns to numeric timestamps
+                if pd.api.types.is_datetime64_any_dtype(df[target_col]) or df[target_col].str.match(r"\d{4}-\d{2}-\d{2}").any():
+                    st.warning(f"'{target_col}' appears to be a date. Converting it to numeric timestamps.")
+                    df[target_col] = pd.to_datetime(df[target_col], errors="coerce").astype(int) / 10**9  # Convert to Unix timestamp
+
                 is_classification = df[target_col].nunique() < 10  # Assume classification if <10 unique values
 
                 if is_classification:
@@ -1463,6 +1470,7 @@ with tab7:
             st.warning("No numerical columns available for visualization.")
     else:
         st.info("Upload a dataset to generate insights and visualizations.")
+
 
 # Advanced options expander
 with st.expander("⚙️ Advanced Options"):
