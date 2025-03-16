@@ -1272,61 +1272,15 @@ with tab6:
             st.warning("⚠️ Please enter some code or upload a file.")
 
 # Content generation section
-# Content generation section
 st.header("✨ Create Content")
+# Add this under the 'Generate Content' section
 
 # Display selected tool or default
 selected_tool = st.session_state.get('selected_tool', 'Smart Content Creator')
 st.markdown(f"### Currently using: **{selected_tool}**")
 
-# User prompt input
-user_prompt = st.text_area("Enter your prompt:", key="user_prompt_input")
-
-# Optional file uploader (Excluding images and music files)
-uploaded_file = st.file_uploader("Upload a text-based file (PDF, DOCX, TXT, CSV)", type=["pdf", "docx", "txt", "csv"])
-
-# Extract text if a file is uploaded
-extracted_text = ""
-if uploaded_file:
-    extracted_text = extract_text_from_file(uploaded_file)  # Ensure this function is defined
-    if extracted_text:
-        st.success("✅ File uploaded successfully!")
-        st.text_area("Extracted Content:", extracted_text[:5000], height=200, key="uploaded_content_area")
-
-# Checkbox to include extracted text in the prompt
-include_extracted_text = st.checkbox("Include extracted content in prompt")
-
-# Append extracted text if checkbox is selected
-if include_extracted_text and extracted_text:
-    user_prompt += f"\n\n{extracted_text}"
-
-# Generate content button
-if st.button("🚀 Generate Content", type="primary"):
-    if not st.session_state.api_key:
-        st.error("Please enter your API key in the sidebar first.")
-    elif not user_prompt.strip():  # Ensure prompt isn't empty
-        st.warning("Please enter a prompt or select extracted content.")
-    else:
-        # Build prompt with template and style instructions
-        template = st.session_state.prompt_templates.get(selected_tool, "Create {prompt}")
-        formatted_prompt = template.replace("{prompt}", user_prompt)
-
-        # Add style instructions
-        style_prompt = f"{formatted_prompt}\n\nStyle Guidelines:\n"
-        for key, value in st.session_state.style_instructions.items():
-            if value and value not in ["None", "Standard"] and (not isinstance(value, list) or len(value) > 0):
-                style_prompt += f"- {key.replace('_', ' ').title()}: {value}\n"
-
-        # Generate content
-        output = generate_ai_content(style_prompt, st.session_state.api_key, st.session_state.api_model)
-
-        # Display output
-        st.markdown("### 🎯 Generated Content")
-        with st.expander("Content Output", expanded=True):
-            st.markdown(output)
-
-        # Save to history
-        save_to_history(selected_tool, user_prompt, output)
+# Content prompt area
+st.text_area("Extracted Content:", extracted_text[:5000], height=200, key="translator_text_area")
 
 
 import pandas as pd
@@ -1927,62 +1881,34 @@ if uploaded_file is not None:
 
 # Generate button and output area
 # Add this before your button code
-# Content generation section
-st.header("✨ Create Content")
+user_prompt = st.text_area("Enter your prompt", key="user_prompt_input")
 
-# Display selected tool or default
-selected_tool = st.session_state.get('selected_tool', 'Smart Content Creator')
-st.markdown(f"### Currently using: **{selected_tool}**")
-
-# User prompt input
-user_prompt = st.text_area("Enter your prompt:", key="user_prompt_input")
-
-# Optional file uploader (Excluding images and music files)
-uploaded_file = st.file_uploader("Upload a text-based file (PDF, DOCX, TXT, CSV)", type=["pdf", "docx", "txt", "csv"])
-
-# Extract text if a file is uploaded
-extracted_text = ""
-if uploaded_file:
-    extracted_text = extract_text_from_file(uploaded_file)  # Ensure this function is defined
-    if extracted_text:
-        st.success("✅ File uploaded successfully!")
-        st.text_area("Extracted Content:", extracted_text[:5000], height=200, key="uploaded_content_area")
-
-# Checkbox to include extracted text in the prompt
-include_extracted_text = st.checkbox("Include extracted content in prompt")
-
-# Append extracted text if checkbox is selected
-if include_extracted_text and extracted_text:
-    user_prompt += f"\n\n{extracted_text}"
-
-# Generate content button
 if st.button("🚀 Generate Content", type="primary"):
     if not st.session_state.api_key:
         st.error("Please enter your API key in the sidebar first.")
-    elif not user_prompt.strip():  # Ensure prompt isn't empty
-        st.warning("Please enter a prompt or select extracted content.")
+    elif not user_prompt:
+        st.warning("Please enter a prompt to generate content.")
     else:
         # Build prompt with template and style instructions
         template = st.session_state.prompt_templates.get(selected_tool, "Create {prompt}")
         formatted_prompt = template.replace("{prompt}", user_prompt)
-
-        # Add style instructions
+        
+        # Add style instructions to prompt
         style_prompt = f"{formatted_prompt}\n\nStyle Guidelines:\n"
         for key, value in st.session_state.style_instructions.items():
             if value and value not in ["None", "Standard"] and (not isinstance(value, list) or len(value) > 0):
                 style_prompt += f"- {key.replace('_', ' ').title()}: {value}\n"
-
+        
         # Generate content
         output = generate_ai_content(style_prompt, st.session_state.api_key, st.session_state.api_model)
-
+        
         # Display output
         st.markdown("### 🎯 Generated Content")
         with st.expander("Content Output", expanded=True):
             st.markdown(output)
-
+        
         # Save to history
         save_to_history(selected_tool, user_prompt, output)
-
               
 # Add theme selector
 st.sidebar.markdown("---")
