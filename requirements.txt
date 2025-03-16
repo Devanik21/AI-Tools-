@@ -8,6 +8,7 @@ watchdog>=3.0.0
 packaging>=23.1
 PyMuPDF
 wordcloud
+openpyxl
 translate
 nltk
 iso-639
