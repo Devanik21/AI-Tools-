@@ -478,58 +478,10 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-import streamlit as st
-
-# Sample tool categories for demonstration
-tool_categories = {
-    "Category 1": ["Tool A", "Tool B", "Tool C"],
-    "Category 2": ["Tool D", "Tool E", "Tool F"],
-}
-
-# List of tool names (same as your original tab names)
-tool_names = [
-    "📋 Categories", 
-    "🔍 Search Results", 
-    "📚 AI Research Assistant", 
-    "🤖 AI Chatbot", 
-    "🌍 AI Translator", 
-    "⚡ AI Code Wizard"
-]
-
-# Use a selectbox to choose the tool instead of tabs
-selected_tool = st.selectbox("Choose your tool:", tool_names)
-
-# Check which tool was selected and display its content
-if selected_tool == "📋 Categories":
-    selected_category = st.selectbox("Choose a category:", list(tool_categories.keys()))
-    
-    # Only show tools from the selected category
-    if selected_category:
-        tools_in_category = tool_categories[selected_category]
-        st.markdown(f"### {selected_category} Tools ({len(tools_in_category)})")
-        
-        # Create a grid layout for tools
-        cols = st.columns(3)
-        for i, tool in enumerate(tools_in_category):
-            with cols[i % 3]:
-                if st.button(tool, key=f"cat_{tool}"):
-                    st.session_state.selected_tool = tool
-
-elif selected_tool == "🔍 Search Results":
-    st.write("Search Results content goes here...")
-
-elif selected_tool == "📚 AI Research Assistant":
-    st.write("AI Research Assistant content goes here...")
-
-elif selected_tool == "🤖 AI Chatbot":
-    st.write("AI Chatbot content goes here...")
-
-elif selected_tool == "🌍 AI Translator":
-    st.write("AI Translator content goes here...")
-
-elif selected_tool == "⚡ AI Code Wizard":
-    st.write("AI Code Wizard content goes here...")
-
+tab1, tab2, tab3, tab4, tab5 , tab6 = st.tabs([
+    "📋 Categories", "🔍 Search Results", 
+    "📚 AI Research Assistant", "🤖 AI Chatbot", "🌍 AI Translator" , "⚡ AI Code Wizard"
+])
 
 
 with tab1:
