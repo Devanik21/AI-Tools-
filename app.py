@@ -478,38 +478,24 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-import streamlit as st
+tab1, tab2, tab3, tab4, tab5 , tab6 = st.tabs([
+    "📋 Categories", "🔍 Search Results", 
+    "📚 AI Research Assistant", "🤖 AI Chatbot", "🌍 AI Translator" , "⚡ AI Code Wizard"
+])
 
-# Tool Selection Section
-st.header("🛠️ Select Your Creation Tool")
 
-st.markdown("""
-    <style>
-    div[data-testid="stTabs"] button {
-        font-size: 12px !important;
-        padding: 20px !important;
-    }
-    </style>
-""", unsafe_allow_html=True)
-
-# Define tool categories
-tool_categories = {
-    "AI Research": ["📚 AI Research Assistant"],
-    "Chat & Communication": ["🤖 AI Chatbot", "🌍 AI Translator"],
-    "Coding & Development": ["⚡ AI Code Wizard", "👨‍💻 AI Code Debugger", "📜 AI Documentation Helper", "🚀 AI Deployment Assistant"],
-    "Data & Analytics": ["📊 AI Data Analyzer", "📈 AI Predictor", "🔍 AI Pattern Finder"],
-    "Content & Creativity": ["📝 AI Writer", "🎭 AI Storyteller", "💡 AI Idea Generator"],
-    "Design & Media": ["🖼️ AI Image Generator", "🎨 AI UI/UX Designer", "📐 AI 3D Model Creator", "🎙️ AI Voice Generator", "🎵 AI Music Composer", "📽️ AI Video Creator"],
-    "Security & Privacy": ["🛡️ AI Cybersecurity Assistant", "🔑 AI Password Manager"]
-}
-
-# Select category
-selected_category = st.selectbox("Choose a category:", list(tool_categories.keys()))
-
-# Select tool from category
-if selected_category:
-    tools_in_category = tool_categories[selected_category]
-    selected_tool = st.selectbox("Choose a tool:", tools_in_category)
+with tab1:
+    selected_category = st.selectbox("Choose a category:", list(tool_categories.keys()))
     
-    if st.button("Select Tool"):
-        st.session_state.selected_tool = selected_tool
+    # Only show tools from selected category
+    if selected_category:
+        tools_in_category = tool_categories[selected_category]
+        st.markdown(f"### {selected_category} Tools ({len(tools_in_category)})")
+        
+        # Create grid layout for tools
+        cols = st.columns(3)
+        for i, tool in enumerate(tools_in_category):
+            with cols[i % 3]:
+                if st.button(tool, key=f"cat_{tool}"):
+                    st.session_state.selected_tool = tool
+
