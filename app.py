@@ -1283,7 +1283,45 @@ st.markdown(f"### Currently using: **{selected_tool}**")
 st.text_area("Extracted Content:", extracted_text[:5000], height=200, key="translator_text_area")
 
 
-# Advanced options expander
+with tab7:
+    st.header("📊 Data Visualization & Insights")
+
+    # File uploader for CSV and data files
+    uploaded_file = st.file_uploader("Upload a dataset (CSV, Excel)", type=["csv", "xlsx"])
+
+    if uploaded_file:
+        # Read data
+        if uploaded_file.name.endswith(".csv"):
+            df = pd.read_csv(uploaded_file)
+        else:
+            df = pd.read_excel(uploaded_file)
+
+        # Display basic information
+        st.subheader("Dataset Overview")
+        st.write(df.head())  # Show first few rows
+
+        # Show basic statistics
+        st.subheader("Basic Insights")
+        st.write(df.describe())
+
+        # Show column selection for visualization
+        st.subheader("📈 Data Visualization")
+        columns = df.select_dtypes(include=["number"]).columns.tolist()
+        if columns:
+            x_axis = st.selectbox("Select X-axis", columns)
+            y_axis = st.selectbox("Select Y-axis", columns)
+
+            # Plot scatter plot
+            fig, ax = plt.subplots()
+            sns.scatterplot(x=df[x_axis], y=df[y_axis], ax=ax)
+            st.pyplot(fig)
+
+        else:
+            st.warning("No numerical columns available for visualization.")
+    else:
+        st.info("Upload a dataset to generate insights and visualizations.")
+
+
 # Advanced options expander
 with st.expander("⚙️ Advanced Options"):
     # Document structure tabs
