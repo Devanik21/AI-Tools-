@@ -472,8 +472,8 @@ st.header("🛠️ Select Your Creation Tool")
 st.markdown("""
     <style>
     div[data-testid="stTabs"] button {
-        font-size: 12px !important;
-        padding: 6px !important;
+        font-size: 10px !important;
+        padding: 4px !important;
     }
     </style>
 """, unsafe_allow_html=True)
