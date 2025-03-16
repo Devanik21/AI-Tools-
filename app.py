@@ -1273,14 +1273,30 @@ with tab6:
 
 # Content generation section
 st.header("✨ Create Content")
-# Add this under the 'Generate Content' section
 
 # Display selected tool or default
 selected_tool = st.session_state.get('selected_tool', 'Smart Content Creator')
 st.markdown(f"### Currently using: **{selected_tool}**")
 
 # Content prompt area
-st.text_area("Extracted Content:", extracted_text[:5000], height=200, key="translator_text_area")
+user_prompt = st.text_area("Enter your prompt:", "", height=150)
+
+# Optional file uploader (Excluding images and music files)
+uploaded_file = st.file_uploader("Upload a text-based file (PDF, DOCX, TXT, CSV)", type=["pdf", "docx", "txt", "csv"])
+
+# Function to extract text from uploaded file
+if uploaded_file:
+    extracted_text = extract_text_from_file(uploaded_file)  # Ensure this function is defined in your code
+    if extracted_text:
+        st.success("✅ File uploaded successfully!")
+        st.text_area("Extracted Content:", extracted_text[:5000], height=200, key="uploaded_content_area")
+        
+        # Option to merge extracted text with user input
+        if st.checkbox("Include extracted content in prompt"):
+            user_prompt += f"\n\n{extracted_text}"
+
+# Store updated prompt in session state
+st.session_state['user_prompt'] = user_prompt
 
 
 import pandas as pd
