@@ -1279,7 +1279,6 @@ selected_tool = st.session_state.get('selected_tool', 'Smart Content Creator')
 st.markdown(f"### Currently using: **{selected_tool}**")
 
 # Content prompt area
-user_prompt = st.text_area("Enter your prompt:", "", height=150)
 
 # Optional file uploader (Excluding images and music files)
 uploaded_file = st.file_uploader("Upload a text-based file (PDF, DOCX, TXT, CSV)", type=["pdf", "docx", "txt", "csv"])
