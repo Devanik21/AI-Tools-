@@ -1288,13 +1288,6 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import streamlit as st
 
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-import streamlit as st
-import numpy as np
-from matplotlib.colors import LinearSegmentedColormap
-
 with tab7:
     st.header("📊 Data Visualization & Insights")
 
@@ -1303,691 +1296,103 @@ with tab7:
 
     if uploaded_file:
         # Read data
-        try:
-            if uploaded_file.name.endswith(".csv"):
-                df = pd.read_csv(uploaded_file)
-            else:
-                df = pd.read_excel(uploaded_file)
-            
-            # Display basic information
-            st.subheader("Dataset Overview")
-            
-            # Toggle for showing raw data
-            if st.checkbox("Show raw data", value=True):
-                num_rows = st.slider("Number of rows to display", 5, 50, 5)
-                st.write(df.head(num_rows))
-            
-            # Toggle for showing column info
-            if st.checkbox("Show column information"):
-                col_info = pd.DataFrame({
-                    'Data Type': df.dtypes,
-                    'Non-Null Count': df.count(),
-                    'Null Count': df.isnull().sum(),
-                    'Unique Values': [df[col].nunique() for col in df.columns]
-                })
-                st.write(col_info)
-            
-            # Show basic statistics with selection
-            st.subheader("Basic Insights")
-            stat_options = st.multiselect(
-                "Select statistics to display",
-                ["Descriptive Statistics", "Missing Values", "Unique Values", "Sample Records"],
-                default=["Descriptive Statistics"]
-            )
-            
-            if "Descriptive Statistics" in stat_options:
-                st.write("### Descriptive Statistics")
-                st.write(df.describe().round(2))
-            
-            if "Missing Values" in stat_options:
-                st.write("### Missing Values")
-                missing = pd.DataFrame(df.isnull().sum(), columns=['Missing Values'])
-                missing['Percentage'] = (missing['Missing Values'] / len(df) * 100).round(2)
-                st.write(missing)
-            
-            if "Unique Values" in stat_options:
-                st.write("### Unique Values")
-                unique_vals = pd.DataFrame(df.nunique(), columns=['Unique Values'])
-                st.write(unique_vals)
-            
-            if "Sample Records" in stat_options:
-                st.write("### Sample Records")
-                sample_size = st.slider("Number of random samples", 5, 20, 5)
-                st.write(df.sample(sample_size))
+        if uploaded_file.name.endswith(".csv"):
+            df = pd.read_csv(uploaded_file)
+        else:
+            df = pd.read_excel(uploaded_file)
 
-            # Select only numeric columns
-            numeric_columns = df.select_dtypes(include=["number"]).columns.tolist()
+        # Display basic information
+        st.subheader("Dataset Overview")
+        st.write(df.head())  # Show first few rows
+
+        # Show basic statistics
+        st.subheader("Basic Insights")
+        st.write(df.describe())
+
+        # Select only numeric columns
+        numeric_columns = df.select_dtypes(include=["number"]).columns.tolist()
+
+        if numeric_columns:
+            st.subheader("📈 Data Visualization")
+
+            # 1. Pairplot
+            st.subheader("🔄 Pairplot (Relationships between Features)")
+            fig = sns.pairplot(df[numeric_columns])
+            st.pyplot(fig)
+
+            # 2. Correlation Heatmap
+            st.subheader("🔥 Correlation Heatmap")
+            fig, ax = plt.subplots(figsize=(10, 6))
+            sns.heatmap(df[numeric_columns].corr(), annot=True, cmap="coolwarm", ax=ax)
+            st.pyplot(fig)
+
+            # Select columns for customized visualization
+            x_axis = st.selectbox("Select X-axis", numeric_columns)
+            y_axis = st.selectbox("Select Y-axis", numeric_columns)
+
+            # 3. Scatter Plot
+            st.subheader("📍 Scatter Plot")
+            fig, ax = plt.subplots()
+            sns.scatterplot(x=df[x_axis], y=df[y_axis], ax=ax)
+            st.pyplot(fig)
+
+            # 4. Histogram
+            st.subheader("📊 Histogram")
+            selected_column = st.selectbox("Select column for histogram", numeric_columns)
+            fig, ax = plt.subplots()
+            sns.histplot(df[selected_column], bins=30, kde=True, ax=ax)
+            st.pyplot(fig)
+
+            # 5. Boxplot
+            st.subheader("📦 Boxplot (Outlier Detection)")
+            fig, ax = plt.subplots()
+            sns.boxplot(y=df[selected_column], ax=ax)
+            st.pyplot(fig)
+
+            # 6. Violin Plot
+            st.subheader("🎻 Violin Plot (Data Distribution)")
+            fig, ax = plt.subplots()
+            sns.violinplot(y=df[selected_column], ax=ax)
+            st.pyplot(fig)
+
+            # 7. Line Plot
+            st.subheader("📈 Line Plot (Trend Over Time)")
+            fig, ax = plt.subplots()
+            sns.lineplot(x=df.index, y=df[selected_column], ax=ax)
+            st.pyplot(fig)
+
+            # 8. Bar Chart
+            st.subheader("📊 Bar Chart (Mean of Categories)")
             categorical_columns = df.select_dtypes(include=["object"]).columns.tolist()
+            if categorical_columns:
+                category_col = st.selectbox("Select a categorical column", categorical_columns)
+                fig, ax = plt.subplots()
+                df.groupby(category_col)[selected_column].mean().plot(kind="bar", ax=ax)
+                st.pyplot(fig)
+            else:
+                st.warning("No categorical columns available for bar chart.")
 
-            if numeric_columns:
-                st.subheader("📈 Data Visualization")
-                
-                # Visualization selection
-                viz_type = st.selectbox(
-                    "Select Visualization Type",
-                    ["Pairplot", "Correlation Heatmap", "Scatter Plot", "Histogram", 
-                     "Boxplot", "Violin Plot", "Line Plot", "Bar Chart", "KDE Plot", "Pie Chart"]
-                )
-                
-                if viz_type == "Pairplot":
-                    st.subheader("🔄 Pairplot (Relationships between Features)")
-                    
-                    # Enhanced pairplot options
-                    col1, col2 = st.columns(2)
-                    with col1:
-                        pairplot_columns = st.multiselect(
-                            "Select features to plot (max 5 recommended)",
-                            numeric_columns,
-                            default=numeric_columns[:min(4, len(numeric_columns))]
-                        )
-                    with col2:
-                        hue_column = st.selectbox(
-                            "Color by category (optional)",
-                            ["None"] + categorical_columns,
-                            index=0
-                        )
-                    
-                    # Additional pairplot settings
-                    col1, col2, col3 = st.columns(3)
-                    with col1:
-                        kind = st.selectbox("Plot kind", ["scatter", "kde", "hist", "reg"])
-                    with col2:
-                        diag_kind = st.selectbox("Diagonal plot kind", ["hist", "kde"])
-                    with col3:
-                        palette = st.selectbox("Color palette", ["viridis", "mako", "flare", "crest", "rocket"])
-                    
-                    # Generate pairplot
-                    if pairplot_columns:
-                        hue = None if hue_column == "None" else hue_column
-                        if hue is not None and hue in df.columns:
-                            # Limit categories for better visualization
-                            max_categories = 5
-                            top_categories = df[hue].value_counts().nlargest(max_categories).index
-                            pairplot_df = df[df[hue].isin(top_categories)][pairplot_columns + ([hue] if hue else [])]
-                        else:
-                            pairplot_df = df[pairplot_columns]
-                        
-                        with st.spinner("Generating pairplot..."):
-                            fig = sns.pairplot(
-                                pairplot_df, 
-                                hue=hue, 
-                                kind=kind, 
-                                diag_kind=diag_kind, 
-                                palette=palette,
-                                plot_kws={'alpha': 0.6}
-                            )
-                            st.pyplot(fig)
-                    else:
-                        st.warning("Please select at least one column for the pairplot.")
-                
-                elif viz_type == "Correlation Heatmap":
-                    st.subheader("🔥 Correlation Heatmap")
-                    
-                    # Enhanced heatmap options
-                    col1, col2 = st.columns(2)
-                    with col1:
-                        heatmap_columns = st.multiselect(
-                            "Select features for correlation",
-                            numeric_columns,
-                            default=numeric_columns[:min(8, len(numeric_columns))]
-                        )
-                    with col2:
-                        corr_method = st.selectbox(
-                            "Correlation method",
-                            ["pearson", "spearman", "kendall"]
-                        )
-                    
-                    # Additional heatmap settings
-                    col1, col2, col3 = st.columns(3)
-                    with col1:
-                        cmap_options = ["coolwarm", "viridis", "plasma", "inferno", "magma", "crest", "flare"]
-                        cmap = st.selectbox("Color map", cmap_options)
-                    with col2:
-                        annot = st.checkbox("Show values", value=True)
-                    with col3:
-                        mask_triangular = st.checkbox("Show only lower triangle")
-                    
-                    # Generate heatmap
-                    if heatmap_columns:
-                        with st.spinner("Generating heatmap..."):
-                            fig, ax = plt.subplots(figsize=(10, 8))
-                            
-                            # Calculate correlation
-                            corr_matrix = df[heatmap_columns].corr(method=corr_method).round(2)
-                            
-                            # Create mask for upper triangle if selected
-                            mask = None
-                            if mask_triangular:
-                                mask = np.triu(np.ones_like(corr_matrix, dtype=bool))
-                            
-                            # Generate heatmap
-                            sns.heatmap(
-                                corr_matrix, 
-                                mask=mask,
-                                annot=annot, 
-                                cmap=cmap, 
-                                linewidths=0.5,
-                                ax=ax,
-                                vmin=-1, 
-                                vmax=1,
-                                annot_kws={'size': 8}
-                            )
-                            
-                            plt.title(f"{corr_method.capitalize()} Correlation")
-                            st.pyplot(fig)
-                    else:
-                        st.warning("Please select at least one column for the heatmap.")
-                
-                elif viz_type == "Scatter Plot":
-                    st.subheader("📍 Scatter Plot")
-                    
-                    # Enhanced scatter plot options
-                    col1, col2 = st.columns(2)
-                    with col1:
-                        x_axis = st.selectbox("Select X-axis", numeric_columns)
-                    with col2:
-                        y_axis = st.selectbox("Select Y-axis", numeric_columns, index=min(1, len(numeric_columns)-1))
-                    
-                    # Additional scatter plot settings
-                    col1, col2, col3 = st.columns(3)
-                    with col1:
-                        color_by = st.selectbox(
-                            "Color by (optional)",
-                            ["None"] + numeric_columns + categorical_columns
-                        )
-                    with col2:
-                        size_by = st.selectbox(
-                            "Size by (optional)",
-                            ["None"] + numeric_columns
-                        )
-                    with col3:
-                        add_regression = st.checkbox("Add regression line")
-                    
-                    # Advanced settings
-                    col1, col2 = st.columns(2)
-                    with col1:
-                        marker_options = [".", "o", "^", "s", "p", "*", "+", "x", "D"]
-                        marker = st.selectbox("Marker style", marker_options)
-                    with col2:
-                        alpha = st.slider("Marker transparency", 0.1, 1.0, 0.7)
-                    
-                    # Generate scatter plot
-                    with st.spinner("Generating scatter plot..."):
-                        fig, ax = plt.subplots(figsize=(10, 6))
-                        
-                        plot_kws = {
-                            'alpha': alpha,
-                            'marker': marker,
-                            's': 80
-                        }
-                        
-                        if color_by != "None" and color_by in df.columns:
-                            if color_by in numeric_columns:
-                                scatter = ax.scatter(
-                                    df[x_axis], 
-                                    df[y_axis],
-                                    c=df[color_by],
-                                    cmap='viridis',
-                                    **plot_kws
-                                )
-                                plt.colorbar(scatter, ax=ax, label=color_by)
-                            else:  # Categorical column
-                                categories = df[color_by].unique()
-                                for category in categories:
-                                    subset = df[df[color_by] == category]
-                                    ax.scatter(
-                                        subset[x_axis],
-                                        subset[y_axis],
-                                        label=category,
-                                        **plot_kws
-                                    )
-                                ax.legend(title=color_by)
-                        else:
-                            # Apply size variation if selected
-                            if size_by != "None" and size_by in numeric_columns:
-                                # Normalize size values
-                                sizes = 20 + 200 * (df[size_by] - df[size_by].min()) / (df[size_by].max() - df[size_by].min() + 1e-10)
-                                ax.scatter(df[x_axis], df[y_axis], s=sizes, alpha=alpha, marker=marker)
-                            else:
-                                ax.scatter(df[x_axis], df[y_axis], **plot_kws)
-                        
-                        # Add regression line if selected
-                        if add_regression:
-                            sns.regplot(
-                                x=x_axis,
-                                y=y_axis,
-                                data=df,
-                                scatter=False,
-                                ax=ax,
-                                line_kws={'color': 'red'}
-                            )
-                        
-                        ax.set_xlabel(x_axis)
-                        ax.set_ylabel(y_axis)
-                        ax.set_title(f"Scatter Plot: {y_axis} vs {x_axis}")
-                        ax.grid(True, alpha=0.3)
-                        
-                        st.pyplot(fig)
-                
-                elif viz_type == "Histogram":
-                    st.subheader("📊 Histogram")
-                    
-                    # Enhanced histogram options
-                    col1, col2 = st.columns(2)
-                    with col1:
-                        selected_column = st.selectbox("Select column for histogram", numeric_columns)
-                    with col2:
-                        bins = st.slider("Number of bins", 5, 100, 30)
-                    
-                    # Additional histogram settings
-                    col1, col2, col3 = st.columns(3)
-                    with col1:
-                        kde = st.checkbox("Show density curve (KDE)", value=True)
-                    with col2:
-                        hist_palette = st.selectbox("Color palette", ["blues", "reds", "greens", "purples", "oranges"])
-                    with col3:
-                        cumulative = st.checkbox("Cumulative histogram")
-                    
-                    # Show outliers or filter them
-                    outlier_filter = st.checkbox("Filter outliers")
-                    if outlier_filter:
-                        q1 = df[selected_column].quantile(0.25)
-                        q3 = df[selected_column].quantile(0.75)
-                        iqr = q3 - q1
-                        lower_bound = q1 - 1.5 * iqr
-                        upper_bound = q3 + 1.5 * iqr
-                        filtered_data = df[(df[selected_column] >= lower_bound) & (df[selected_column] <= upper_bound)]
-                        hist_data = filtered_data[selected_column]
-                        st.info(f"Filtered {len(df) - len(filtered_data)} outliers")
-                    else:
-                        hist_data = df[selected_column]
-                    
-                    # Generate histogram
-                    with st.spinner("Generating histogram..."):
-                        fig, ax = plt.subplots(figsize=(10, 6))
-                        
-                        sns.histplot(
-                            hist_data,
-                            bins=bins,
-                            kde=kde,
-                            cumulative=cumulative,
-                            color=sns.color_palette(hist_palette)[-2],
-                            alpha=0.7,
-                            ax=ax
-                        )
-                        
-                        # Add vertical lines for statistics
-                        stats_to_show = st.multiselect(
-                            "Show statistics on plot",
-                            ["Mean", "Median", "Mode", "25th Percentile", "75th Percentile"],
-                            default=["Mean", "Median"]
-                        )
-                        
-                        for stat in stats_to_show:
-                            if stat == "Mean":
-                                mean_val = hist_data.mean()
-                                ax.axvline(mean_val, color='red', linestyle='--', linewidth=2, label=f'Mean: {mean_val:.2f}')
-                            elif stat == "Median":
-                                median_val = hist_data.median()
-                                ax.axvline(median_val, color='green', linestyle='--', linewidth=2, label=f'Median: {median_val:.2f}')
-                            elif stat == "Mode":
-                                mode_val = hist_data.mode().iloc[0]
-                                ax.axvline(mode_val, color='purple', linestyle='--', linewidth=2, label=f'Mode: {mode_val:.2f}')
-                            elif stat == "25th Percentile":
-                                q1_val = hist_data.quantile(0.25)
-                                ax.axvline(q1_val, color='orange', linestyle='--', linewidth=2, label=f'Q1: {q1_val:.2f}')
-                            elif stat == "75th Percentile":
-                                q3_val = hist_data.quantile(0.75)
-                                ax.axvline(q3_val, color='brown', linestyle='--', linewidth=2, label=f'Q3: {q3_val:.2f}')
-                        
-                        if stats_to_show:
-                            ax.legend()
-                        
-                        ax.set_xlabel(selected_column)
-                        ax.set_ylabel("Frequency" if not cumulative else "Cumulative Frequency")
-                        ax.set_title(f"Histogram of {selected_column}")
-                        ax.grid(True, alpha=0.3)
-                        
-                        st.pyplot(fig)
-                        
-                        # Show summary statistics
-                        if st.checkbox("Show summary statistics"):
-                            stats = hist_data.describe().round(2)
-                            st.write(stats)
-                
-                elif viz_type == "Boxplot":
-                    st.subheader("📦 Boxplot (Outlier Detection)")
-                    
-                    # Enhanced boxplot options
-                    col1, col2 = st.columns(2)
-                    with col1:
-                        box_column = st.selectbox("Select column for boxplot", numeric_columns)
-                    with col2:
-                        group_by = st.selectbox(
-                            "Group by (optional)",
-                            ["None"] + categorical_columns
-                        )
-                    
-                    # Additional boxplot settings
-                    col1, col2, col3 = st.columns(3)
-                    with col1:
-                        box_palette = st.selectbox("Color palette", ["viridis", "mako", "flare", "crest", "rocket"])
-                    with col2:
-                        orient = st.selectbox("Orientation", ["Vertical", "Horizontal"])
-                    with col3:
-                        notched = st.checkbox("Show notched boxplot")
-                    
-                    # Generate boxplot
-                    with st.spinner("Generating boxplot..."):
-                        fig, ax = plt.subplots(figsize=(10, 6))
-                        
-                        # Set orientation
-                        if orient == "Horizontal":
-                            x, y = box_column, group_by if group_by != "None" else None
-                        else:
-                            y, x = box_column, group_by if group_by != "None" else None
-                        
-                        # Create boxplot
-                        if group_by != "None" and group_by in categorical_columns:
-                            # Limit to top categories if too many
-                            if df[group_by].nunique() > 10:
-                                top_categories = df[group_by].value_counts().nlargest(10).index
-                                box_df = df[df[group_by].isin(top_categories)]
-                                st.info(f"Showing only top 10 categories out of {df[group_by].nunique()} for readability")
-                            else:
-                                box_df = df
-                            
-                            sns.boxplot(
-                                x=x,
-                                y=y,
-                                data=box_df,
-                                palette=box_palette,
-                                notch=notched,
-                                ax=ax
-                            )
-                            
-                            # Adjust figure size for many categories
-                            if orient == "Vertical" and box_df[group_by].nunique() > 5:
-                                fig.set_figwidth(max(10, box_df[group_by].nunique()))
-                        else:
-                            sns.boxplot(
-                                x=x if orient == "Horizontal" else None,
-                                y=y if orient == "Vertical" else None,
-                                data=df,
-                                color=sns.color_palette(box_palette)[0],
-                                notch=notched,
-                                ax=ax
-                            )
-                        
-                        # Optional swarm plot overlay
-                        if st.checkbox("Add data points (swarm plot)"):
-                            sns.swarmplot(
-                                x=x,
-                                y=y,
-                                data=df if group_by == "None" or group_by not in categorical_columns else box_df,
-                                color='black',
-                                alpha=0.5,
-                                size=3,
-                                ax=ax
-                            )
-                        
-                        # Set title and labels
-                        title = f"Boxplot of {box_column}"
-                        if group_by != "None":
-                            title += f" grouped by {group_by}"
-                        ax.set_title(title)
-                        
-                        # Add grid
-                        ax.grid(True, alpha=0.3)
-                        
-                        st.pyplot(fig)
-                        
-                        # Show outlier information
-                        if st.checkbox("Show outlier information"):
-                            q1 = df[box_column].quantile(0.25)
-                            q3 = df[box_column].quantile(0.75)
-                            iqr = q3 - q1
-                            lower_bound = q1 - 1.5 * iqr
-                            upper_bound = q3 + 1.5 * iqr
-                            
-                            outliers = df[(df[box_column] < lower_bound) | (df[box_column] > upper_bound)]
-                            
-                            if not outliers.empty:
-                                st.write(f"Number of outliers: {len(outliers)}")
-                                st.write(f"Percentage of outliers: {(len(outliers) / len(df) * 100):.2f}%")
-                                
-                                if st.checkbox("Show outlier records"):
-                                    st.write(outliers)
-                            else:
-                                st.write("No outliers detected using 1.5 IQR rule")
-                
-                elif viz_type == "Violin Plot":
-                    st.subheader("🎻 Violin Plot (Data Distribution)")
-                    
-                    # Enhanced violin plot options
-                    col1, col2 = st.columns(2)
-                    with col1:
-                        violin_column = st.selectbox("Select column for violin plot", numeric_columns)
-                    with col2:
-                        violin_group_by = st.selectbox(
-                            "Group by (optional)",
-                            ["None"] + categorical_columns
-                        )
-                    
-                    # Additional violin plot settings
-                    col1, col2, col3 = st.columns(3)
-                    with col1:
-                        violin_palette = st.selectbox("Color palette", ["viridis", "mako", "flare", "crest", "rocket", "pastel"])
-                    with col2:
-                        violin_orient = st.selectbox("Violin orientation", ["Vertical", "Horizontal"])
-                    with col3:
-                        inner_plot = st.selectbox("Inner plot type", ["box", "quartile", "stick", "None"])
-                    
-                    # Generate violin plot
-                    with st.spinner("Generating violin plot..."):
-                        fig, ax = plt.subplots(figsize=(10, 6))
-                        
-                        # Set orientation
-                        if violin_orient == "Horizontal":
-                            x, y = violin_column, violin_group_by if violin_group_by != "None" else None
-                        else:
-                            y, x = violin_column, violin_group_by if violin_group_by != "None" else None
-                        
-                        # Set inner representation
-                        inner = None if inner_plot == "None" else inner_plot
-                        
-                        # Create violin plot
-                        if violin_group_by != "None" and violin_group_by in categorical_columns:
-                            # Limit to top categories if too many
-                            if df[violin_group_by].nunique() > 10:
-                                top_categories = df[violin_group_by].value_counts().nlargest(10).index
-                                violin_df = df[df[violin_group_by].isin(top_categories)]
-                                st.info(f"Showing only top 10 categories out of {df[violin_group_by].nunique()} for readability")
-                            else:
-                                violin_df = df
-                            
-                            sns.violinplot(
-                                x=x,
-                                y=y,
-                                data=violin_df,
-                                palette=violin_palette,
-                                split=st.checkbox("Split violins", value=False),
-                                inner=inner,
-                                ax=ax
-                            )
-                            
-                            # Adjust figure size for many categories
-                            if violin_orient == "Vertical" and violin_df[violin_group_by].nunique() > 5:
-                                fig.set_figwidth(max(10, violin_df[violin_group_by].nunique()))
-                        else:
-                            sns.violinplot(
-                                x=x if violin_orient == "Horizontal" else None,
-                                y=y if violin_orient == "Vertical" else None,
-                                data=df,
-                                color=sns.color_palette(violin_palette)[0],
-                                inner=inner,
-                                ax=ax
-                            )
-                        
-                        # Optional stripplot overlay
-                        if st.checkbox("Add data points (stripplot)"):
-                            sns.stripplot(
-                                x=x,
-                                y=y,
-                                data=df if violin_group_by == "None" or violin_group_by not in categorical_columns else violin_df,
-                                color='black',
-                                alpha=0.3,
-                                size=3,
-                                jitter=True,
-                                ax=ax
-                            )
-                        
-                        # Set title and labels
-                        title = f"Violin Plot of {violin_column}"
-                        if violin_group_by != "None":
-                            title += f" grouped by {violin_group_by}"
-                        ax.set_title(title)
-                        
-                        # Add grid
-                        ax.grid(True, alpha=0.3)
-                        
-                        st.pyplot(fig)
-                        
-                        # Show distribution statistics
-                        if st.checkbox("Show distribution statistics"):
-                            st.write(df[violin_column].describe().round(2))
-                
-                elif viz_type == "Line Plot":
-                    st.subheader("📈 Line Plot (Trend Over Time)")
-                    
-                    # Enhanced line plot options
-                    col1, col2 = st.columns(2)
-                    with col1:
-                        line_y_column = st.selectbox("Select Y-axis (values)", numeric_columns)
-                    with col2:
-                        line_x_columns = ["Index"] + numeric_columns + categorical_columns
-                        line_x_column = st.selectbox("Select X-axis (sequence/time)", line_x_columns)
-                    
-                    # Additional line plot settings
-                    col1, col2, col3 = st.columns(3)
-                    with col1:
-                        line_color = st.selectbox("Line color", ["blue", "green", "red", "purple", "orange", "teal"])
-                    with col2:
-                        marker = st.selectbox("Marker style", ["None", "o", "^", "s", "p", "*", "+", "x", "D"])
-                    with col3:
-                        line_style = st.selectbox("Line style", ["-", "--", "-.", ":", "None"])
-                    
-                    # Group by option
-                    line_group_by = st.selectbox(
-                        "Group by (optional, creates multiple lines)",
-                        ["None"] + categorical_columns
-                    )
-                    
-                    # Data aggregation options (when using categorical x-axis)
-                    agg_method = "mean"
-                    if line_x_column != "Index" and line_x_column in categorical_columns:
-                        agg_method = st.selectbox(
-                            "Aggregation method",
-                            ["mean", "median", "sum", "min", "max", "count"]
-                        )
-                    
-                    # Generate line plot
-                    with st.spinner("Generating line plot..."):
-                        fig, ax = plt.subplots(figsize=(10, 6))
-                        
-                        # Prepare data based on selection
-                        if line_x_column == "Index":
-                            x_data = df.index
-                        else:
-                            x_data = df[line_x_column]
-                        
-                        # Handle the marker setting
-                        marker_style = None if marker == "None" else marker
-                        line_style_val = "" if line_style == "None" else line_style
-                        
-                        # Create line plot based on grouping
-                        if line_group_by != "None" and line_group_by in categorical_columns:
-                            # Limit categories if too many
-                            if df[line_group_by].nunique() > 10:
-                                top_categories = df[line_group_by].value_counts().nlargest(10).index
-                                line_df = df[df[line_group_by].isin(top_categories)]
-                                st.info(f"Showing only top 10 categories out of {df[line_group_by].nunique()} for readability")
-                            else:
-                                line_df = df
-                            
-                            # For categorical x-axis, aggregate data
-                            if line_x_column != "Index" and line_x_column in categorical_columns:
-                                pivot_data = pd.pivot_table(
-                                    line_df, 
-                                    values=line_y_column,
-                                    index=line_x_column,
-                                    columns=line_group_by,
-                                    aggfunc=agg_method
-                                ).reset_index()
-                                
-                                # Plot each group
-                                pivot_data.set_index(line_x_column).plot(
-                                    marker=marker_style,
-                                    linestyle=line_style_val,
-                                    ax=ax
-                                )
-                            else:
-                                # Plot for each group
-                                for name, group in line_df.groupby(line_group_by):
-                                    if line_x_column == "Index":
-                                        group = group.sort_index()
-                                        x_vals = group.index
-                                    else:
-                                        group = group.sort_values(line_x_column)
-                                        x_vals = group[line_x_column]
-                                    
-                                    ax.plot(
-                                        x_vals,
-                                        group[line_y_column],
-                                        marker=marker_style,
-                                        linestyle=line_style_val,
-                                        label=name
-                                    )
-                                
-                                ax.legend(title=line_group_by)
-                        else:
-                            # For categorical x-axis without grouping, aggregate data
-                            if line_x_column != "Index" and line_x_column in categorical_columns:
-                                agg_data = df.groupby(line_x_column)[line_y_column].agg(agg_method).reset_index()
-                                ax.plot(
-                                    agg_data[line_x_column],
-                                    agg_data[line_y_column],
-                                    marker=marker_style,
-                                    linestyle=line_style_val,
-                                    color=line_color
-                                )
-                            else:
-                                # Sort data for proper line plot
-                                if line_x_column != "Index":
-                                    sorted_df = df.sort_values(line_x_column)
-                                    x_vals = sorted_df[line_x_column]
-                                    y_vals = sorted_df[line_y_column]
-                                else:
-                                    sorted_df = df.sort_index()
-                                    x_vals = sorted_df.index
-                                    y_vals = sorted_df[line_y_column]
-                                                                    # Plot the final line chart
-                                ax.plot(
-                                    x_vals,
-                                    y_vals,
-                                    marker=marker_style,
-                                    linestyle=line_style_val,
-                                    color=line_color
-                                )
+            # 9. KDE Plot (Kernel Density Estimation)
+            st.subheader("🌊 KDE Plot (Density Distribution)")
+            fig, ax = plt.subplots()
+            sns.kdeplot(df[selected_column], fill=True, ax=ax)
+            st.pyplot(fig)
 
-                        # Set labels and title
-                        ax.set_xlabel(line_x_column)
-                        ax.set_ylabel(line_y_column)
-                        ax.set_title(f"Line Plot: {line_y_column} vs {line_x_column}")
-                        ax.grid(True, alpha=0.3)
+            # 10. Pie Chart
+            st.subheader("🥧 Pie Chart (Category Distribution)")
+            if categorical_columns:
+                pie_col = st.selectbox("Select a categorical column for pie chart", categorical_columns)
+                fig, ax = plt.subplots()
+                df[pie_col].value_counts().plot(kind="pie", autopct="%1.1f%%", ax=ax)
+                st.pyplot(fig)
+            else:
+                st.warning("No categorical columns available for pie chart.")
 
-                        # Display the plot
-                        st.pyplot(fig)
+        else:
+            st.warning("No numerical columns available for visualization.")
+    else:
+        st.info("Upload a dataset to generate insights and visualizations.")
+
 
 # Advanced options expander
 with st.expander("⚙️ Advanced Options"):
