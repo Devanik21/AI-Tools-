@@ -1288,6 +1288,14 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import streamlit as st
 
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+import streamlit as st
+import numpy as np
+from sklearn.ensemble import IsolationForest
+from sklearn.feature_selection import mutual_info_regression, mutual_info_classif
+
 with tab7:
     st.header("📊 Data Visualization & Insights")
 
@@ -1311,6 +1319,7 @@ with tab7:
 
         # Select only numeric columns
         numeric_columns = df.select_dtypes(include=["number"]).columns.tolist()
+        categorical_columns = df.select_dtypes(include=["object"]).columns.tolist()
 
         if numeric_columns:
             st.subheader("📈 Data Visualization")
@@ -1363,7 +1372,6 @@ with tab7:
 
             # 8. Bar Chart
             st.subheader("📊 Bar Chart (Mean of Categories)")
-            categorical_columns = df.select_dtypes(include=["object"]).columns.tolist()
             if categorical_columns:
                 category_col = st.selectbox("Select a categorical column", categorical_columns)
                 fig, ax = plt.subplots()
@@ -1388,11 +1396,51 @@ with tab7:
             else:
                 st.warning("No categorical columns available for pie chart.")
 
+            # 11. Anomaly Detection (Isolation Forest)
+            st.subheader("🚨 Anomaly Detection (Isolation Forest)")
+            outlier_col = st.selectbox("Select column for anomaly detection", numeric_columns)
+            contamination = st.slider("Contamination percentage", 0.01, 0.1, 0.05)
+
+            # Apply Isolation Forest
+            model = IsolationForest(contamination=contamination, random_state=42)
+            df["Anomaly"] = model.fit_predict(df[[outlier_col]])
+            outliers = df[df["Anomaly"] == -1]
+
+            st.write(f"Detected {len(outliers)} potential anomalies out of {len(df)} records.")
+
+            # Plot anomalies
+            fig, ax = plt.subplots()
+            sns.scatterplot(x=df.index, y=df[outlier_col], hue=df["Anomaly"], palette={1: "blue", -1: "red"}, ax=ax)
+            st.pyplot(fig)
+
+            # 12. Feature Importance (Mutual Information)
+            st.subheader("⭐ Feature Importance (Mutual Information)")
+
+            if categorical_columns:
+                target_col = st.selectbox("Select target column", categorical_columns)
+                is_classification = df[target_col].nunique() < 10  # Assume classification if <10 unique values
+
+                if is_classification:
+                    importance = mutual_info_classif(df[numeric_columns], df[target_col].astype('category'))
+                else:
+                    importance = mutual_info_regression(df[numeric_columns], df[target_col])
+
+                feature_importance = pd.DataFrame({"Feature": numeric_columns, "Importance": importance})
+                feature_importance = feature_importance.sort_values(by="Importance", ascending=False)
+
+                st.write(feature_importance)
+
+                # Plot feature importance
+                fig, ax = plt.subplots()
+                sns.barplot(x=feature_importance["Importance"], y=feature_importance["Feature"], ax=ax)
+                st.pyplot(fig)
+            else:
+                st.warning("No categorical target column available for feature importance analysis.")
+
         else:
             st.warning("No numerical columns available for visualization.")
     else:
         st.info("Upload a dataset to generate insights and visualizations.")
-
 
 # Advanced options expander
 with st.expander("⚙️ Advanced Options"):
