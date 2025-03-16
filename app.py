@@ -1884,31 +1884,29 @@ if uploaded_file is not None:
 
 # Generate button and output area
 if st.button("🚀 Generate Content", type="primary"):
+    user_prompt = st.text_area("Enter your prompt:", "").strip()  # Ensure it's retrieved and not empty
+
     if not st.session_state.api_key:
         st.error("Please enter your API key in the sidebar first.")
     elif not user_prompt:
         st.warning("Please enter a prompt to generate content.")
     else:
-        # Build prompt with template and style instructions
         template = st.session_state.prompt_templates.get(selected_tool, "Create {prompt}")
         formatted_prompt = template.replace("{prompt}", user_prompt)
-        
-        # Add style instructions to prompt
+
         style_prompt = f"{formatted_prompt}\n\nStyle Guidelines:\n"
         for key, value in st.session_state.style_instructions.items():
             if value and value not in ["None", "Standard"] and (not isinstance(value, list) or len(value) > 0):
                 style_prompt += f"- {key.replace('_', ' ').title()}: {value}\n"
-        
-        # Generate content
+
         output = generate_ai_content(style_prompt, st.session_state.api_key, st.session_state.api_model)
-        
-        # Display output
+
         st.markdown("### 🎯 Generated Content")
         with st.expander("Content Output", expanded=True):
             st.markdown(output)
-        
-        # Save to history
+
         save_to_history(selected_tool, user_prompt, output)
+
               
 # Add theme selector
 st.sidebar.markdown("---")
