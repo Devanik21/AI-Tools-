@@ -472,16 +472,19 @@ st.header("🛠️ Select Your Creation Tool")
 st.markdown("""
     <style>
     div[data-testid="stTabs"] button {
-        font-size: 10px !important;
-        padding: 4px !important;
+        font-size: 12px !important;
+        padding: 20px !important;
     }
     </style>
 """, unsafe_allow_html=True)
 
-tab1, tab2, tab3, tab4, tab5 , tab6 = st.tabs([
+tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs([
     "📋 Categories", "🔍 Search Results", 
-    "📚 AI Research Assistant", "🤖 AI Chatbot", "🌍 AI Translator" , "⚡ AI Code Wizard"
+    "📚 AI Research Assistant", "🤖 AI Chatbot", 
+    "🌍 AI Translator", "⚡ AI Code Wizard", 
+    "📊 Data Visualization & Insights"
 ])
+
 
 
 with tab1:
