@@ -1880,15 +1880,18 @@ if uploaded_file is not None:
         st.sidebar.error(f"Error importing history: {e}")
 
 # Generate button and output area
+# Add this before your button code
+user_prompt = st.text_area("Enter your prompt", key="user_prompt_input")
+
 if st.button("🚀 Generate Content", type="primary"):
     if not st.session_state.api_key:
         st.error("Please enter your API key in the sidebar first.")
-    elif not prompt:
+    elif not user_prompt:
         st.warning("Please enter a prompt to generate content.")
     else:
         # Build prompt with template and style instructions
         template = st.session_state.prompt_templates.get(selected_tool, "Create {prompt}")
-        formatted_prompt = template.replace("{prompt}", prompt)
+        formatted_prompt = template.replace("{prompt}", user_prompt)
         
         # Add style instructions to prompt
         style_prompt = f"{formatted_prompt}\n\nStyle Guidelines:\n"
@@ -1905,7 +1908,7 @@ if st.button("🚀 Generate Content", type="primary"):
             st.markdown(output)
         
         # Save to history
-        save_to_history(selected_tool, prompt, output)
+        save_to_history(selected_tool, user_prompt, output)
               
 # Add theme selector
 st.sidebar.markdown("---")
