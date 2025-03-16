@@ -1446,6 +1446,118 @@ with tab7:
                         fig, ax = plt.subplots()
                         df[col].value_counts().plot(kind="pie", autopct="%1.1f%%", ax=ax)
                         st.pyplot(fig)
+            
+            # Swarm Plot
+            elif plot_type == "Swarm Plot":
+                if categorical_columns:
+                    cat_col = st.selectbox("Select a categorical column", categorical_columns)
+                    num_col = st.selectbox("Select a numeric column", numeric_columns)
+                    fig, ax = plt.subplots(figsize=(10, 6))
+                    sns.swarmplot(x=df[cat_col], y=df[num_col], ax=ax)
+                    plt.xticks(rotation=45)
+                    st.pyplot(fig)
+                else:
+                    st.warning("Swarm Plot requires at least one categorical column.")
+
+            # Stacked Area Chart
+            elif plot_type == "Stacked Area Chart":
+                selected_cols = st.multiselect("Select multiple columns for Stacked Area Chart", numeric_columns, default=numeric_columns[:3])
+                if selected_cols:
+                    fig = px.area(df, x=df.index, y=selected_cols)
+                    st.plotly_chart(fig)
+
+            # Parallel Coordinates
+            elif plot_type == "Parallel Coordinates":
+                selected_cols = st.multiselect("Select columns for Parallel Coordinates", numeric_columns, default=numeric_columns[:5])
+                if selected_cols and len(selected_cols) >= 3:
+                    color_col = st.selectbox("Select column for color", selected_cols)
+                    fig = px.parallel_coordinates(df, dimensions=selected_cols, color=color_col)
+                    st.plotly_chart(fig)
+                else:
+                    st.warning("Parallel Coordinates requires at least 3 numeric columns.")
+
+            # Dendrogram
+            elif plot_type == "Dendrogram":
+                selected_cols = st.multiselect("Select columns for Dendrogram", numeric_columns, default=numeric_columns[:5])
+                if selected_cols:
+                    fig, ax = plt.subplots(figsize=(10, 8))
+                    Z = hierarchy.linkage(df[selected_cols], 'ward')
+                    dn = hierarchy.dendrogram(Z, ax=ax)
+                    st.pyplot(fig)
+
+            # Radar Chart
+            elif plot_type == "Radar Chart":
+                selected_cols = st.multiselect("Select columns for Radar Chart", numeric_columns, default=numeric_columns[:5])
+                if selected_cols and len(selected_cols) >= 3:
+                    df_radar = df[selected_cols].copy()
+                    for col in selected_cols:
+                        df_radar[col] = (df_radar[col] - df_radar[col].min()) / (df_radar[col].max() - df_radar[col].min())
+                    samples = min(5, len(df_radar))
+                    sample_rows = df_radar.sample(samples).index
+                    fig = go.Figure()
+                    for i, row in enumerate(sample_rows):
+                        fig.add_trace(go.Scatterpolar(r=df_radar.loc[row].values, theta=selected_cols, fill='toself', name=f'Sample {i+1}'))
+                    fig.update_layout(polar=dict(radialaxis=dict(visible=True, range=[0, 1])))
+                    st.plotly_chart(fig)
+                else:
+                    st.warning("Radar Chart requires at least 3 numeric columns.")
+
+            # 3D Scatter Plot
+            elif plot_type == "3D Scatter Plot":
+                if len(numeric_columns) >= 3:
+                    x_axis = st.selectbox("Select X-axis", numeric_columns, index=0)
+                    y_axis = st.selectbox("Select Y-axis", numeric_columns, index=min(1, len(numeric_columns)-1))
+                    z_axis = st.selectbox("Select Z-axis", numeric_columns, index=min(2, len(numeric_columns)-1))
+                    fig = px.scatter_3d(df, x=x_axis, y=y_axis, z=z_axis)
+                    st.plotly_chart(fig)
+                else:
+                    st.warning("3D Scatter Plot requires at least 3 numeric columns.")
+
+            # Joint Plot
+            elif plot_type == "Joint Plot":
+                x_col = st.selectbox("Select X-axis column", numeric_columns, index=0)
+                y_col = st.selectbox("Select Y-axis column", numeric_columns, index=min(1, len(numeric_columns)-1))
+                fig = sns.jointplot(x=df[x_col], y=df[y_col], kind="hex")
+                st.pyplot(fig)
+
+            # Autocorrelation Plot
+            elif plot_type == "Autocorrelation Plot":
+                selected_col = st.selectbox("Select column for Autocorrelation", numeric_columns)
+                fig, ax = plt.subplots(figsize=(10, 6))
+                pd.plotting.autocorrelation_plot(df[selected_col], ax=ax)
+                st.pyplot(fig)
+
+            # Treemap
+            elif plot_type == "Treemap":
+                if categorical_columns:
+                    cat_cols = st.multiselect("Select categorical columns (hierarchy levels)", categorical_columns, default=[categorical_columns[0]])
+                    val_col = st.selectbox("Select value column", numeric_columns)
+                    if cat_cols and val_col:
+                        fig = px.treemap(df, path=cat_cols, values=val_col)
+                        st.plotly_chart(fig)
+                else:
+                    st.warning("Treemap requires at least one categorical column.")
+
+            # Word Cloud
+            elif plot_type == "Word Cloud":
+                if categorical_columns:
+                    text_col = st.selectbox("Select text column for Word Cloud", categorical_columns)
+                    stop_words = st.text_input("Enter additional stop words (comma separated)")
+                    stop_words_list = [word.strip() for word in stop_words.split(',')] if stop_words else []
+                    
+                    # Combine all text
+                    text = ' '.join(df[text_col].dropna().astype(str))
+                    
+                    # Generate word cloud
+                    wordcloud = WordCloud(width=800, height=400, background_color='white', stopwords=set(STOPWORDS).union(stop_words_list)).generate(text)
+                    
+                    # Display
+                    fig, ax = plt.subplots(figsize=(10, 5))
+                    ax.imshow(wordcloud, interpolation='bilinear')
+                    ax.axis('off')
+                    st.pyplot(fig)
+                else:
+                    st.warning("Word Cloud requires at least one text column.")
 
             # Anomaly Detection
             elif plot_type == "Anomaly Detection":
@@ -1477,7 +1589,6 @@ with tab7:
             st.warning("No numerical columns available for visualization.")
     else:
         st.info("Upload a dataset to generate insights and visualizations.")
-
 
 
 # Advanced options expander
