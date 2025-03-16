@@ -466,7 +466,6 @@ if show_history and 'history' in st.session_state and len(st.session_state.histo
 if not st.session_state.prompt_templates or len(st.session_state.prompt_templates) == 0:
     st.session_state.prompt_templates = load_prompt_templates()
 
-
 # Tool Selection Section
 st.header("🛠️ Select Your Creation Tool")
 
@@ -479,25 +478,33 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# Define tool categories
+import streamlit as st
+
+# Example tool categories dictionary
 tool_categories = {
-    "AI Research": ["📚 AI Research Assistant"],
-    "Chat & Communication": ["🤖 AI Chatbot", "🌍 AI Translator"],
-    "Coding & Development": ["⚡ AI Code Wizard", "👨‍💻 AI Code Debugger", "📜 AI Documentation Helper", "🚀 AI Deployment Assistant"],
-    "Data & Analytics": ["📊 AI Data Analyzer", "📈 AI Predictor", "🔍 AI Pattern Finder"],
-    "Content & Creativity": ["📝 AI Writer", "🎭 AI Storyteller", "💡 AI Idea Generator"],
-    "Design & Media": ["🖼️ AI Image Generator", "🎨 AI UI/UX Designer", "📐 AI 3D Model Creator", "🎙️ AI Voice Generator", "🎵 AI Music Composer", "📽️ AI Video Creator"],
-    "Security & Privacy": ["🛡️ AI Cybersecurity Assistant", "🔑 AI Password Manager"]
+    "📋 Categories": ["Data Science", "AI Tools", "Research"],
+    "🔍 Search Results": ["Recent Searches", "Trending Tools"],
+    "📚 AI Research Assistant": ["Paper Summarizer", "Citation Generator"],
+    "🤖 AI Chatbot": ["Chatbot 1", "Chatbot 2"],
+    "🌍 AI Translator": ["Text Translator", "Speech Translator"],
+    "⚡ AI Code Wizard": ["Code Generator", "Bug Fixer"],
 }
 
-# Select category
-selected_category = st.selectbox("Choose a category:", list(tool_categories.keys()))
+# Select section
+selected_section = st.selectbox("Choose a section:", list(tool_categories.keys()))
 
-# Select tool from category
-if selected_category:
-    tools_in_category = tool_categories[selected_category]
-    selected_tool = st.selectbox("Choose a tool:", tools_in_category)
-    
-    if st.button("Select Tool"):
-        st.session_state.selected_tool = selected_tool
+# Display tools in the selected section
+if selected_section:
+    tools_in_section = tool_categories[selected_section]
+    st.markdown(f"### {selected_section} Tools ({len(tools_in_section)})")
+
+    # Create grid layout for tools
+    cols = st.columns(3)
+    for i, tool in enumerate(tools_in_section):
+        with cols[i % 3]:
+            if st.button(tool, key=f"tool_{tool}"):
+                st.session_state.selected_tool = tool
+
+
+
 
