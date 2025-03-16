@@ -478,10 +478,42 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-tab1, tab2, tab3, tab4, tab5 , tab6 = st.tabs([
-    "📋 Categories", "🔍 Search Results", 
-    "📚 AI Research Assistant", "🤖 AI Chatbot", "🌍 AI Translator" , "⚡ AI Code Wizard"
-])
+import streamlit as st
+
+st.header("🛠️ Select Your Creation Tool")
+
+# Define the tool names (same as the tab names)
+tool_names = [
+    "📋 Categories", 
+    "🔍 Search Results", 
+    "📚 AI Research Assistant", 
+    "🤖 AI Chatbot", 
+    "🌍 AI Translator", 
+    "⚡ AI Code Wizard"
+]
+
+# Create a selectbox for tool selection
+selected_tool = st.selectbox("Choose your tool:", tool_names)
+
+# Use the selected tool and assign it to the appropriate variable
+if selected_tool == "📋 Categories":
+    tab1 = selected_tool
+    st.write("You selected Categories")
+elif selected_tool == "🔍 Search Results":
+    tab2 = selected_tool
+    st.write("You selected Search Results")
+elif selected_tool == "📚 AI Research Assistant":
+    tab3 = selected_tool
+    st.write("You selected AI Research Assistant")
+elif selected_tool == "🤖 AI Chatbot":
+    tab4 = selected_tool
+    st.write("You selected AI Chatbot")
+elif selected_tool == "🌍 AI Translator":
+    tab5 = selected_tool
+    st.write("You selected AI Translator")
+elif selected_tool == "⚡ AI Code Wizard":
+    tab6 = selected_tool
+    st.write("You selected AI Code Wizard")
 
 
 with tab1:
