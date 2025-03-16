@@ -466,20 +466,22 @@ if show_history and 'history' in st.session_state and len(st.session_state.histo
 if not st.session_state.prompt_templates or len(st.session_state.prompt_templates) == 0:
     st.session_state.prompt_templates = load_prompt_templates()
 
+# Tool Selection Section
 st.header("🛠️ Select Your Creation Tool")
 
 st.markdown("""
     <style>
     div[data-testid="stTabs"] button {
-        font-size: 14px !important;  /* Reduce font size slightly */
-        padding: 6px 12px !important; /* Reduce padding */
-        margin: 0px 3px !important;  /* Reduce margin between tabs */
+        font-size: 12px !important;
+        padding: 10px !important;
     }
     </style>
 """, unsafe_allow_html=True)
 
-tab_labels = ["📋 Categories", "🔍 Search", "📚 Research", "🤖 Chatbot", "🌍 Translator", "⚡ Code Wizard"]
-tabs = st.tabs(tab_labels)
+tab1, tab2, tab3, tab4, tab5 , tab6 = st.tabs([
+    "📋 Categories", "🔍 Search Results", 
+    "📚 AI Research Assistant", "🤖 AI Chatbot", "🌍 AI Translator" , "⚡ AI Code Wizard"
+])
 
 
 with tab1:
