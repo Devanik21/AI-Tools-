@@ -4,6 +4,7 @@ import io
 import base64
 import json
 import time
+from scipy import hierarchy
 import os
 from datetime import datetime
 import fitz  # PyMuPDF for PDF text extraction
