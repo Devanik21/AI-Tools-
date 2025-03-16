@@ -1305,6 +1305,14 @@ import numpy as np
 from sklearn.ensemble import IsolationForest
 from sklearn.feature_selection import mutual_info_regression, mutual_info_classif
 
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+import streamlit as st
+import numpy as np
+from sklearn.ensemble import IsolationForest
+from sklearn.feature_selection import mutual_info_regression, mutual_info_classif
+
 with tab7:
     st.header("📊 Data Visualization & Insights")
 
@@ -1326,145 +1334,154 @@ with tab7:
         st.subheader("Basic Insights")
         st.write(df.describe())
 
-        # Select only numeric columns
+        # Select only numeric and categorical columns
         numeric_columns = df.select_dtypes(include=["number"]).columns.tolist()
         categorical_columns = df.select_dtypes(include=["object"]).columns.tolist()
 
         if numeric_columns:
-            st.subheader("📈 Data Visualization")
+            st.subheader("📈 Choose a Visualization")
 
-            # 1. Pairplot (Multiple Columns)
-            st.subheader("🔄 Pairplot (Relationships between Features)")
-            selected_pairplot_cols = st.multiselect("Select multiple columns for Pairplot", numeric_columns, default=numeric_columns[:3])
-            if selected_pairplot_cols:
-                fig = sns.pairplot(df[selected_pairplot_cols])
-                st.pyplot(fig)
-            else:
-                st.warning("Please select at least one column.")
+            # Select visualization type
+            plot_type = st.selectbox(
+                "Select a plot to display",
+                [
+                    "Pairplot", "Correlation Heatmap", "Scatter Plot", "Histogram", 
+                    "Boxplot", "Violin Plot", "Line Plot", "Bar Chart", "KDE Plot", 
+                    "Pie Chart", "Anomaly Detection", "Feature Importance"
+                ]
+            )
 
-            # 2. Correlation Heatmap (Multiple Columns)
-            st.subheader("🔥 Correlation Heatmap")
-            selected_heatmap_cols = st.multiselect("Select multiple columns for Heatmap", numeric_columns, default=numeric_columns[:5])
-            if selected_heatmap_cols:
-                fig, ax = plt.subplots(figsize=(10, 6))
-                sns.heatmap(df[selected_heatmap_cols].corr(), annot=True, cmap="coolwarm", ax=ax)
-                st.pyplot(fig)
-            else:
-                st.warning("Please select at least one column.")
-
-            # 3. Scatter Plot (User-defined X & Y)
-            st.subheader("📍 Scatter Plot")
-            selected_x = st.selectbox("Select X-axis", numeric_columns)
-            selected_y = st.selectbox("Select Y-axis", numeric_columns)
-            fig, ax = plt.subplots()
-            sns.scatterplot(x=df[selected_x], y=df[selected_y], ax=ax)
-            st.pyplot(fig)
-
-            # 4. Histogram (Multiple Columns)
-            st.subheader("📊 Histogram")
-            selected_hist_cols = st.multiselect("Select multiple columns for Histogram", numeric_columns, default=[numeric_columns[0]])
-            for col in selected_hist_cols:
-                fig, ax = plt.subplots()
-                sns.histplot(df[col], bins=30, kde=True, ax=ax)
-                st.pyplot(fig)
-
-            # 5. Boxplot (Multiple Columns)
-            st.subheader("📦 Boxplot (Outlier Detection)")
-            selected_box_cols = st.multiselect("Select multiple columns for Boxplot", numeric_columns, default=[numeric_columns[0]])
-            for col in selected_box_cols:
-                fig, ax = plt.subplots()
-                sns.boxplot(y=df[col], ax=ax)
-                st.pyplot(fig)
-
-            # 6. Violin Plot (Multiple Columns)
-            st.subheader("🎻 Violin Plot (Data Distribution)")
-            selected_violin_cols = st.multiselect("Select multiple columns for Violin Plot", numeric_columns, default=[numeric_columns[0]])
-            for col in selected_violin_cols:
-                fig, ax = plt.subplots()
-                sns.violinplot(y=df[col], ax=ax)
-                st.pyplot(fig)
-
-            # 7. Line Plot (Multiple Columns)
-            st.subheader("📈 Line Plot (Trend Over Time)")
-            selected_line_cols = st.multiselect("Select multiple columns for Line Plot", numeric_columns, default=[numeric_columns[0]])
-            for col in selected_line_cols:
-                fig, ax = plt.subplots()
-                sns.lineplot(x=df.index, y=df[col], ax=ax)
-                st.pyplot(fig)
-
-            # 8. Bar Chart (Mean of Categories)
-            st.subheader("📊 Bar Chart (Mean of Categories)")
-            if categorical_columns:
-                selected_bar_cat = st.selectbox("Select a categorical column", categorical_columns)
-                selected_bar_num_cols = st.multiselect("Select multiple numeric columns", numeric_columns, default=[numeric_columns[0]])
-                for col in selected_bar_num_cols:
-                    fig, ax = plt.subplots()
-                    df.groupby(selected_bar_cat)[col].mean().plot(kind="bar", ax=ax)
+            # Pairplot
+            if plot_type == "Pairplot":
+                selected_cols = st.multiselect("Select multiple columns for Pairplot", numeric_columns, default=numeric_columns[:3])
+                if selected_cols:
+                    fig = sns.pairplot(df[selected_cols])
                     st.pyplot(fig)
-            else:
-                st.warning("No categorical columns available for bar chart.")
-
-            # 9. KDE Plot (Multiple Columns)
-            st.subheader("🌊 KDE Plot (Density Distribution)")
-            selected_kde_cols = st.multiselect("Select multiple columns for KDE Plot", numeric_columns, default=[numeric_columns[0]])
-            for col in selected_kde_cols:
-                fig, ax = plt.subplots()
-                sns.kdeplot(df[col], fill=True, ax=ax)
-                st.pyplot(fig)
-
-            # 10. Pie Chart (Multiple Columns)
-            st.subheader("🥧 Pie Chart (Category Distribution)")
-            if categorical_columns:
-                selected_pie_cols = st.multiselect("Select multiple categorical columns for Pie Chart", categorical_columns, default=[categorical_columns[0]])
-                for col in selected_pie_cols:
-                    fig, ax = plt.subplots()
-                    df[col].value_counts().plot(kind="pie", autopct="%1.1f%%", ax=ax)
-                    st.pyplot(fig)
-            else:
-                st.warning("No categorical columns available for pie chart.")
-
-            # 11. Anomaly Detection (Isolation Forest)
-            st.subheader("🚨 Anomaly Detection (Isolation Forest)")
-            selected_anomaly_cols = st.multiselect("Select columns for anomaly detection", numeric_columns, default=[numeric_columns[0]])
-            contamination = st.slider("Contamination percentage", 0.01, 0.1, 0.05)
-
-            if selected_anomaly_cols:
-                model = IsolationForest(contamination=contamination, random_state=42)
-                df["Anomaly"] = model.fit_predict(df[selected_anomaly_cols])
-                outliers = df[df["Anomaly"] == -1]
-                st.write(f"Detected {len(outliers)} potential anomalies out of {len(df)} records.")
-
-                fig, ax = plt.subplots()
-                sns.scatterplot(x=df.index, y=df[selected_anomaly_cols[0]], hue=df["Anomaly"], palette={1: "blue", -1: "red"}, ax=ax)
-                st.pyplot(fig)
-
-            # 12. Feature Importance (Mutual Information) with Date Handling
-            st.subheader("⭐ Feature Importance (Mutual Information)")
-            if categorical_columns:
-                target_col = st.selectbox("Select target column", categorical_columns)
-                
-                # Convert date columns to numeric timestamps
-                if pd.api.types.is_datetime64_any_dtype(df[target_col]) or df[target_col].str.match(r"\d{4}-\d{2}-\d{2}").any():
-                    st.warning(f"'{target_col}' appears to be a date. Converting it to numeric timestamps.")
-                    df[target_col] = pd.to_datetime(df[target_col], errors="coerce").astype(int) / 10**9  # Convert to Unix timestamp
-
-                is_classification = df[target_col].nunique() < 10  # Assume classification if <10 unique values
-
-                if is_classification:
-                    importance = mutual_info_classif(df[numeric_columns], df[target_col].astype('category'))
                 else:
-                    importance = mutual_info_regression(df[numeric_columns], df[target_col])
+                    st.warning("Please select at least one column.")
 
-                feature_importance = pd.DataFrame({"Feature": numeric_columns, "Importance": importance})
-                feature_importance = feature_importance.sort_values(by="Importance", ascending=False)
+            # Correlation Heatmap
+            elif plot_type == "Correlation Heatmap":
+                selected_cols = st.multiselect("Select multiple columns for Heatmap", numeric_columns, default=numeric_columns[:5])
+                if selected_cols:
+                    fig, ax = plt.subplots(figsize=(10, 6))
+                    sns.heatmap(df[selected_cols].corr(), annot=True, cmap="coolwarm", ax=ax)
+                    st.pyplot(fig)
+                else:
+                    st.warning("Please select at least one column.")
 
-                st.write(feature_importance)
-
+            # Scatter Plot
+            elif plot_type == "Scatter Plot":
+                x_axis = st.selectbox("Select X-axis", numeric_columns)
+                y_axis = st.selectbox("Select Y-axis", numeric_columns)
                 fig, ax = plt.subplots()
-                sns.barplot(x=feature_importance["Importance"], y=feature_importance["Feature"], ax=ax)
+                sns.scatterplot(x=df[x_axis], y=df[y_axis], ax=ax)
                 st.pyplot(fig)
-            else:
-                st.warning("No categorical target column available for feature importance analysis.")
+
+            # Histogram
+            elif plot_type == "Histogram":
+                selected_cols = st.multiselect("Select multiple columns for Histogram", numeric_columns, default=[numeric_columns[0]])
+                for col in selected_cols:
+                    fig, ax = plt.subplots()
+                    sns.histplot(df[col], bins=30, kde=True, ax=ax)
+                    st.pyplot(fig)
+
+            # Boxplot
+            elif plot_type == "Boxplot":
+                selected_cols = st.multiselect("Select multiple columns for Boxplot", numeric_columns, default=[numeric_columns[0]])
+                for col in selected_cols:
+                    fig, ax = plt.subplots()
+                    sns.boxplot(y=df[col], ax=ax)
+                    st.pyplot(fig)
+
+            # Violin Plot
+            elif plot_type == "Violin Plot":
+                selected_cols = st.multiselect("Select multiple columns for Violin Plot", numeric_columns, default=[numeric_columns[0]])
+                for col in selected_cols:
+                    fig, ax = plt.subplots()
+                    sns.violinplot(y=df[col], ax=ax)
+                    st.pyplot(fig)
+
+            # Line Plot
+            elif plot_type == "Line Plot":
+                selected_cols = st.multiselect("Select multiple columns for Line Plot", numeric_columns, default=[numeric_columns[0]])
+                for col in selected_cols:
+                    fig, ax = plt.subplots()
+                    sns.lineplot(x=df.index, y=df[col], ax=ax)
+                    st.pyplot(fig)
+
+            # Bar Chart
+            elif plot_type == "Bar Chart":
+                if categorical_columns:
+                    cat_col = st.selectbox("Select a categorical column", categorical_columns)
+                    num_cols = st.multiselect("Select multiple numeric columns", numeric_columns, default=[numeric_columns[0]])
+                    for col in num_cols:
+                        fig, ax = plt.subplots()
+                        df.groupby(cat_col)[col].mean().plot(kind="bar", ax=ax)
+                        st.pyplot(fig)
+                else:
+                    st.warning("No categorical columns available for bar chart.")
+
+            # KDE Plot
+            elif plot_type == "KDE Plot":
+                selected_cols = st.multiselect("Select multiple columns for KDE Plot", numeric_columns, default=[numeric_columns[0]])
+                for col in selected_cols:
+                    fig, ax = plt.subplots()
+                    sns.kdeplot(df[col], fill=True, ax=ax)
+                    st.pyplot(fig)
+
+            # Pie Chart
+            elif plot_type == "Pie Chart":
+                if categorical_columns:
+                    selected_cols = st.multiselect("Select multiple categorical columns for Pie Chart", categorical_columns, default=[categorical_columns[0]])
+                    for col in selected_cols:
+                        fig, ax = plt.subplots()
+                        df[col].value_counts().plot(kind="pie", autopct="%1.1f%%", ax=ax)
+                        st.pyplot(fig)
+                else:
+                    st.warning("No categorical columns available for pie chart.")
+
+            # Anomaly Detection
+            elif plot_type == "Anomaly Detection":
+                selected_cols = st.multiselect("Select columns for anomaly detection", numeric_columns, default=[numeric_columns[0]])
+                contamination = st.slider("Contamination percentage", 0.01, 0.1, 0.05)
+                if selected_cols:
+                    model = IsolationForest(contamination=contamination, random_state=42)
+                    df["Anomaly"] = model.fit_predict(df[selected_cols])
+                    outliers = df[df["Anomaly"] == -1]
+                    st.write(f"Detected {len(outliers)} potential anomalies out of {len(df)} records.")
+
+                    fig, ax = plt.subplots()
+                    sns.scatterplot(x=df.index, y=df[selected_cols[0]], hue=df["Anomaly"], palette={1: "blue", -1: "red"}, ax=ax)
+                    st.pyplot(fig)
+
+            # Feature Importance
+            elif plot_type == "Feature Importance":
+                if categorical_columns:
+                    target_col = st.selectbox("Select target column", categorical_columns)
+
+                    # Convert dates to numeric timestamps
+                    if pd.api.types.is_datetime64_any_dtype(df[target_col]) or df[target_col].str.match(r"\d{4}-\d{2}-\d{2}").any():
+                        st.warning(f"'{target_col}' appears to be a date. Converting it to numeric timestamps.")
+                        df[target_col] = pd.to_datetime(df[target_col], errors="coerce").astype(int) / 10**9
+
+                    is_classification = df[target_col].nunique() < 10  # Assume classification if <10 unique values
+
+                    if is_classification:
+                        importance = mutual_info_classif(df[numeric_columns], df[target_col].astype('category'))
+                    else:
+                        importance = mutual_info_regression(df[numeric_columns], df[target_col])
+
+                    feature_importance = pd.DataFrame({"Feature": numeric_columns, "Importance": importance})
+                    feature_importance = feature_importance.sort_values(by="Importance", ascending=False)
+
+                    st.write(feature_importance)
+
+                    fig, ax = plt.subplots()
+                    sns.barplot(x=feature_importance["Importance"], y=feature_importance["Feature"], ax=ax)
+                    st.pyplot(fig)
+                else:
+                    st.warning("No categorical target column available for feature importance analysis.")
 
         else:
             st.warning("No numerical columns available for visualization.")
