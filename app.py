@@ -1283,6 +1283,11 @@ st.markdown(f"### Currently using: **{selected_tool}**")
 st.text_area("Extracted Content:", extracted_text[:5000], height=200, key="translator_text_area")
 
 
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+import streamlit as st
+
 with tab7:
     st.header("📊 Data Visualization & Insights")
 
@@ -1304,17 +1309,84 @@ with tab7:
         st.subheader("Basic Insights")
         st.write(df.describe())
 
-        # Show column selection for visualization
-        st.subheader("📈 Data Visualization")
-        columns = df.select_dtypes(include=["number"]).columns.tolist()
-        if columns:
-            x_axis = st.selectbox("Select X-axis", columns)
-            y_axis = st.selectbox("Select Y-axis", columns)
+        # Select only numeric columns
+        numeric_columns = df.select_dtypes(include=["number"]).columns.tolist()
 
-            # Plot scatter plot
+        if numeric_columns:
+            st.subheader("📈 Data Visualization")
+
+            # 1. Pairplot
+            st.subheader("🔄 Pairplot (Relationships between Features)")
+            fig = sns.pairplot(df[numeric_columns])
+            st.pyplot(fig)
+
+            # 2. Correlation Heatmap
+            st.subheader("🔥 Correlation Heatmap")
+            fig, ax = plt.subplots(figsize=(10, 6))
+            sns.heatmap(df[numeric_columns].corr(), annot=True, cmap="coolwarm", ax=ax)
+            st.pyplot(fig)
+
+            # Select columns for customized visualization
+            x_axis = st.selectbox("Select X-axis", numeric_columns)
+            y_axis = st.selectbox("Select Y-axis", numeric_columns)
+
+            # 3. Scatter Plot
+            st.subheader("📍 Scatter Plot")
             fig, ax = plt.subplots()
             sns.scatterplot(x=df[x_axis], y=df[y_axis], ax=ax)
             st.pyplot(fig)
+
+            # 4. Histogram
+            st.subheader("📊 Histogram")
+            selected_column = st.selectbox("Select column for histogram", numeric_columns)
+            fig, ax = plt.subplots()
+            sns.histplot(df[selected_column], bins=30, kde=True, ax=ax)
+            st.pyplot(fig)
+
+            # 5. Boxplot
+            st.subheader("📦 Boxplot (Outlier Detection)")
+            fig, ax = plt.subplots()
+            sns.boxplot(y=df[selected_column], ax=ax)
+            st.pyplot(fig)
+
+            # 6. Violin Plot
+            st.subheader("🎻 Violin Plot (Data Distribution)")
+            fig, ax = plt.subplots()
+            sns.violinplot(y=df[selected_column], ax=ax)
+            st.pyplot(fig)
+
+            # 7. Line Plot
+            st.subheader("📈 Line Plot (Trend Over Time)")
+            fig, ax = plt.subplots()
+            sns.lineplot(x=df.index, y=df[selected_column], ax=ax)
+            st.pyplot(fig)
+
+            # 8. Bar Chart
+            st.subheader("📊 Bar Chart (Mean of Categories)")
+            categorical_columns = df.select_dtypes(include=["object"]).columns.tolist()
+            if categorical_columns:
+                category_col = st.selectbox("Select a categorical column", categorical_columns)
+                fig, ax = plt.subplots()
+                df.groupby(category_col)[selected_column].mean().plot(kind="bar", ax=ax)
+                st.pyplot(fig)
+            else:
+                st.warning("No categorical columns available for bar chart.")
+
+            # 9. KDE Plot (Kernel Density Estimation)
+            st.subheader("🌊 KDE Plot (Density Distribution)")
+            fig, ax = plt.subplots()
+            sns.kdeplot(df[selected_column], fill=True, ax=ax)
+            st.pyplot(fig)
+
+            # 10. Pie Chart
+            st.subheader("🥧 Pie Chart (Category Distribution)")
+            if categorical_columns:
+                pie_col = st.selectbox("Select a categorical column for pie chart", categorical_columns)
+                fig, ax = plt.subplots()
+                df[pie_col].value_counts().plot(kind="pie", autopct="%1.1f%%", ax=ax)
+                st.pyplot(fig)
+            else:
+                st.warning("No categorical columns available for pie chart.")
 
         else:
             st.warning("No numerical columns available for visualization.")
