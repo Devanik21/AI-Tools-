@@ -13,6 +13,8 @@ import matplotlib.pyplot as plt
 import plotly.express as px
 import seaborn as sns
 import pyperclip
+import scipy.cluster.hierarchy as hierarchy  # Fix for Dendrogram
+import plotly.graph_objects as go  # Fix for Radar Chart
 
 
 # Configure Streamlit page
