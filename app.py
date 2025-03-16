@@ -466,8 +466,6 @@ if show_history and 'history' in st.session_state and len(st.session_state.histo
 if not st.session_state.prompt_templates or len(st.session_state.prompt_templates) == 0:
     st.session_state.prompt_templates = load_prompt_templates()
 
-# Tool Selection Section
-st.header("🛠️ Select Your Creation Tool")
 
 # Add custom CSS for scrollable tabs
 st.markdown("""
@@ -487,6 +485,11 @@ st.markdown("""
     }
     </style>
 """, unsafe_allow_html=True)
+
+# Tool Selection Section
+st.header("🛠️ Select Your Creation Tool")
+
+
 
 tab1, tab2, tab3, tab4, tab5 , tab6 = st.tabs([
     "📋 Categories", "🔍 Search Results", 
