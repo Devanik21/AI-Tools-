@@ -473,7 +473,7 @@ st.markdown("""
     <style>
     div[data-testid="stTabs"] button {
         font-size: 12px !important;
-        padding: 10px !important;
+        padding: 20px !important;
     }
     </style>
 """, unsafe_allow_html=True)
