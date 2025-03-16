@@ -467,34 +467,16 @@ if not st.session_state.prompt_templates or len(st.session_state.prompt_template
     st.session_state.prompt_templates = load_prompt_templates()
 
 
-# Add custom CSS for scrollable tabs
-st.markdown("""
-    <style>
-    div[data-testid="stTabs"] {
-        overflow-x: auto !important;
-        display: flex;
-        flex-wrap: nowrap;
-        scrollbar-width: thin;
-        scrollbar-color: #ccc transparent;
-    }
-    div[data-testid="stTabs"] button {
-        flex-shrink: 0;
-        font-size: 16px !important;
-        padding: 10px !important;
-        white-space: nowrap;
-    }
-    </style>
-""", unsafe_allow_html=True)
-
-# Tool Selection Section
 st.header("🛠️ Select Your Creation Tool")
 
+page = st.selectbox("Select Page", ["Page 1", "Page 2", "Page 3"])
 
-
-tab1, tab2, tab3, tab4, tab5 , tab6 = st.tabs([
-    "📋 Categories", "🔍 Search Results", 
-    "📚 AI Research Assistant", "🤖 AI Chatbot", "🌍 AI Translator" , "⚡ AI Code Wizard"
-])
+if page == "Page 1":
+    tab1, tab2, tab3, tab4, tab5 = st.tabs(["📋 Categories", "🔍 Search", "📚 AI Research", "🤖 AI Chatbot", "🌍 AI Translator"])
+elif page == "Page 2":
+    tab6, tab7, tab8, tab9, tab10 = st.tabs(["⚡ AI Code Wizard", "📊 AI Data Analyzer", "🎨 AI Art Generator", "📜 AI Text Summarizer", "📌 AI Note Taker"])
+elif page == "Page 3":
+    tab11, tab12, tab13, tab14, tab15 = st.tabs(["🔢 AI Math Solver", "🎭 AI Story Creator", "🎵 AI Music Generator", "📷 AI Image Enhancer", "🖌️ AI Sketch Tool"])
 
 
 with tab1:
