@@ -16,7 +16,7 @@ import pyperclip
 import scipy.cluster.hierarchy as hierarchy  # Fix for Dendrogram
 import plotly.graph_objects as go  # Fix for Radar Chart
 
-pip install openpyxl
+
 
 # Configure Streamlit page
 st.set_page_config(page_title="Ultimate AI Creator Hub", page_icon="🧠", layout="wide", initial_sidebar_state="expanded")
