@@ -467,27 +467,37 @@ if not st.session_state.prompt_templates or len(st.session_state.prompt_template
     st.session_state.prompt_templates = load_prompt_templates()
 
 # Tool Selection Section
+import streamlit as st
+
+# Tool Selection Section
 st.header("🛠️ Select Your Creation Tool")
 
 st.markdown("""
     <style>
     div[data-testid="stTabs"] button {
-        font-size: 10px !important;
-        padding: 4px !important;
+        font-size: 12px !important;
+        padding: 20px !important;
     }
     </style>
 """, unsafe_allow_html=True)
 
-tab1, tab2, tab3, tab4, tab5 , tab6 = st.tabs([
-    "📋 Categories", "🔍 Search Results", 
-    "📚 AI Research Assistant", "🤖 AI Chatbot", "🌍 AI Translator" , "⚡ AI Code Wizard"
-])
+# Define tab names
+tab_names = [
+    "📋 Categories", "🔍 Search Results", "📚 AI Research Assistant", "🤖 AI Chatbot",
+    "🌍 AI Translator", "⚡ AI Code Wizard", "📊 AI Data Analyzer", "📈 AI Predictor",
+    "🔍 AI Pattern Finder", "📝 AI Writer", "🎭 AI Storyteller", "💡 AI Idea Generator",
+    "👨‍💻 AI Code Debugger", "📜 AI Documentation Helper", "🚀 AI Deployment Assistant",
+    "🖼️ AI Image Generator", "🎨 AI UI/UX Designer", "📐 AI 3D Model Creator",
+    "🎙️ AI Voice Generator", "🎵 AI Music Composer", "📽️ AI Video Creator",
+    "🛡️ AI Cybersecurity Assistant", "🔑 AI Password Manager"
+]
 
+tabs = st.tabs(tab_names)
 
-with tab1:
+with tabs[0]:  # "📋 Categories"
     selected_category = st.selectbox("Choose a category:", list(tool_categories.keys()))
     
-    # Only show tools from selected category
+    # Only show tools from the selected category
     if selected_category:
         tools_in_category = tool_categories[selected_category]
         st.markdown(f"### {selected_category} Tools ({len(tools_in_category)})")
@@ -499,7 +509,7 @@ with tab1:
                 if st.button(tool, key=f"cat_{tool}"):
                     st.session_state.selected_tool = tool
 
-with tab2:
+'''with tab2:
     if search_term:
         st.markdown(f"### Search Results for '{search_term}' ({len(filtered_tools)})")
         
@@ -1618,4 +1628,4 @@ theme_css = f"""
     .stButton>button {{ background: linear-gradient(90deg, {theme_colors[selected_theme]["accent"]}, {theme_colors[selected_theme]["accent"]}88) }}
 </style>
 """
-st.sidebar.markdown(theme_css, unsafe_allow_html=True)
+st.sidebar.markdown(theme_css, unsafe_allow_html=True)'''
