@@ -2,7 +2,7 @@
 ### **Your One-Stop AI-Powered Productivity & Creativity Suite!**  
 
 ![Stars](https://img.shields.io/github/stars/your-repo?style=social)
-![License](https://img.shields.io/github/license/your-repo)
+![License](https://img.shields.io/github/license/AI-Tools-)
 ![Built with Streamlit](https://img.shields.io/badge/Built%20With-Streamlit-red)
 
 ## ✨ **What is Ultimate AI Creator Hub?**
