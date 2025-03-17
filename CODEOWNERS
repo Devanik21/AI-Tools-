@@ -1,0 +1,9 @@
+# Default rule: All files require approval from @Devanik21
+*Devanik21
+
+
+
+# Protecting main configuration files
+README.md @Devanik21
+.gitignore @Devanik21
+LICENSE @Devanik21
