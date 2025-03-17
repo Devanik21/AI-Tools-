@@ -19,7 +19,7 @@
 🔹 **AI Code Wizard** 🖥️ — Debug, generate, optimize, and convert code easily!  
 🔹 **Data Visualization & Insights** 📊 — Create stunning plots, analyze trends, and detect anomalies.  
 🔹 **Ultimate AI Writing Tools** ✍️ — Generate blogs, essays, business plans, and more!  
-🔹 **Voice & Image Processing** 🎙️📸 — Extract text from images/audio using OCR & Speech Recognition.
+🔹 **Voice & Image Processing(under Dev)** 🎙️📸 — Extract text from images/audio using OCR & Speech Recognition.
 
 ---
 ## 🚀 **Getting Started**
