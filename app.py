@@ -1677,7 +1677,7 @@ with tab9:
     email_content = st.text_area("✍️ Enter Email Content or Brief:")
 
     # Tone Selection
-    tone = st.selectbox("Select Tone:", ["Formal", "Informal", "Neutral", "Persuasive", "Apologetic"])
+    tone = st.radio("Select Tone:", ["Formal", "Informal", "Neutral", "Persuasive", "Apologetic"])
 
     # Action Selection
     action = st.radio("What would you like to do?", 
@@ -1733,7 +1733,7 @@ with tab10:
     query = st.text_area("📝 Describe what you need (e.g., 'Extract domain from email'):")
 
     # Syntax Selection
-    syntax = st.selectbox("Choose Formula Syntax:", ["Excel", "Google Sheets", "LibreOffice Calc"])
+    syntax = st.radio("Choose Formula Syntax:", ["Excel", "Google Sheets", "LibreOffice Calc"])
 
     # Formula Type Selection
     formula_type = st.radio("Formula Type:", ["Single Cell", "Multi-Cell/Range", "Array Formula", "SQL Query"], horizontal=True)
@@ -1789,7 +1789,7 @@ with tab11:
     duration = st.slider("⏳ Select Podcast Duration (minutes):", 5, 90, 20)
     
     # Podcast Style & Tone
-    style = st.selectbox("🎭 Choose Style:", ["Conversational", "Storytelling", "Humorous", "Data-Driven", "Inspirational"])
+    style = st.radio("🎭 Choose Style:", ["Conversational", "Storytelling", "Humorous", "Data-Driven", "Inspirational"])
     tone = st.radio("🗣️ Select Tone:", ["Casual", "Professional", "Energetic", "Serious"], horizontal=True)
 
     # Word Count Control
@@ -1852,7 +1852,7 @@ with tab12:
     goal = st.text_input("🎯 Learning Goal (e.g., Become a Machine Learning Engineer):")
 
     # Select Learning Style
-    learning_style = st.selectbox("📚 Preferred Learning Style:", 
+    learning_style = st.radio("📚 Preferred Learning Style:", 
                                   ["Video-Based", "Hands-On Projects", "Reading-Focused", "Hybrid"])
 
     # Select Duration
