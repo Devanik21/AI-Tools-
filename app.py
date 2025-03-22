@@ -1665,6 +1665,61 @@ with tab8:
         st.download_button("📥 Download Questions", interview_questions, "mock_interview.txt")
 
 
+with tab9:
+    st.header("📧 AI-Powered Email Assistant")
+    st.markdown("### Generate, summarize, and rewrite emails with AI.")
+
+    # Email Input
+    email_content = st.text_area("✍️ Enter Email Content or Brief:")
+
+    # Tone Selection
+    tone = st.selectbox("Select Tone:", ["Formal", "Informal", "Neutral", "Persuasive", "Apologetic"])
+
+    # Action Selection
+    action = st.radio("What would you like to do?", 
+                      ["Generate Email", "Summarize Email", "Rewrite Email", "Quick Reply", "Follow-Up Suggestion"], 
+                      horizontal=True)
+
+    # Email Personalization
+    recipient_type = st.selectbox("Recipient Type:", ["Boss", "Colleague", "Client", "Friend", "General"])
+
+    # Attachment Upload (for Email Summarization)
+    uploaded_file = st.file_uploader("📎 Upload a file (PDF, DOCX, TXT) for summary (Optional)", 
+                                     type=["pdf", "docx", "txt"])
+
+    # Email Scheduling Assistant
+    urgency = st.selectbox("📅 Email Urgency:", ["Immediate", "Within 24 Hours", "End of Week", "Next Week"])
+    if urgency == "Immediate":
+        best_time = "Send Now 🚀"
+    elif urgency == "Within 24 Hours":
+        best_time = "Send within the next few hours ⏳"
+    elif urgency == "End of Week":
+        best_time = "Send by Friday afternoon 📆"
+    else:
+        best_time = "Schedule for next Monday ⏰"
+    
+    st.markdown(f"**🕒 Suggested Send Time: {best_time}**")
+
+    # Generate Button
+    if st.button("✉️ Process Email"):
+        email_prompt = f"""
+        Perform '{action}' on this email: {email_content} with a '{tone}' tone.
+        Tailor it for a '{recipient_type}' and consider urgency level '{urgency}'.
+        """
+
+        # Handle File Upload for Summary
+        if uploaded_file is not None:
+            file_text = extract_text_from_file(uploaded_file)
+            email_prompt += f"\n\n[Attachment Summary: {file_text}]"
+
+        with st.spinner("Processing..."):
+            processed_email = generate_ai_content(email_prompt, st.session_state.api_key, st.session_state.api_model)
+
+        st.success("✅ AI-Generated Email:")
+        st.write(processed_email)
+
+        # Download Button
+        st.download_button("📥 Download Email", processed_email, "email.txt")
 
 
 # Advanced options expander
