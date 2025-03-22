@@ -478,11 +478,11 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs([
+tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8 = st.tabs([
     "📋 Categories", "🔍 Search Results", 
     "📚 AI Research Assistant", "🤖 AI Chatbot", 
     "🌍 AI Translator", "⚡ AI Code Wizard", 
-    "📊 Data Visualization & Insights"
+    "📊 Data Visualization & Insights", "📑 Research Paper Summarization"
 ])
 
 
@@ -1606,6 +1606,52 @@ with tab7:
     else:
         st.info("Upload a dataset to generate insights and visualizations.")
 
+with tab8:
+    st.header("📑 Research Paper Summarization")
+
+    uploaded_file = st.file_uploader("Upload Research Paper (PDF)", type="pdf")
+
+    if uploaded_file:
+        pdf_text = extract_text_from_pdf(uploaded_file)
+
+        # Advanced Extraction Options
+        extraction_options = st.expander("Advanced Extraction Options")
+        with extraction_options:
+            extract_figures = st.checkbox("Extract Figures", value=False)
+            extract_tables = st.checkbox("Extract Tables", value=False)
+            extract_references = st.checkbox("Extract References", value=True)
+            max_text_length = st.slider("Maximum Text Length (chars)", 1000, 20000, 6000)
+
+        st.text_area("Extracted Text:", pdf_text[:max_text_length], height=500)
+
+        summary_options = st.expander("Summary Options")
+        with summary_options:
+            summary_type = st.radio("Summary Type", 
+                ["Concise (1 paragraph)", "Standard (3-5 paragraphs)", "Detailed (comprehensive)"])
+            focus_areas = st.multiselect("Focus Areas", 
+                ["Methodology", "Results", "Conclusions", "Background", "Limitations", "Future Work"])
+            academic_level = st.select_slider("Academic Level", 
+                ["Undergraduate", "Graduate", "Expert"])
+
+        if st.button("Summarize Paper ✨"):
+            focus_str = ", ".join(focus_areas) if focus_areas else "all sections"
+            summary_prompt = f"""Summarize this research paper {summary_type}. 
+            Focus on {focus_str} at an {academic_level} level:
+            
+            {pdf_text[:max_text_length]}"""
+
+            with st.spinner("Generating summary..."):
+                summary = generate_ai_content(summary_prompt, st.session_state.api_key, st.session_state.api_model)
+
+            st.success("📑 AI Summary:")
+            st.write(summary)
+
+            # Export Options
+            col1, col2 = st.columns(2)
+            with col1:
+                st.download_button("Download Summary", summary, "paper_summary.txt")
+            with col2:
+                st.button("Copy to Clipboard", on_click=lambda: st.write("<script>navigator.clipboard.writeText(`" + summary.replace("`", "\\`") + "`);</script>", unsafe_allow_html=True))
 
 # Advanced options expander
 with st.expander("⚙️ Advanced Options"):
