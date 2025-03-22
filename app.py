@@ -1911,6 +1911,9 @@ with tab13:
     st.header("📄 AI-Powered CV Gap Justifier")
     st.markdown("### Get a professional and convincing explanation for career gaps in your resume.")
 
+    # CV Upload
+    uploaded_cv = st.file_uploader("📂 Upload Your CV (TXT, DOCX, PDF)", type=["txt", "docx", "pdf"])
+
     # Reason for Employment Gap
     reason = st.selectbox("📌 Select Your Career Gap Reason:", 
                           ["Health Issues", "Further Education", "Family Responsibilities", 
@@ -1945,6 +1948,12 @@ with tab13:
     action_plan = st.checkbox("🚀 Career Boosting Action Plan", value=True)
     social_media = st.checkbox("📢 Improve LinkedIn & Social Media Presence", value=False)
 
+    # Extract CV Text (if uploaded)
+    extracted_cv_text = ""
+    if uploaded_cv is not None:
+        extracted_cv_text = extract_text_from_file(uploaded_cv)  # Custom function to handle file reading
+        st.success("✅ CV uploaded successfully! AI will analyze it.")
+
     # Generate Button
     if st.button("📝 Generate Justification"):
         justification_prompt = f"""
@@ -1961,6 +1970,7 @@ with tab13:
         {"Incorporate the justification into a professional cover letter." if cover_letter else ""}
         {"Provide an action plan to recover career momentum." if action_plan else ""}
         {"Suggest LinkedIn and social media profile updates." if social_media else ""}
+        {"Use the extracted CV text to improve the response:\n" + extracted_cv_text if extracted_cv_text else ""}
         """
 
         with st.spinner("Crafting your career gap explanation..."):
@@ -1977,6 +1987,7 @@ with tab13:
             st.button("📋 Copy to Clipboard", on_click=lambda: st.write(
                 "<script>navigator.clipboard.writeText(`" + justification.replace("`", "\\`") + "`);</script>", 
                 unsafe_allow_html=True))
+
 
 
 # Advanced options expander
