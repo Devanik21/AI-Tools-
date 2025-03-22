@@ -479,11 +479,11 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # Dropdown Navigation (Replaces Tabs)
-tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8 = st.tabs([
+tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9 = st.tabs([
     "📋 Categories", "🔍 Search", 
     "📚 Research", "🤖 Chat", 
     "🌍 Translate", "⚡ Code", 
-    "📊 Insights", "📑 Papers"
+    "📊 Insights", "📑 Papers", "🎤 Interview"
 ])
 
 
@@ -1655,6 +1655,71 @@ with tab8:
                 st.download_button("Download Summary", summary, "paper_summary.txt")
             with col2:
                 st.button("Copy to Clipboard", on_click=lambda: st.write("<script>navigator.clipboard.writeText(`" + summary.replace("`", "\\`") + "`);</script>", unsafe_allow_html=True))
+
+
+with tab9:
+    st.header("🎤 AI-Powered Mock Interviewer")
+    st.markdown("### Prepare for your next job interview with AI-generated questions and feedback.")
+
+    # Job Role Selection
+    col1, col2 = st.columns(2)
+    with col1:
+        job_role = st.text_input("Enter Job Role (e.g., Data Scientist, Software Engineer):")
+    with col2:
+        experience_level = st.selectbox("Experience Level:", ["Entry Level", "Mid-Level", "Senior-Level", "Executive"])
+
+    # Interview Type Selection
+    interview_type = st.radio("Interview Type:", ["Technical", "Behavioral", "Case Study", "HR"], horizontal=True)
+
+    # Advanced Options
+    with st.expander("🎯 Customize Your Mock Interview"):
+        col1, col2 = st.columns(2)
+        with col1:
+            difficulty = st.slider("Difficulty Level:", 1, 10, 5)
+        with col2:
+            question_count = st.slider("Number of Questions:", 3, 20, 5)
+
+        response_feedback = st.checkbox("Enable AI Feedback on Responses", value=True)
+
+    # Generate Questions
+    if st.button("Start Mock Interview 🎙️"):
+        interview_prompt = f"""
+        Conduct a {interview_type} interview for a {experience_level} {job_role}. 
+        Ask {question_count} questions with increasing difficulty from level {difficulty}. 
+        {"Provide detailed feedback on user responses." if response_feedback else ""}
+        """
+
+        with st.spinner("Generating interview questions..."):
+            interview_questions = generate_ai_content(interview_prompt, st.session_state.api_key, st.session_state.api_model)
+
+        st.success("🎤 AI-Generated Mock Interview:")
+        st.write(interview_questions)
+
+        # User Responses
+        if response_feedback:
+            st.markdown("### 📢 Your Answers:")
+            user_responses = []
+            for i in range(question_count):
+                user_response = st.text_area(f"Answer Question {i+1}:", key=f"response_{i}")
+                user_responses.append(user_response)
+
+            # AI Feedback on Responses
+            if st.button("Get AI Feedback 🧠"):
+                feedback_prompt = f"Evaluate these interview responses:\n{interview_questions}\n\nUser Responses:\n{user_responses}"
+                with st.spinner("Analyzing your responses..."):
+                    feedback = generate_ai_content(feedback_prompt, st.session_state.api_key, st.session_state.api_model)
+
+                st.success("📊 AI Feedback:")
+                st.write(feedback)
+
+        # Download Options
+        col1, col2 = st.columns(2)
+        with col1:
+            st.download_button("📥 Download Questions", interview_questions, "mock_interview.txt")
+        with col2:
+            if response_feedback:
+                st.download_button("📥 Download Feedback", feedback, "interview_feedback.txt")
+
 
 # Advanced options expander
 with st.expander("⚙️ Advanced Options"):
