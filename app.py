@@ -1657,7 +1657,9 @@ with tab8:
                 summary = generate_ai_content(summary_prompt, st.session_state.api_key, st.session_state.api_model)
 
             st.success("📑 AI Summary:")
-            st.write(summary)
+            with st.expander("Click to View AI Summary 📜"):
+                st.write(summary)
+            
 
             # Export Options
             col1, col2 = st.columns(2)
