@@ -1913,9 +1913,12 @@ with tab13:
     st.header("📝 AI-Powered Meeting Minutes Generator")
     st.markdown("### Automatically generate structured meeting summaries from transcripts or audio files.")
 
-    # Upload Meeting File
+    # Upload Meeting File or Paste Custom Transcript
     uploaded_meeting = st.file_uploader("📂 Upload Meeting Transcript or Audio (TXT, DOCX, PDF, MP3, WAV)", 
                                         type=["txt", "docx", "pdf", "mp3", "wav"])
+
+    st.markdown("**OR**")
+    custom_transcript = st.text_area("✍️ Paste Your Meeting Transcript (Optional):", height=200)
 
     # Key Features Selection
     extract_decisions = st.checkbox("🎯 Extract Key Decisions", value=True)
@@ -1924,14 +1927,17 @@ with tab13:
     sentiment_analysis = st.checkbox("💡 Perform Sentiment Analysis", value=False)
     search_keywords = st.text_input("🔎 Search for Specific Keywords (Optional):")
 
-    # Process Meeting File
+    # Process Meeting File or Custom Input
     extracted_meeting_text = ""
     if uploaded_meeting is not None:
         extracted_meeting_text = extract_text_from_file(uploaded_meeting)  # Function to extract text from uploaded file
         st.success("✅ Meeting file uploaded successfully! AI will analyze it.")
+    elif custom_transcript:
+        extracted_meeting_text = custom_transcript
+        st.success("✅ Custom transcript added! AI will analyze it.")
 
     # Generate Meeting Summary
-    if st.button("📜 Generate Meeting Minutes"):
+    if extracted_meeting_text and st.button("📜 Generate Meeting Minutes"):
         meeting_prompt = f"""
         Analyze the following meeting transcript and generate structured minutes.
         {"Extract key decisions made." if extract_decisions else ""}
@@ -1958,6 +1964,7 @@ with tab13:
             st.button("📋 Copy to Clipboard", on_click=lambda: st.write(
                 "<script>navigator.clipboard.writeText(`" + meeting_summary.replace("`", "\\`") + "`);</script>", 
                 unsafe_allow_html=True))
+
 
 
 with tab14:
