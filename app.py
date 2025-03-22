@@ -491,14 +491,14 @@ st.markdown(
 st.markdown('<div class="scroll-container">', unsafe_allow_html=True)
 # Close the Scrollable Container
 
-tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9, tab10, tab11, tab12, tab13 = st.tabs([
+tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9, tab10, tab11, tab12, tab13,tab14 = st.tabs([
     "📋 Categories", "🔍 Search", 
     "📚 Research", "🤖 Chat", 
     "🌍 Translate", "⚡ Code", 
     "📊 Insights", "🎤 Interview",
     "📧 Email Assistant", "📊 Spreadsheet",
     "🎬 Podcast", "🎯 Learning Path",
-    "🚀 Startup Validator"
+    "📝 Meeting Minutes","🚀 Startup Validator"
 ])
 
 
@@ -1909,7 +1909,58 @@ with tab12:
 
 
 
-with tab13:
+with tab14:
+    st.header("📝 AI-Powered Meeting Minutes Generator")
+    st.markdown("### Automatically generate structured meeting summaries from transcripts or audio files.")
+
+    # Upload Meeting File
+    uploaded_meeting = st.file_uploader("📂 Upload Meeting Transcript or Audio (TXT, DOCX, PDF, MP3, WAV)", 
+                                        type=["txt", "docx", "pdf", "mp3", "wav"])
+
+    # Key Features Selection
+    extract_decisions = st.checkbox("🎯 Extract Key Decisions", value=True)
+    extract_action_items = st.checkbox("✅ Identify Action Items & Owners", value=True)
+    extract_deadlines = st.checkbox("📅 Highlight Deadlines", value=True)
+    sentiment_analysis = st.checkbox("💡 Perform Sentiment Analysis", value=False)
+    search_keywords = st.text_input("🔎 Search for Specific Keywords (Optional):")
+
+    # Process Meeting File
+    extracted_meeting_text = ""
+    if uploaded_meeting is not None:
+        extracted_meeting_text = extract_text_from_file(uploaded_meeting)  # Function to extract text from uploaded file
+        st.success("✅ Meeting file uploaded successfully! AI will analyze it.")
+
+    # Generate Meeting Summary
+    if st.button("📜 Generate Meeting Minutes"):
+        meeting_prompt = f"""
+        Analyze the following meeting transcript and generate structured minutes.
+        {"Extract key decisions made." if extract_decisions else ""}
+        {"Identify action items, assigned members, and deadlines." if extract_action_items else ""}
+        {"Highlight upcoming deadlines and due dates." if extract_deadlines else ""}
+        {"Perform sentiment analysis to detect agreement, disagreement, or conflicts." if sentiment_analysis else ""}
+        {"Include a search-based summary for the keyword(s): " + search_keywords if search_keywords else ""}
+        
+        Meeting Transcript:
+        {extracted_meeting_text}
+        """
+
+        with st.spinner("Processing meeting minutes..."):
+            meeting_summary = generate_ai_content(meeting_prompt, st.session_state.api_key, st.session_state.api_model)
+
+        st.success("✅ AI-Generated Meeting Minutes:")
+        st.text_area("📜 Your Meeting Summary:", meeting_summary, height=300)
+
+        # Download & Copy Options
+        col1, col2 = st.columns(2)
+        with col1:
+            st.download_button("📥 Download Minutes", meeting_summary, "meeting_minutes.txt")
+        with col2:
+            st.button("📋 Copy to Clipboard", on_click=lambda: st.write(
+                "<script>navigator.clipboard.writeText(`" + meeting_summary.replace("`", "\\`") + "`);</script>", 
+                unsafe_allow_html=True))
+
+
+with tab14:
     st.header("🚀 AI-Powered Startup Idea Validator")
     st.markdown("### Validate your business idea with AI-driven market analysis!")
 
@@ -1977,6 +2028,7 @@ with tab13:
             st.button("📋 Copy to Clipboard", on_click=lambda: st.write(
                 "<script>navigator.clipboard.writeText(`" + startup_report.replace("`", "\\`") + "`);</script>", 
                 unsafe_allow_html=True))
+
 
 
 
