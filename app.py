@@ -491,12 +491,12 @@ st.markdown(
 st.markdown('<div class="scroll-container">', unsafe_allow_html=True)
 # Close the Scrollable Container
 
-tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9 = st.tabs([
+tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9, tab10 = st.tabs([
     "📋 Categories", "🔍 Search", 
     "📚 Research", "🤖 Chat", 
     "🌍 Translate", "⚡ Code", 
     "📊 Insights", "🎤 Interview",
-    "📧 Email Assistant"
+    "📧 Email Assistant", "📊 Spreadsheet"
 ])
 
 
@@ -1720,6 +1720,43 @@ with tab9:
 
         # Download Button
         st.download_button("📥 Download Email", processed_email, "email.txt")
+
+with tab10:
+    st.header("📊 AI-Powered Spreadsheet Formula Generator")
+    st.markdown("### Convert plain English into powerful spreadsheet formulas.")
+
+    # User Input for Natural Language Query
+    query = st.text_area("📝 Describe what you need (e.g., 'Extract domain from email'):")
+
+    # Syntax Selection
+    syntax = st.selectbox("Choose Formula Syntax:", ["Excel", "Google Sheets", "LibreOffice Calc"])
+
+    # Formula Type Selection
+    formula_type = st.radio("Formula Type:", ["Single Cell", "Multi-Cell/Range", "Array Formula", "SQL Query"], horizontal=True)
+
+    # Debug & Optimization Option
+    debug_formula = st.checkbox("Enable Formula Debugging & Optimization", value=True)
+
+    # Function Recommendations
+    function_suggestions = st.checkbox("Suggest Best Functions for My Task", value=True)
+
+    # Generate Button
+    if st.button("🔢 Generate Formula"):
+        formula_prompt = f"""
+        Convert this request into a {formula_type} formula for {syntax}: {query}.
+        {"Provide a breakdown and explanation." if debug_formula else ""}
+        {"Suggest the best spreadsheet functions for this task." if function_suggestions else ""}
+        """
+
+        with st.spinner("Generating formula..."):
+            generated_formula = generate_ai_content(formula_prompt, st.session_state.api_key, st.session_state.api_model)
+
+        st.success("✅ AI-Generated Formula:")
+        st.code(generated_formula, language="plaintext")
+
+        # Download Button
+        st.download_button("📥 Download Formula", generated_formula, "formula.txt")
+
 
 
 # Advanced options expander
