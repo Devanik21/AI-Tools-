@@ -1692,7 +1692,7 @@ with tab9:
                                      type=["pdf", "docx", "txt"])
 
     # Email Scheduling Assistant
-    urgency = st.selectbox("📅 Email Urgency:", ["Immediate", "Within 24 Hours", "End of Week", "Next Week"])
+    urgency = st.radio("📅 Email Urgency:", ["Immediate", "Within 24 Hours", "End of Week", "Next Week"])
     if urgency == "Immediate":
         best_time = "Send Now 🚀"
     elif urgency == "Within 24 Hours":
