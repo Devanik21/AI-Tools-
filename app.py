@@ -469,32 +469,42 @@ if not st.session_state.prompt_templates or len(st.session_state.prompt_template
 # Tool Selection Section
 st.header("🛠️ Select Your Creation Tool")
 
-# Apply Scrollable Tabs CSS
+# Apply Fixed Tabs with Scrollable Content CSS
 st.markdown(
     """
     <style>
+    /* Fix the tab bar at the top */
     div[data-testid="stTabs"] {
-        overflow-x: auto !important;
-        white-space: nowrap !important;
-        display: flex;
-        flex-wrap: nowrap;
+        position: fixed;
+        top: 0;
+        width: 100%;
+        background: white;
+        z-index: 1000;
+        padding-top: 10px;
+        border-bottom: 2px solid #ddd;
     }
-    div[data-testid="stTabs"] button {
-        flex: 1 1 auto;
-        min-width: 150px;  /* Adjust tab width */
+
+    /* Add spacing below the fixed tab bar */
+    .scrollable-content {
+        margin-top: 60px; /* Adjust to prevent overlap */
+        overflow-y: auto;
+        height: calc(100vh - 80px); /* Adjusted for full-page scroll */
     }
     </style>
     """,
     unsafe_allow_html=True
 )
 
-# Dropdown Navigation (Replaces Tabs)
+# Define Tabs
 tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9 = st.tabs([
     "📋 Categories", "🔍 Search", 
     "📚 Research", "🤖 Chat", 
     "🌍 Translate", "⚡ Code", 
     "📊 Insights", "📑 Papers", "🎤 Interview"
 ])
+
+# Wrap all tab content inside the scrollable section
+st.markdown('<div class="scrollable-content">', unsafe_allow_html=True)
 
 
 
@@ -1705,6 +1715,7 @@ with tab9:
         # Download Options
         st.download_button("📥 Download Questions", interview_questions, "mock_interview.txt")
 
+st.markdown('</div>', unsafe_allow_html=True)
 
 # Advanced options expander
 with st.expander("⚙️ Advanced Options"):
