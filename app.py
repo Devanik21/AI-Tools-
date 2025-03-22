@@ -1609,7 +1609,8 @@ with tab7:
 with tab8:
     st.header("📑 Research Paper Summarization")
 
-    uploaded_file = st.file_uploader("Upload Research Paper (PDF)", type="pdf")
+    uploaded_file = st.file_uploader("Upload Research Paper (PDF)", type="pdf", key="research_paper_uploader")
+
 
     if uploaded_file:
         pdf_text = extract_text_from_pdf(uploaded_file)
