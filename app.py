@@ -498,8 +498,9 @@ tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9, tab10, tab11, tab12, tab13
     "📊 Insights", "🎤 Interview",
     "📧 Email Assistant", "📊 Spreadsheet",
     "🎬 Podcast", "🎯 Learning Path",
-    "📄 CV Justifier"
+    "🚀 Startup Validator"
 ])
+
 
 
 
@@ -1907,85 +1908,74 @@ with tab12:
         st.download_button("📥 Download Learning Path", learning_path, "learning_path.txt")
 
 
+
 with tab13:
-    st.header("📄 AI-Powered CV Gap Justifier")
-    st.markdown("### Get a professional and convincing explanation for career gaps in your resume.")
+    st.header("🚀 AI-Powered Startup Idea Validator")
+    st.markdown("### Validate your business idea with AI-driven market analysis!")
 
-    # CV Upload
-    uploaded_cv = st.file_uploader("📂 Upload Your CV (TXT, DOCX, PDF)", type=["txt", "docx", "pdf"])
+    # Startup Idea Input
+    startup_idea = st.text_area("📝 Describe Your Startup Idea (e.g., 'AI-Powered Resume Builder'):")
+    
+    # Industry Selection
+    industry = st.selectbox("🏢 Select Industry:", 
+                            ["Technology", "Healthcare", "Finance", "E-Commerce", "Education", "Other"])
+    
+    # Business Model Selection
+    business_model = st.radio("💰 Select Revenue Model:", 
+                              ["Subscription-Based", "Ad-Supported", "Freemium", "E-Commerce", "Enterprise Sales"], horizontal=True)
 
-    # Reason for Employment Gap
-    reason = st.selectbox("📌 Select Your Career Gap Reason:", 
-                          ["Health Issues", "Further Education", "Family Responsibilities", 
-                           "Relocation", "Career Change", "Laid Off", "Travel & Personal Growth", "Other"])
+    # Additional AI Analysis Features
+    competitor_analysis = st.checkbox("🏆 Include Competitor Research", value=True)
+    market_potential = st.checkbox("📊 Analyze Market Demand", value=True)
+    scalability_risks = st.checkbox("🚀 Assess Scalability & Risks", value=True)
+    future_trends = st.checkbox("🔮 Predict Future Industry Trends", value=True)
+    branding_advice = st.checkbox("📢 Provide Marketing & Branding Strategies", value=True)
+    swot_analysis = st.checkbox("🧠 Generate SWOT Analysis", value=True)
+    target_audience = st.checkbox("📍 Identify Target Audience", value=True)
+    usp_finder = st.checkbox("💡 Find Unique Selling Proposition (USP)", value=True)
+    mvp_plan = st.checkbox("🏗️ Create Minimum Viable Product (MVP) Plan", value=True)
+    growth_strategy = st.checkbox("📈 Suggest Growth & Scaling Strategy", value=True)
+    funding_readiness = st.checkbox("💵 Evaluate Funding & Investor Readiness", value=True)
+    go_to_market = st.checkbox("🎯 Develop Go-To-Market Strategy", value=True)
+    global_vs_local = st.checkbox("🌍 Recommend Global vs Local Expansion", value=True)
+    tech_stack = st.checkbox("🛠️ Suggest Best Tech Stack & Tools", value=True)
+    business_plan = st.checkbox("📜 Generate Business Plan Summary", value=True)
 
-    # Custom Reason (if "Other" is selected)
-    if reason == "Other":
-        reason = st.text_input("✍️ Enter Your Custom Reason:")
-
-    # Gap Duration
-    duration = st.slider("⏳ Select Employment Gap Duration (Months):", 1, 60, 12)
-
-    # Tone Selection
-    tone = st.radio("🎭 Select Justification Tone:", ["Professional", "Confident", "Apologetic"], horizontal=True)
-
-    # Justification Length
-    justification_length = st.radio("📜 Justification Length:", ["Short", "Detailed"], horizontal=True)
-
-    # Output Format
-    output_format = st.radio("📄 Where Will You Use This Justification?", 
-                             ["Resume", "Cover Letter", "Interview Response", "LinkedIn Profile"], horizontal=True)
-
-    # Additional Career Assistance Features
-    ai_gap_analysis = st.checkbox("📊 AI Gap Impact Analysis", value=True)
-    industry_specific = st.checkbox("📝 Tailor for Your Industry", value=True)
-    career_timeline = st.checkbox("📅 Generate a Logical Career Timeline", value=True)
-    alternative_versions = st.checkbox("🔄 Provide Alternative Wording", value=True)
-    mock_interview = st.checkbox("🗣️ Generate Spoken Answer for Interviews", value=True)
-    strength_based = st.checkbox("📌 Highlight Strengths Gained During Gap", value=True)
-    career_moves = st.checkbox("💡 Suggest Career Pivots", value=True)
-    cover_letter = st.checkbox("✍️ Integrate into Cover Letter", value=False)
-    action_plan = st.checkbox("🚀 Career Boosting Action Plan", value=True)
-    social_media = st.checkbox("📢 Improve LinkedIn & Social Media Presence", value=False)
-
-    # Extract CV Text (if uploaded)
-    extracted_cv_text = ""
-    if uploaded_cv is not None:
-        extracted_cv_text = extract_text_from_file(uploaded_cv)  # Custom function to handle file reading
-        st.success("✅ CV uploaded successfully! AI will analyze it.")
-
-    # Generate Button
-    if st.button("📝 Generate Justification"):
-        justification_prompt = f"""
-        Generate a {justification_length.lower()} explanation for a {duration}-month career gap 
-        due to '{reason}' in a {tone.lower()} tone.
-        Adapt it for use in a {output_format.lower()}.
-        {"Analyze how this gap may impact job prospects." if ai_gap_analysis else ""}
-        {"Customize the justification for the user's industry." if industry_specific else ""}
-        {"Provide a logical career timeline to explain the gap." if career_timeline else ""}
-        {"Offer multiple variations of the justification." if alternative_versions else ""}
-        {"Create an interview-friendly spoken response." if mock_interview else ""}
-        {"Emphasize strengths and skills gained during the gap." if strength_based else ""}
-        {"Suggest career paths where the gap has minimal impact." if career_moves else ""}
-        {"Incorporate the justification into a professional cover letter." if cover_letter else ""}
-        {"Provide an action plan to recover career momentum." if action_plan else ""}
-        {"Suggest LinkedIn and social media profile updates." if social_media else ""}
-        {"Use the extracted CV text to improve the response:\n" + extracted_cv_text if extracted_cv_text else ""}
+    # Generate Startup Report
+    if st.button("📈 Validate My Startup Idea"):
+        startup_prompt = f"""
+        Analyze the feasibility of the startup idea: '{startup_idea}' in the {industry} industry.
+        Revenue Model: {business_model}.
+        {"Include competitor research." if competitor_analysis else ""}
+        {"Analyze the market potential and demand." if market_potential else ""}
+        {"Assess scalability challenges and risks." if scalability_risks else ""}
+        {"Predict future trends in this industry." if future_trends else ""}
+        {"Provide branding and marketing strategies." if branding_advice else ""}
+        {"Generate a SWOT analysis (Strengths, Weaknesses, Opportunities, Threats)." if swot_analysis else ""}
+        {"Identify the ideal target audience and customer personas." if target_audience else ""}
+        {"Find a Unique Selling Proposition (USP) to differentiate the startup." if usp_finder else ""}
+        {"Create a Minimum Viable Product (MVP) development plan." if mvp_plan else ""}
+        {"Suggest growth, scaling, and funding strategies." if growth_strategy else ""}
+        {"Assess funding readiness and provide investor pitching advice." if funding_readiness else ""}
+        {"Develop a go-to-market strategy and customer acquisition plan." if go_to_market else ""}
+        {"Evaluate whether this startup should focus on a local or global market." if global_vs_local else ""}
+        {"Suggest the best tech stack and AI tools for development." if tech_stack else ""}
+        {"Generate a structured business plan summary for investors." if business_plan else ""}
         """
 
-        with st.spinner("Crafting your career gap explanation..."):
-            justification = generate_ai_content(justification_prompt, st.session_state.api_key, st.session_state.api_model)
+        with st.spinner("Analyzing your startup idea..."):
+            startup_report = generate_ai_content(startup_prompt, st.session_state.api_key, st.session_state.api_model)
 
-        st.success("✅ AI-Generated Career Gap Justification:")
-        st.text_area("📄 Your Justification:", justification, height=200)
+        st.success("✅ AI-Generated Startup Validation Report:")
+        st.text_area("📊 Your Startup Analysis:", startup_report, height=300)
 
         # Download & Copy Options
         col1, col2 = st.columns(2)
         with col1:
-            st.download_button("📥 Download Justification", justification, "cv_gap_justification.txt")
+            st.download_button("📥 Download Report", startup_report, "startup_report.txt")
         with col2:
             st.button("📋 Copy to Clipboard", on_click=lambda: st.write(
-                "<script>navigator.clipboard.writeText(`" + justification.replace("`", "\\`") + "`);</script>", 
+                "<script>navigator.clipboard.writeText(`" + startup_report.replace("`", "\\`") + "`);</script>", 
                 unsafe_allow_html=True))
 
 
