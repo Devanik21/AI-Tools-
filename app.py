@@ -491,12 +491,13 @@ st.markdown(
 st.markdown('<div class="scroll-container">', unsafe_allow_html=True)
 # Close the Scrollable Container
 
-tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9, tab10 = st.tabs([
+tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9, tab10, tab11= st.tabs([
     "📋 Categories", "🔍 Search", 
     "📚 Research", "🤖 Chat", 
     "🌍 Translate", "⚡ Code", 
     "📊 Insights", "🎤 Interview",
-    "📧 Email Assistant", "📊 Spreadsheet"
+    "📧 Email Assistant", "📊 Spreadsheet",
+    "🎬 Podcast Script"
 ])
 
 
@@ -1774,6 +1775,56 @@ with tab10:
         # Download Button
         st.download_button("📥 Download Formula", generated_formula, "formula.txt")
 
+
+
+with tab11:
+    st.header("🎙️ AI-Based Podcast Script Generator")
+    st.markdown("### Create engaging, professional, and unique podcast scripts!")
+
+    # Podcast Topic & Duration
+    topic = st.text_input("🎯 Enter Podcast Topic:")
+    duration = st.slider("⏳ Select Podcast Duration (minutes):", 5, 90, 20)
+    
+    # Podcast Style & Tone
+    style = st.selectbox("🎭 Choose Style:", ["Conversational", "Storytelling", "Humorous", "Data-Driven", "Inspirational"])
+    tone = st.radio("🗣️ Select Tone:", ["Casual", "Professional", "Energetic", "Serious"], horizontal=True)
+
+    # Podcast Features & Enhancements
+    add_intro_outro = st.checkbox("🎶 Auto-Generated Podcast Intro & Outro", value=True)
+    simulate_cohost_guest = st.checkbox("🧑‍🤝‍🧑 Simulate Multi-Host & Guest Interactions", value=True)
+    add_trending_news = st.checkbox("🌎 Include Real-Time News & Trends", value=False)
+    add_music_sfx = st.checkbox("🎵 Suggest Background Music & Sound Effects", value=False)
+    ai_character_speaking = st.checkbox("🤖 Generate Script in a Famous Figure's Style", value=False)
+    add_hot_takes = st.checkbox("💡 Include Debates & Controversial Takes", value=False)
+    future_predictions = st.checkbox("🔮 AI-Powered Future Insights & Trends", value=False)
+    generate_ads = st.checkbox("📜 Create Sponsor Ad Scripts", value=False)
+    auto_schedule = st.checkbox("🛠️ Auto-Generate Social Media Promo Posts", value=False)
+    multi_language = st.checkbox("📢 Translate to Multiple Languages", value=False)
+
+    # Generate Button
+    if st.button("📜 Generate Podcast Script"):
+        podcast_prompt = f"""
+        Generate a {duration}-minute podcast script on '{topic}' in {style} style with a {tone} tone.
+        {"Include a dynamic podcast intro & outro." if add_intro_outro else ""}
+        {"Simulate engaging conversations between a host and a guest." if simulate_cohost_guest else ""}
+        {"Incorporate real-world trending news & insights." if add_trending_news else ""}
+        {"Suggest background music or sound effects for key moments." if add_music_sfx else ""}
+        {"Write the script in the style of a well-known personality or character." if ai_character_speaking else ""}
+        {"Add a controversial debate section or counterpoints for engagement." if add_hot_takes else ""}
+        {"Provide AI-driven future predictions related to the topic." if future_predictions else ""}
+        {"Generate sponsor messages relevant to the topic." if generate_ads else ""}
+        {"Auto-generate social media post copy for promoting this episode." if auto_schedule else ""}
+        {"Translate the script into multiple languages with regional adaptation." if multi_language else ""}
+        """
+
+        with st.spinner("Generating podcast script..."):
+            podcast_script = generate_ai_content(podcast_prompt, st.session_state.api_key, st.session_state.api_model)
+
+        st.success("✅ AI-Generated Podcast Script:")
+        st.text_area("🎙️ Your Podcast Script:", podcast_script, height=300)
+
+        # Download Button
+        st.download_button("📥 Download Script", podcast_script, "podcast_script.txt")
 
 
 # Advanced options expander
