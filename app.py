@@ -1789,6 +1789,18 @@ with tab11:
     style = st.selectbox("🎭 Choose Style:", ["Conversational", "Storytelling", "Humorous", "Data-Driven", "Inspirational"])
     tone = st.radio("🗣️ Select Tone:", ["Casual", "Professional", "Energetic", "Serious"], horizontal=True)
 
+    # Word Count Control
+    col1, col2 = st.columns(2)
+    with col1:
+        min_words = st.number_input("🔡 Min Words:", min_value=100, max_value=5000, value=300, step=50)
+    with col2:
+        max_words = st.number_input("🔠 Max Words:", min_value=200, max_value=10000, value=1500, step=100)
+
+    # Script Detail Level
+    script_detail = st.select_slider("📜 Script Detail Level:", 
+                                     options=["Short", "Standard", "Comprehensive"], 
+                                     value="Standard")
+
     # Podcast Features & Enhancements
     add_intro_outro = st.checkbox("🎶 Auto-Generated Podcast Intro & Outro", value=True)
     simulate_cohost_guest = st.checkbox("🧑‍🤝‍🧑 Simulate Multi-Host & Guest Interactions", value=True)
@@ -1804,7 +1816,8 @@ with tab11:
     # Generate Button
     if st.button("📜 Generate Podcast Script"):
         podcast_prompt = f"""
-        Generate a {duration}-minute podcast script on '{topic}' in {style} style with a {tone} tone.
+        Generate a {script_detail} {duration}-minute podcast script on '{topic}' in {style} style with a {tone} tone.
+        Ensure the script is between {min_words} and {max_words} words.
         {"Include a dynamic podcast intro & outro." if add_intro_outro else ""}
         {"Simulate engaging conversations between a host and a guest." if simulate_cohost_guest else ""}
         {"Incorporate real-world trending news & insights." if add_trending_news else ""}
