@@ -479,25 +479,12 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # Dropdown Navigation (Replaces Tabs)
-selected_tool = st.selectbox("🛠 Select Your AI Tool", [
-    "📋 Categories", "🔍 Search Results",
-    "📚 AI Research Assistant", "🤖 AI Chatbot",
-    "🌍 AI Translator", "⚡ AI Code Wizard",
-    "📊 Data Visualization & Insights", "📑 Research Paper Summarization"
+tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8 = st.tabs([
+    "📋 Categories", "🔍 Search", 
+    "📚 Research", "🤖 Chat", 
+    "🌍 Translate", "⚡ Code", 
+    "📊 Insights", "📑 Papers"
 ])
-
-# Render the selected tool dynamically
-if selected_tool == "📚 AI Research Assistant":
-    st.header("📚 AI Research Assistant")
-    st.write("Your AI-powered research assistant...")
-
-elif selected_tool == "🤖 AI Chatbot":
-    st.header("🤖 AI Chatbot")
-    st.write("Chat with an AI model...")
-
-elif selected_tool == "📑 Research Paper Summarization":
-    st.header("📑 Research Paper Summarization")
-    uploaded_file = st.file_uploader("Upload Research Paper (PDF)", type="pdf", key="research_paper_uploader")
 
 
 
