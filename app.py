@@ -498,8 +498,7 @@ tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9 = st.tabs([
 
 
 # Wrap Everything Below Tabs in a Scrollable Container
-st.markdown('<div class="scroll-container">', unsafe_allow_html=True)
-# Close the Scrollable Container
+
 st.markdown("</div>", unsafe_allow_html=True)
 
 with tab1:
