@@ -1909,7 +1909,7 @@ with tab12:
 
 
 
-with tab14:
+with tab13:
     st.header("📝 AI-Powered Meeting Minutes Generator")
     st.markdown("### Automatically generate structured meeting summaries from transcripts or audio files.")
 
