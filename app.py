@@ -488,6 +488,9 @@ st.markdown(
     unsafe_allow_html=True
 )
 
+st.markdown('<div class="scroll-container">', unsafe_allow_html=True)
+# Close the Scrollable Container
+
 # Dropdown Navigation (Replaces Tabs)
 tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9 = st.tabs([
     "📋 Categories", "🔍 Search", 
@@ -498,9 +501,8 @@ tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9 = st.tabs([
 
 
 # Wrap Everything Below Tabs in a Scrollable Container
-st.markdown('<div class="scroll-container">', unsafe_allow_html=True)
-# Close the Scrollable Container
 
+st.markdown("</div>", unsafe_allow_html=True)
 
 with tab1:
     selected_category = st.selectbox("Choose a category:", list(tool_categories.keys()))
