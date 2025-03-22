@@ -503,10 +503,6 @@ tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9 = st.tabs([
     "📊 Insights", "📑 Papers", "🎤 Interview"
 ])
 
-# Wrap all tab content inside the scrollable section
-st.markdown('<div class="scrollable-content">', unsafe_allow_html=True)
-
-
 
 
 with tab1:
@@ -1715,7 +1711,7 @@ with tab9:
         # Download Options
         st.download_button("📥 Download Questions", interview_questions, "mock_interview.txt")
 
-st.markdown('</div>', unsafe_allow_html=True)
+
 
 # Advanced options expander
 with st.expander("⚙️ Advanced Options"):
