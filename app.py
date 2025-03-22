@@ -1925,39 +1925,43 @@ if st.button("🚀 Generate Content", type="primary"):
         # Save to history
         save_to_history(selected_tool, user_prompt, output)
 
-# Export options
-st.markdown("### 📥 Export Options")
+        # Export options
+        st.markdown("### 📥 Export Options")
 
-# Function to create DOCX file
-def create_docx(text):
-    doc = docx.Document()
-    doc.add_paragraph(text)
-    doc_stream = BytesIO()
-    doc.save(doc_stream)
-    doc_stream.seek(0)  # Move to the beginning of the file
-    return doc_stream
+        # Function to create DOCX file
+        def create_docx(text):
+            doc = docx.Document()
+            doc.add_paragraph(text)
+            doc_stream = BytesIO()
+            doc.save(doc_stream)
+            doc_stream.seek(0)  # Move to the beginning of the file
+            return doc_stream
 
-# Function to create PDF file
-def create_pdf(text):
-    pdf_stream = BytesIO()
-    doc = fitz.open()  # Create a new PDF
-    page = doc.new_page(width=595, height=842)  # A4 size
-    text = text.replace("\n", "<br>")  # Maintain line breaks
-    page.insert_text((50, 50), text, fontsize=12, color=(0, 0, 0))
-    doc.save(pdf_stream)
-    pdf_stream.seek(0)
-    return pdf_stream
+        # Function to create PDF file
+        import fitz  # PyMuPDF for PDF generation
+        def create_pdf(text):
+            pdf_stream = BytesIO()
+            doc = fitz.open()  # Create a new PDF
+            page = doc.new_page(width=595, height=842)  # A4 size
+            text = text.replace("\n", "<br>")  # Maintain line breaks
+            page.insert_text((50, 50), text, fontsize=12, color=(0, 0, 0))
+            doc.save(pdf_stream)
+            pdf_stream.seek(0)
+            return pdf_stream
 
-# Download buttons
-col1, col2, col3 = st.columns(3)
-with col1:
-    st.download_button("📄 Download as TXT", output, "generated_content.txt")
-with col2:
-    docx_file = create_docx(output)
-    st.download_button("📄 Download as DOCX", docx_file, "generated_content.docx")
-with col3:
-    pdf_file = create_pdf(output)
-    st.download_button("📄 Download as PDF", pdf_file, "generated_content.pdf")
+        # Download buttons
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            st.download_button("📄 Download as TXT", output, "generated_content.txt")
+        with col2:
+            docx_file = create_docx(output)
+            st.download_button("📄 Download as DOCX", docx_file, "generated_content.docx")
+        with col3:
+            pdf_file = create_pdf(output)
+            st.download_button("📄 Download as PDF", pdf_file, "generated_content.pdf")
+
+
+
               
 # Add theme selector
 st.sidebar.markdown("---")
