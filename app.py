@@ -1917,7 +1917,7 @@ with tab13:
     startup_idea = st.text_area("📝 Describe Your Startup Idea (e.g., 'AI-Powered Resume Builder'):")
     
     # Industry Selection
-    industry = st.selectbox("🏢 Select Industry:", 
+    industry = st.radio("🏢 Select Industry:", 
                             ["Technology", "Healthcare", "Finance", "E-Commerce", "Education", "Other"])
     
     # Business Model Selection
