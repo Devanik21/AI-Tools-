@@ -491,13 +491,13 @@ st.markdown(
 st.markdown('<div class="scroll-container">', unsafe_allow_html=True)
 # Close the Scrollable Container
 
-tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9, tab10, tab11= st.tabs([
+tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9, tab10, tab11, tab12 = st.tabs([
     "📋 Categories", "🔍 Search", 
     "📚 Research", "🤖 Chat", 
     "🌍 Translate", "⚡ Code", 
     "📊 Insights", "🎤 Interview",
     "📧 Email Assistant", "📊 Spreadsheet",
-    "🎬 Podcast Script"
+    "🎬 Podcast", "🎯 Learning Path"
 ])
 
 
@@ -1839,6 +1839,70 @@ with tab11:
         # Download Button
         st.download_button("📥 Download Script", podcast_script, "podcast_script.txt")
 
+
+with tab12:
+    st.header("🎯 AI-Powered Learning Path Generator")
+    st.markdown("### Get a personalized learning roadmap based on your skills and goals!")
+
+    # User Inputs
+    current_skill = st.text_input("🛠️ Current Skills (e.g., Python, Data Science, Web Dev):")
+    goal = st.text_input("🎯 Learning Goal (e.g., Become a Machine Learning Engineer):")
+
+    # Select Learning Style
+    learning_style = st.selectbox("📚 Preferred Learning Style:", 
+                                  ["Video-Based", "Hands-On Projects", "Reading-Focused", "Hybrid"])
+
+    # Select Duration
+    duration = st.slider("⏳ Select Learning Duration (Weeks):", 1, 52, 12)
+
+    # Skill Level Selection
+    skill_level = st.radio("📊 Current Proficiency Level:", 
+                           ["Beginner", "Intermediate", "Advanced"], horizontal=True)
+
+    # Word Count Control
+    col1, col2 = st.columns(2)
+    with col1:
+        min_words = st.number_input("🔡 Min Words:", min_value=100, max_value=5000, value=500, step=50)
+    with col2:
+        max_words = st.number_input("🔠 Max Words:", min_value=200, max_value=10000, value=1500, step=100)
+
+    # Additional Features
+    ai_gap_analysis = st.checkbox("🛠️ AI Skill Gap Analysis", value=True)
+    personalized_challenges = st.checkbox("📌 Generate Weekly Challenges", value=True)
+    certification_mapping = st.checkbox("🎓 Recommend Certifications & Courses", value=True)
+    resume_boost = st.checkbox("📂 AI Resume Enhancement", value=False)
+    adaptive_learning = st.checkbox("🧠 Adaptive Learning (Dynamic Updates)", value=False)
+    time_estimate = st.checkbox("⏳ Time Commitment Estimator", value=True)
+    mentor_suggestions = st.checkbox("👥 Suggest Mentors & Learning Communities", value=False)
+    quizzes = st.checkbox("📝 Generate Self-Assessment Quizzes", value=True)
+    job_insights = st.checkbox("📢 Industry Trends & Job Market Insights", value=True)
+
+    # Generate Learning Path
+    if st.button("📜 Generate Learning Path"):
+        learning_prompt = f"""
+        Create a {duration}-week personalized learning roadmap for someone with {skill_level} skills in {current_skill} 
+        who wants to achieve the goal: '{goal}'.
+        Preferred learning style: {learning_style}.
+        Ensure the response is between {min_words} and {max_words} words.
+        {"Analyze the skill gap between their current skills and their goal." if ai_gap_analysis else ""}
+        {"Generate weekly challenges to test their learning progress." if personalized_challenges else ""}
+        {"Recommend certifications, books, and online courses." if certification_mapping else ""}
+        {"Suggest how to add these skills to a resume for better job opportunities." if resume_boost else ""}
+        {"Provide an adaptive learning roadmap that changes based on progress." if adaptive_learning else ""}
+        {"Estimate the required daily/weekly study time to reach the goal." if time_estimate else ""}
+        {"Suggest relevant mentorship programs and online learning communities." if mentor_suggestions else ""}
+        {"Include self-assessment quizzes to measure progress." if quizzes else ""}
+        {"Provide industry trends and job market insights for this skill." if job_insights else ""}
+        """
+
+        with st.spinner("Generating your learning path..."):
+            learning_path = generate_ai_content(learning_prompt, st.session_state.api_key, st.session_state.api_model)
+
+        st.success("✅ AI-Generated Learning Path:")
+        st.text_area("🎯 Your Personalized Learning Roadmap:", learning_path, height=300)
+
+        # Download Option
+        st.download_button("📥 Download Learning Path", learning_path, "learning_path.txt")
 
 # Advanced options expander
 with st.expander("⚙️ Advanced Options"):
