@@ -1659,7 +1659,7 @@ with tab8:
 
 with tab9:
     st.header("🎤 AI-Powered Mock Interviewer")
-    st.markdown("### Prepare for your next job interview with AI-generated questions and feedback.")
+    st.markdown("### Prepare for your next job interview with AI-generated questions.")
 
     # Job Role Selection
     col1, col2 = st.columns(2)
@@ -1679,14 +1679,11 @@ with tab9:
         with col2:
             question_count = st.slider("Number of Questions:", 3, 20, 5)
 
-        response_feedback = st.checkbox("Enable AI Feedback on Responses", value=True)
-
     # Generate Questions
     if st.button("Start Mock Interview 🎙️"):
         interview_prompt = f"""
         Conduct a {interview_type} interview for a {experience_level} {job_role}. 
-        Ask {question_count} questions with increasing difficulty from level {difficulty}. 
-        {"Provide detailed feedback on user responses." if response_feedback else ""}
+        Ask {question_count} questions with increasing difficulty from level {difficulty}.
         """
 
         with st.spinner("Generating interview questions..."):
@@ -1695,30 +1692,8 @@ with tab9:
         st.success("🎤 AI-Generated Mock Interview:")
         st.write(interview_questions)
 
-        # User Responses
-        if response_feedback:
-            st.markdown("### 📢 Your Answers:")
-            user_responses = []
-            for i in range(question_count):
-                user_response = st.text_area(f"Answer Question {i+1}:", key=f"response_{i}")
-                user_responses.append(user_response)
-
-            # AI Feedback on Responses
-            if st.button("Get AI Feedback 🧠"):
-                feedback_prompt = f"Evaluate these interview responses:\n{interview_questions}\n\nUser Responses:\n{user_responses}"
-                with st.spinner("Analyzing your responses..."):
-                    feedback = generate_ai_content(feedback_prompt, st.session_state.api_key, st.session_state.api_model)
-
-                st.success("📊 AI Feedback:")
-                st.write(feedback)
-
         # Download Options
-        col1, col2 = st.columns(2)
-        with col1:
-            st.download_button("📥 Download Questions", interview_questions, "mock_interview.txt")
-        with col2:
-            if response_feedback:
-                st.download_button("📥 Download Feedback", feedback, "interview_feedback.txt")
+        st.download_button("📥 Download Questions", interview_questions, "mock_interview.txt")
 
 
 # Advanced options expander
