@@ -1732,7 +1732,7 @@ with tab10:
     syntax = st.selectbox("Choose Formula Syntax:", ["Excel", "Google Sheets", "LibreOffice Calc"])
 
     # Formula Type Selection
-    formula_type = st.selectbox("Formula Type:", ["Single Cell", "Multi-Cell/Range", "Array Formula", "SQL Query"], horizontal=True)
+    formula_type = st.radio("Formula Type:", ["Single Cell", "Multi-Cell/Range", "Array Formula", "SQL Query"], horizontal=True)
 
     # Debug & Optimization Option
     debug_formula = st.checkbox("Enable Formula Debugging & Optimization", value=True)
