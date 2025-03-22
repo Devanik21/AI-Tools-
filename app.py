@@ -491,14 +491,16 @@ st.markdown(
 st.markdown('<div class="scroll-container">', unsafe_allow_html=True)
 # Close the Scrollable Container
 
-tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9, tab10, tab11, tab12 = st.tabs([
+tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9, tab10, tab11, tab12, tab13 = st.tabs([
     "📋 Categories", "🔍 Search", 
     "📚 Research", "🤖 Chat", 
     "🌍 Translate", "⚡ Code", 
     "📊 Insights", "🎤 Interview",
     "📧 Email Assistant", "📊 Spreadsheet",
-    "🎬 Podcast", "🎯 Learning Path"
+    "🎬 Podcast", "🎯 Learning Path",
+    "📄 CV Justifier"
 ])
+
 
 
 
@@ -1903,6 +1905,79 @@ with tab12:
 
         # Download Option
         st.download_button("📥 Download Learning Path", learning_path, "learning_path.txt")
+
+
+with tab13:
+    st.header("📄 AI-Powered CV Gap Justifier")
+    st.markdown("### Get a professional and convincing explanation for career gaps in your resume.")
+
+    # Reason for Employment Gap
+    reason = st.selectbox("📌 Select Your Career Gap Reason:", 
+                          ["Health Issues", "Further Education", "Family Responsibilities", 
+                           "Relocation", "Career Change", "Laid Off", "Travel & Personal Growth", "Other"])
+
+    # Custom Reason (if "Other" is selected)
+    if reason == "Other":
+        reason = st.text_input("✍️ Enter Your Custom Reason:")
+
+    # Gap Duration
+    duration = st.slider("⏳ Select Employment Gap Duration (Months):", 1, 60, 12)
+
+    # Tone Selection
+    tone = st.radio("🎭 Select Justification Tone:", ["Professional", "Confident", "Apologetic"], horizontal=True)
+
+    # Justification Length
+    justification_length = st.radio("📜 Justification Length:", ["Short", "Detailed"], horizontal=True)
+
+    # Output Format
+    output_format = st.radio("📄 Where Will You Use This Justification?", 
+                             ["Resume", "Cover Letter", "Interview Response", "LinkedIn Profile"], horizontal=True)
+
+    # Additional Career Assistance Features
+    ai_gap_analysis = st.checkbox("📊 AI Gap Impact Analysis", value=True)
+    industry_specific = st.checkbox("📝 Tailor for Your Industry", value=True)
+    career_timeline = st.checkbox("📅 Generate a Logical Career Timeline", value=True)
+    alternative_versions = st.checkbox("🔄 Provide Alternative Wording", value=True)
+    mock_interview = st.checkbox("🗣️ Generate Spoken Answer for Interviews", value=True)
+    strength_based = st.checkbox("📌 Highlight Strengths Gained During Gap", value=True)
+    career_moves = st.checkbox("💡 Suggest Career Pivots", value=True)
+    cover_letter = st.checkbox("✍️ Integrate into Cover Letter", value=False)
+    action_plan = st.checkbox("🚀 Career Boosting Action Plan", value=True)
+    social_media = st.checkbox("📢 Improve LinkedIn & Social Media Presence", value=False)
+
+    # Generate Button
+    if st.button("📝 Generate Justification"):
+        justification_prompt = f"""
+        Generate a {justification_length.lower()} explanation for a {duration}-month career gap 
+        due to '{reason}' in a {tone.lower()} tone.
+        Adapt it for use in a {output_format.lower()}.
+        {"Analyze how this gap may impact job prospects." if ai_gap_analysis else ""}
+        {"Customize the justification for the user's industry." if industry_specific else ""}
+        {"Provide a logical career timeline to explain the gap." if career_timeline else ""}
+        {"Offer multiple variations of the justification." if alternative_versions else ""}
+        {"Create an interview-friendly spoken response." if mock_interview else ""}
+        {"Emphasize strengths and skills gained during the gap." if strength_based else ""}
+        {"Suggest career paths where the gap has minimal impact." if career_moves else ""}
+        {"Incorporate the justification into a professional cover letter." if cover_letter else ""}
+        {"Provide an action plan to recover career momentum." if action_plan else ""}
+        {"Suggest LinkedIn and social media profile updates." if social_media else ""}
+        """
+
+        with st.spinner("Crafting your career gap explanation..."):
+            justification = generate_ai_content(justification_prompt, st.session_state.api_key, st.session_state.api_model)
+
+        st.success("✅ AI-Generated Career Gap Justification:")
+        st.text_area("📄 Your Justification:", justification, height=200)
+
+        # Download & Copy Options
+        col1, col2 = st.columns(2)
+        with col1:
+            st.download_button("📥 Download Justification", justification, "cv_gap_justification.txt")
+        with col2:
+            st.button("📋 Copy to Clipboard", on_click=lambda: st.write(
+                "<script>navigator.clipboard.writeText(`" + justification.replace("`", "\\`") + "`);</script>", 
+                unsafe_allow_html=True))
+
 
 # Advanced options expander
 with st.expander("⚙️ Advanced Options"):
