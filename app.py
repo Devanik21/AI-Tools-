@@ -1862,9 +1862,9 @@ with tab12:
     # Word Count Control
     col1, col2 = st.columns(2)
     with col1:
-        min_words = st.number_input("🔡 Min Words:", min_value=100, max_value=5000, value=500, step=50)
+        min_words = st.number_input("🔡 Min Words:", min_value=100, max_value=5000, value=500, step=50,key="min_words_input")
     with col2:
-        max_words = st.number_input("🔠 Max Words:", min_value=200, max_value=10000, value=1500, step=100)
+        max_words = st.number_input("🔠 Max Words:", min_value=200, max_value=10000, value=1500, step=100,key="max_words_input")
 
     # Additional Features
     ai_gap_analysis = st.checkbox("🛠️ AI Skill Gap Analysis", value=True)
