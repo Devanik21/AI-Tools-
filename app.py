@@ -1732,7 +1732,7 @@ with tab10:
     syntax = st.selectbox("Choose Formula Syntax:", ["Excel", "Google Sheets", "LibreOffice Calc"])
 
     # Formula Type Selection
-    formula_type = st.radio("Formula Type:", ["Single Cell", "Multi-Cell/Range", "Array Formula", "SQL Query"], horizontal=True)
+    formula_type = st.selectbox("Formula Type:", ["Single Cell", "Multi-Cell/Range", "Array Formula", "SQL Query"], horizontal=True)
 
     # Debug & Optimization Option
     debug_formula = st.checkbox("Enable Formula Debugging & Optimization", value=True)
@@ -1740,12 +1740,29 @@ with tab10:
     # Function Recommendations
     function_suggestions = st.checkbox("Suggest Best Functions for My Task", value=True)
 
+    # Data Cleaning & Formatting
+    data_cleaning = st.checkbox("Enable AI Data Cleaning & Auto-Formatting", value=True)
+
+    # Auto-Generate Pivot Tables & Charts
+    generate_pivot = st.checkbox("Generate Pivot Tables & Charts Automatically", value=False)
+
+    # Bulk Formula Generation for Large Datasets
+    bulk_formula = st.checkbox("Apply Formula in Bulk for Large Datasets", value=False)
+
+    # AI-Powered Conditional Formatting
+    conditional_formatting = st.checkbox("Enable Smart Conditional Formatting", value=False)
+
     # Generate Button
     if st.button("🔢 Generate Formula"):
         formula_prompt = f"""
         Convert this request into a {formula_type} formula for {syntax}: {query}.
         {"Provide a breakdown and explanation." if debug_formula else ""}
         {"Suggest the best spreadsheet functions for this task." if function_suggestions else ""}
+        {"Optimize and debug the formula for efficiency." if debug_formula else ""}
+        {"Ensure the formula works well with large datasets." if bulk_formula else ""}
+        {"Automatically clean and format the data before applying the formula." if data_cleaning else ""}
+        {"Suggest conditional formatting rules if applicable." if conditional_formatting else ""}
+        {"If relevant, generate a Pivot Table or Chart based on the query." if generate_pivot else ""}
         """
 
         with st.spinner("Generating formula..."):
