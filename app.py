@@ -469,14 +469,24 @@ if not st.session_state.prompt_templates or len(st.session_state.prompt_template
 # Tool Selection Section
 st.header("🛠️ Select Your Creation Tool")
 
-st.markdown("""
+# Apply Scrollable Tabs CSS
+st.markdown(
+    """
     <style>
+    div[data-testid="stTabs"] {
+        overflow-x: auto !important;
+        white-space: nowrap !important;
+        display: flex;
+        flex-wrap: nowrap;
+    }
     div[data-testid="stTabs"] button {
-        font-size: 12px !important;
-        padding: 20px !important;
+        flex: 1 1 auto;
+        min-width: 150px;  /* Adjust tab width */
     }
     </style>
-""", unsafe_allow_html=True)
+    """,
+    unsafe_allow_html=True
+)
 
 # Dropdown Navigation (Replaces Tabs)
 tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9 = st.tabs([
