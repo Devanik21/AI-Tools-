@@ -491,13 +491,14 @@ st.markdown(
 st.markdown('<div class="scroll-container">', unsafe_allow_html=True)
 # Close the Scrollable Container
 
-# Dropdown Navigation (Replaces Tabs)
-tab1, tab2, tab3, tab4, tab5, tab6, tab7,  tab8 = st.tabs([
+tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9 = st.tabs([
     "📋 Categories", "🔍 Search", 
     "📚 Research", "🤖 Chat", 
     "🌍 Translate", "⚡ Code", 
-    "📊 Insights",  "🎤 Interview"
+    "📊 Insights", "🎤 Interview",
+    "📧 Email Assistant"
 ])
+
 
 
 # Wrap Everything Below Tabs in a Scrollable Container
@@ -1663,7 +1664,8 @@ with tab8:
         # Download Options
         st.download_button("📥 Download Questions", interview_questions, "mock_interview.txt")
 
-st.markdown('</div>', unsafe_allow_html=True)
+
+
 
 # Advanced options expander
 with st.expander("⚙️ Advanced Options"):
