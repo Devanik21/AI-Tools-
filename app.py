@@ -1238,7 +1238,7 @@ with tab6:
     st.header("⚡ AI Code Wizard")
 
     # Automatically select the AI model for coding tasks
-    st.session_state.api_model = "gemini-2.0-flash-thinking-exp-01-21"
+    st.session_state.api_model = "gemini-2.5-pro-exp-03-25"
 
     # Choose AI task
     task = st.selectbox("What do you need help with?", 
