@@ -269,18 +269,20 @@ def generate_ai_tools():
     all_categories = {**base_categories, **extended_categories}
     
     # Multipliers to expand each tool category (adjectival prefixes)
+# Practical Tool Multipliers
+
+    # Descriptive Qualifiers: Focus on Actual Capabilities
     tool_multipliers = [
-        "Advanced", "Custom", "Premium", "Enhanced", "Professional", "Intelligent", "Smart", "Dynamic",
-        "Interactive", "Personalized", "Strategic", "Comprehensive", "Automated", "High-Performance", "Next-Gen",
-        "Streamlined", "Optimized", "Scalable", "Innovative", "Creative", "Essential", "Ultimate", "Practical",
-        "Specialized", "Expert", "Efficient", "Versatile", "Powerful", "Flexible", "Multi-purpose"
+        "AI-Powered", "Data-Driven", "Adaptive", "Intelligent", 
+        "Automated", "Precision", "Workflow", "Strategic", 
+        "Analytical", "Efficient", "Scalable", "Integrated"
     ]
-    
-    # Format multipliers (output format variations)
+
+    # Tool Format Descriptors: Emphasize Functional Purpose
     format_multipliers = [
-        "Generator", "Builder", "Creator", "Designer", "Maker", "Assistant", "Helper", "Tool", "Solution",
-        "Expert", "Consultant", "Advisor", "Planner", "Architect", "Analyst", "Strategist", "Developer",
-        "Manager", "Optimizer", "Writer", "Guide", "Template", "Framework", "System", "Toolkit"
+        "Engine", "Platform", "Framework", "Toolkit", 
+        "Accelerator", "Assistant", "Optimizer", "Analyzer", 
+        "Manager", "Generator", "Orchestrator", "Solution"
     ]
     
     # Generate expanded tools by combining base tools with multipliers
