@@ -12,7 +12,6 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import plotly.express as px
 import seaborn as sns
-import uuid
 import pyperclip
 
 
@@ -183,460 +182,106 @@ def extract_text_from_pdf(uploaded_file):
 def generate_ai_tools():
     # Base categories dictionary - we'll expand with multipliers later
     base_categories = {
-"Writing": [
-    # Professional & Business Writing  
-    "Resume", "Cover Letter", "Job Application Letter", "Recommendation Letter", "Business Proposal",  
-    "Project Proposal", "Executive Summary", "Professional Bio", "Company Profile", "Business Plan",  
-    "Marketing Copy", "Sales Pitch", "Brand Story", "Press Release", "Meeting Minutes", "Email",  
-    "SOP (Standard Operating Procedure)", "RFP (Request for Proposal)", "Policy Draft", "Employee Handbook",  
-    "Business Case Study", "Whitepaper",  
-
-    # Academic & Research Writing  
-    "Academic Essay", "Thesis Statement", "Literature Review", "Research Paper", "Citation",  
-    "Abstract & Keywords Generator", "Lab Report", "Case Study", "Grant Proposal", "Conference Paper",  
-    "Technical Report", "Editorial Guidelines", "Style Guide",  
-
-    # Creative & Content Writing  
-    "Blog Post", "Script (Movie, YouTube, Podcast)", "Short Story", "Novel Outline", "Poetry",  
-    "Creative Writing Prompt", "Character Development", "Plot Outline", "Ghostwriting",  
-    "Content Ideation & Brainstorming", "Social Media Caption & Hashtag Generator",  
-
-    # Legal & Compliance Writing  
-    "Legal Document Drafting", "Contract Clause Generator", "Terms & Conditions", "Privacy Policy",  
-    "GDPR Compliance Notice", "Non-Disclosure Agreement (NDA)", "Service-Level Agreement (SLA)",  
-    "Disclaimers & Liability Waivers",  
-
-    # Editing & Optimization  
-    "Grammar & Spell Check", "Paraphrasing Tool", "Readability Improvement", "Plagiarism Checker",  
-    "Tone Adjustment (Formal, Casual, Professional)", "Style Consistency Checker",  
-    "Sentence Expansion & Condensation",  
-
-    # Summarization & Extraction  
-    "Executive Summary Generator", "Meeting Notes & Minutes Summarization", "Article Summary",  
-    "Research Paper Summary", "Legal Document Summary", "Report Extraction", "Transcript Summarization",  
-
-    # Technical & Documentation Writing  
-    "API Documentation Generator", "Software User Manual", "Product Documentation",  
-    "Engineering Report", "Patent Writing", "Troubleshooting Guide", "FAQs & Help Desk Content",  
-
-    # UX & Product Writing  
-    "UX Writing (Microcopy for Apps & Websites)", "Chatbot Script", "Error Message Optimization",  
-    "App Store Description", "Product Descriptions",  
-
-    # Miscellaneous Writing  
-    "Personal Letter (Apology, Love, Invitation)", "Speech Writing (Wedding, Graduation, Motivational)",  
-    "Eulogy Writing", "Greeting Card Messages", "Review Writing (Product, Movie, Book)",  
-],
-
+        "Writing": [
+            "Resume", "Cover Letter", "Email", "Blog Post", "Content Rewrite", "Grammar Check", 
+            "Summary", "Academic Essay", "Letter", "Script", "Technical Writing", "Research Paper",
+            "Whitepaper", "Thesis Statement", "Literature Review", "Citation", "Lab Report",
+            "Case Study", "Editorial Guidelines", "Style Guide", "Professional Bio", "Executive Summary",
+            "Project Proposal", "Meeting Minutes", "Documentation", "SOP", "Policy Draft",
+            "Legal Document", "Contract Clause", "Terms & Conditions", "Privacy Policy"
+        ],
         
-"Creative": [
-    # Poetry & Lyrics  
-    "Poem", "Haiku", "Limerick", "Sonnet", "Free Verse", "Song Lyrics", "Rap Lyrics",  
-    "Acrostic Poem", "Poetry Prompt", "Rhyming Verse",  
-
-    # Fiction & Storytelling  
-    "Story", "Short Story", "Flash Fiction", "Novella Outline", "Novel Outline",  
-    "Children's Story", "Bedtime Story", "Horror Story", "Sci-Fi Story", "Fantasy Story",  
-    "Mythology Retelling", "Historical Fiction", "Alternate History", "Fable", "Urban Legend",  
-    "Fairy Tale Rewrite", "Dystopian Story",  
-
-    # Character Development  
-    "Character", "Character Backstory", "Character Arc", "Villain Development",  
-    "Hero’s Journey", "Sidekick Generator", "Anti-Hero Development",  
-
-    # Worldbuilding & Fantasy Elements  
-    "Fantasy World", "Sci-Fi Technology", "Magic System", "Fictional Language",  
-    "Mythical Creature", "Superpower Generator", "Alien Species", "Alternate Universe",  
-    "Steampunk Invention", "Cyberpunk Society", "Post-Apocalyptic World",  
-
-    # Plot & Writing Aids  
-    "Book Title", "Plot Twist", "Story Conflict", "Story Climax", "Short Story Starter",  
-    "Creative Prompt", "Poetry Prompt", "Dialogue", "Monologue", "Setting Description",  
-    "Screenplay Format", "Scene Breakdown", "Writing Warm-Up",  
-
-    # Humor & Light-Hearted Writing  
-    "Joke", "Puns", "Satire Piece", "Parody Song", "Comedy Sketch",  
-
-    # Memoir & Personal Writing  
-    "Memoir", "Personal Essay", "Anecdote", "Inspirational Story", "Letter to Future Self",  
-
-    # Dream & Metaphysical Writing  
-    "Dream Interpreter", "Symbolic Dream Meaning", "Lucid Dream Story",  
-    "Surreal Dream Narration", "Dream Journal Entry", "Visionary Experience",  
-],
-
+        "Creative": [
+            "Poem", "Story", "Dialogue", "Character", "Book Title", "Horror Story", "Sci-Fi Story",
+            "Song Lyrics", "Children's Story", "Novel Outline", "Metaphor", "Joke", "Fantasy World",
+            "Sci-Fi Technology", "Historical Fiction", "Memoir", "Poetry Prompt", "Creative Prompt",
+            "Short Story Starter", "Screenplay Format", "Plot Twist", "Character Backstory",
+            "Setting Description", "Alternate History", "Mythical Creature", "Magic System",
+            "Fictional Language", "Story Conflict"
+        ],
         
-"Business": [
-    # Business Strategy & Planning  
-    "Business Idea", "Business Model Canvas", "Business Plan", "Go-to-Market Strategy",  
-    "Startup Pitch", "Investor Pitch", "Funding Request", "Bootstrapping Strategy",  
-    "Growth Hacking Techniques", "Project Timeline", "Risk Assessment", "Exit Strategy",  
-
-    # Marketing & Branding  
-    "Marketing Strategy", "Content Marketing Plan", "Branding Guide", "Social Media Strategy",  
-    "SEO Keywords", "Ad Copy Generator", "Product Launch Plan", "Rebranding Strategy",  
-    "Customer Retention Plan", "Brand Voice & Messaging",  
-
-    # Sales & Customer Development  
-    "Sales Pitch", "Freelance Proposal", "Lead Generation Strategy", "Customer Persona",  
-    "Cold Email Template", "Sales Funnel Optimization", "Customer Support Guidelines",  
-    "Loyalty Program Strategy", "Upselling & Cross-Selling Strategy",  
-
-    # Financial & Business Analysis  
-    "Grant Proposal", "ROI Calculator", "Break-even Analysis", "Pricing Strategy",  
-    "Financial Forecasting", "Cash Flow Management", "Profit Margin Analysis",  
-    "Funding Proposal", "Investor Report",  
-
-    # Market Research & Competitive Analysis  
-    "Market Research", "Competitor Analysis", "Industry Trends Report", "Customer Survey Questions",  
-    "Business Case", "SWOT Analysis", "KPI Framework", "Benchmarking Analysis",  
-
-    # Business Communication & Operations  
-    "Business Email", "LinkedIn Bio", "Professional Networking Message", "Press Release",  
-    "Mission Statement", "Company Values", "Code of Conduct", "HR Policy Draft",  
-    "Crisis Management Plan", "Standard Operating Procedure (SOP)",  
-
-    # Entrepreneurship & Consultation  
-    "Business Consultation", "Startup Incubation Strategy", "Fundraising Strategy",  
-    "Legal Compliance Checklist", "Franchise Business Plan", "Freelance Business Plan",  
-    "E-commerce Strategy", "Subscription Model Strategy",  
-]
-
+        "Business": [
+            "Business Idea", "Startup Pitch", "SEO Keywords", "Business Consultation", "Marketing Strategy",
+            "Grant Proposal", "Freelance Proposal", "LinkedIn Bio", "Branding Guide", "Business Email",
+            "SWOT Analysis", "Business Case", "Market Research", "Competitor Analysis", "Pricing Strategy",
+            "Product Launch", "Go-to-Market", "Customer Persona", "Mission Statement", "Company Values",
+            "Business Plan", "Investor Pitch", "Funding Request", "Project Timeline", "Risk Assessment",
+            "ROI Calculator", "KPI Framework"
+        ]
     }
 
     
     # Additional categories to reach 2000+ tools
     extended_categories = {
-"Social Media": [
-    # General Social Media Content  
-    "Post", "Caption", "Viral Tweet", "Hashtag Strategy", "Content Calendar", "Trending Topics Finder",  
-    "Community Post", "Meme Generator", "User Engagement Prompt", "Social Media Poll Idea",  
-
-    # YouTube & Video Content  
-    "YouTube Idea", "YouTube Script", "YouTube Thumbnail Text", "Reel Script",  
-    "TikTok Trend", "Instagram Story", "Short-Form Video Hook", "Livestream Outline",  
-
-    # Influencer & Brand Marketing  
-    "Influencer Pitch", "Brand Partnership", "Sponsorship Email", "Affiliate Marketing Copy",  
-    "Networking Opener", "Collaborative Post Idea", "Product Placement Script",  
-
-    # Advertising & Growth Strategies  
-    "Facebook Ad", "Instagram Ad Copy", "LinkedIn Ad Copy", "Twitter Ad Copy",  
-    "A/B Testing Ad Variations", "Social Media Growth Hack", "Viral Formula",  
-
-    # Engagement & Audience Interaction  
-    "Review Response", "Crisis Response", "Customer Support Reply", "Community Engagement Strategy",  
-    "DM Outreach Message", "Story Poll & Quiz Ideas",  
-
-    # Niche-Specific Content  
-    "Podcast Episode Idea", "Podcast Episode Title", "Podcast Teaser Post", "Dating Profile",  
-    "LinkedIn Article", "Twitter Thread", "Pinterest Description", "Tagline",  
-    "Event Promotion Post", "Giveaway & Contest Post",  
-
-    # SEO & Algorithm Boosting Content  
-    "SEO-Optimized Post", "Trending Hashtag Suggestions", "Social Media Headline Generator",  
-    "Evergreen Content Idea", "Cross-Platform Content Repurposing",  
-],
-
+        "Social Media": ["Post", "Caption", "Viral Tweet", "YouTube Idea", "Tagline", "Pinterest Description",
+                        "Cold Email", "Podcast Episode", "Content Calendar", "Viral Formula", "Influencer Pitch",
+                        "Brand Partnership", "YouTube Script", "Dating Profile", "Networking Opener",
+                        "TikTok Trend", "Instagram Story", "LinkedIn Article", "Twitter Thread", "Facebook Ad",
+                        "Hashtag Strategy", "Reel Script", "Community Post", "Review Response", "Crisis Response"],
         
-"Productivity": [
-    # Planning & Scheduling  
-    "Productivity Plan", "Daily Plan", "Weekly Schedule", "Monthly Planner", "Yearly Goal Planner",  
-    "Project Management", "Task Breakdown", "Meeting Agenda", "Time Blocking Planner",  
-    "Work-Life Balance Plan", "Pomodoro Session Planner",  
-
-    # Organization & Efficiency  
-    "Note-Taking", "Brainstorming", "Mind Mapping", "Decision Matrix", "Prioritization",  
-    "Time Management", "Kanban Board Organizer", "Checklist Generator", "Routine Optimization",  
-
-    # Goal Setting & Self-Improvement  
-    "Goal Setting", "Habit Tracker", "Professional Development Plan", "Self-Reflection Journal",  
-    "Personal SWOT Analysis", "Skill Development Roadmap", "Morning & Night Routine Guide",  
-
-    # Travel & Logistics  
-    "Travel Itinerary", "Packing List", "Grocery List", "Meal Planning", "Event Planning",  
-
-    # Career & Productivity Tools  
-    "Interview Prep", "Performance Review Template", "Networking Plan", "Work Presentation Structure",  
-    "Work Journal", "Bullet Journal Prompts", "Crisis Management Plan",  
-],
-
-        "Education": [
-    # Teaching & Curriculum Design  
-    "Lesson Plan", "Course Outline", "Curriculum", "Syllabus", "Workshop Plan",  
-    "Classroom Activity Idea", "Lecture Notes", "Tutoring Session Plan",  
-
-    # Student Learning & Study Aids  
-    "Educational Quiz", "Study Guide", "Subject Summary", "Assignment", "Test Questions",  
-    "Flashcard Generator", "Formula Cheat Sheet", "Learning Path", "Research Topic Suggestions",  
-
-    # Interactive & Alternative Learning  
-    "Educational Game", "Puzzle-Based Learning", "Simulation-Based Teaching", "Case Study Analysis",  
-    "Peer Learning Strategy", "Role-Playing Educational Exercise",  
-
-    # Higher Education & Academic Tools  
-    "Academic Resource List", "Research Paper Guide", "Thesis Outline", "Citation Generator",  
-    "Critical Thinking Exercise", "Problem-Solving Challenge",  
-
-    # Skill Development & Self-Learning  
-    "Tutorial", "Self-Study Plan", "Lifelong Learning Roadmap", "Language Learning Plan",  
-    "Career-Oriented Learning Path", "Skill-Building Guide",  
-],
-
+        "Productivity": ["Productivity Plan", "Daily Plan", "Travel Itinerary", "Note-Taking", "Brainstorming",
+                         "Grocery List", "Interview Prep", "Learning Path", "Time Management", "Prioritization",
+                         "Decision Matrix", "Problem-Solving", "Critical Thinking", "Goal Setting", "Habit Tracker",
+                         "Professional Development", "Weekly Schedule", "Project Management", "Task Breakdown"],
         
-
+        "Education": ["Lesson Plan", "Course Outline", "Curriculum", "Educational Quiz", "Study Guide",
+                     "Teaching Material", "Assignment", "Workshop", "Test Questions", "Learning Objectives",
+                     "Educational Game", "Academic Resource", "Subject Summary", "Syllabus", "Tutorial"],
         
-"Design": [
-    # Branding & Identity  
-    "Design Brief", "Logo Concept", "Brand Identity", "Typography Guide", "Color Palette",  
-    "Mood Board", "Style Tile", "Visual Hierarchy Guide",  
-
-    # UI/UX & Digital Design  
-    "UI Element", "UX Flow", "Wireframe Sketch", "Website Layout", "Mobile App UI",  
-    "Dashboard UI", "Landing Page Wireframe", "Accessibility Guidelines",  
-
-    # Print & Packaging Design  
-    "Print Material", "Product Packaging", "Brochure Layout", "Business Card Design",  
-    "Poster Concept", "Book Cover Design",  
-
-    # Illustration & Graphic Elements  
-    "Illustration Concept", "Icon Set", "Custom Vector Art", "Infographic Layout",  
-    "Social Media Graphics", "Sticker Pack", "3D Design Concept",  
-
-    # Advanced & Systematic Design  
-    "Design System", "UI Component Library", "Grid System Guide", "Motion Design Concept",  
-    "Microinteraction Design", "Design Tokens",  
-],
-
-
-"Development": [
-    # Software Planning & Architecture  
-    "Development Plan", "Code Architecture", "Tech Stack", "System Architecture",  
-    "Software Requirements", "Scalability Strategy", "Performance Optimization Guide",  
-
-    # Coding & Documentation  
-    "Code Review", "Code Snippet", "Code Refactoring", "Algorithm", "API Documentation",  
-    "Database Schema", "Technical Spec", "Feature Spec",  
-
-    # Testing & Debugging  
-    "Testing Strategy", "Unit Test Case", "Bug Report", "Debugging Guide",  
-    "Security Best Practices",  
-
-    # DevOps & Deployment  
-    "CI/CD Pipeline Plan", "Infrastructure as Code", "Deployment Strategy",  
-    "Server Configuration", "Monitoring & Logging Setup",  
-
-    # Web & Mobile Development  
-    "Frontend Framework Guide", "Backend API Design", "Full-Stack Development Plan",  
-    "Responsive Web Design Principles", "Cross-Platform Development Strategy",  
-
-    # AI & Data Science Development  
-    "ML Model Deployment Guide", "Data Pipeline Design", "AI Ethics & Bias Mitigation",  
-    "Deep Learning Framework Selection", "Edge AI Development Plan",  
-],
-
-
+        "Design": ["Design Brief", "Color Palette", "Typography Guide", "Design System", "Logo Concept",
+                  "UI Element", "UX Flow", "Website Layout", "Print Material", "Product Packaging",
+                  "Illustration Concept", "Icon Set", "Brand Identity", "Style Tile", "Mood Board"],
         
-"Marketing": [
-    # Strategy & Planning  
-    "Marketing Plan", "Campaign Brief", "Growth Hack", "Product Launch Strategy", "Rebranding Strategy",  
-    "Customer Journey", "Competitive Positioning", "Go-to-Market Plan", "Market Segmentation",  
-
-    # Advertising & Promotion  
-    "Ad Copy", "Landing Page", "Promotion", "Social Media Ad Script", "Native Advertising Copy",  
-    "Influencer Marketing Strategy", "Referral Marketing Plan", "Affiliate Marketing Plan",  
-
-    # Content & Engagement  
-    "Email Campaign", "Newsletter Strategy", "Content Calendar", "SEO-Optimized Blog Strategy",  
-    "Video Marketing Plan", "Podcast Promotion Plan", "Webinar Outline",  
-
-    # Sales & Conversion Optimization  
-    "Conversion Strategy", "Sales Script", "Lead Magnet Idea", "Customer Retention Plan",  
-    "Call-to-Action Optimization", "Upselling & Cross-Selling Strategy",  
-
-    # Branding & Messaging  
-    "Value Proposition", "USP", "Elevator Pitch", "Messaging Framework", "Brand Storytelling",  
-    "Emotional Branding Guide", "Tagline & Slogan Generator",  
-
-    # Market Research & Analytics  
-    "Customer Persona", "A/B Testing Plan", "Performance Metrics Dashboard", "Marketing ROI Calculator",  
-    "Competitor Analysis", "Consumer Trend Report", "Pricing Psychology Strategy",  
-],
-
+        "Development": ["Code Review", "Technical Spec", "API Documentation", "Development Plan", "Code Architecture",
+                       "Database Schema", "Software Requirements", "Testing Strategy", "Bug Report", "Feature Spec",
+                       "Code Refactoring", "Algorithm", "Tech Stack", "System Architecture", "Code Snippet"],
         
-"Finance": [
-    # Budgeting & Financial Planning  
-    "Budget Plan", "Expense Report", "Savings Plan", "Personal Finance Tracker", "Cash Flow Management",  
-    "Debt Management", "Cost Reduction Strategy", "Emergency Fund Planning",  
-
-    # Investment & Business Finance  
-    "Investment Strategy", "Stock Market Analysis", "Wealth Management Plan", "Equity Distribution",  
-    "Fundraising Strategy", "Investor Pitch Financials", "Mergers & Acquisitions Strategy",  
-
-    # Revenue & Profit Optimization  
-    "Revenue Forecast", "Profit Optimization", "Monetization Strategy", "Pricing Model",  
-    "Financial Risk Assessment", "Financial Growth Projection",  
-
-    # Tax & Compliance  
-    "Tax Strategy", "Legal & Compliance Checklist", "Audit Preparation Guide",  
-
-    # Retirement & Long-Term Planning  
-    "Retirement Plan", "Passive Income Strategy", "Estate Planning Guide",  
-
-    # Financial Education & Analysis  
-    "Financial Model", "Financial Education", "Personal Net Worth Calculation",  
-    "Business Valuation Analysis", "Break-Even Analysis",  
-],
-
+        "Marketing": ["Marketing Plan", "Campaign Brief", "Ad Copy", "Landing Page", "Email Campaign",
+                     "Conversion Strategy", "Growth Hack", "Product Description", "Promotion", "Sales Script",
+                     "Value Proposition", "USP", "Elevator Pitch", "Customer Journey", "Messaging Framework"],
         
-"Health": [
-    # General Wellness & Lifestyle  
-    "Wellness Plan", "Self-Care Routine", "Health Goal", "Stress Management", "Work-Life Balance Guide",  
-    "Sleep Improvement", "Mindfulness Exercise", "Daily Energy Optimization",  
-
-    # Diet & Nutrition  
-    "Diet Plan", "Meal Prep Guide", "Nutrition Guide", "Hydration Plan", "Superfood Recommendations",  
-    "Vitamins & Supplements Guide", "Intermittent Fasting Plan",  
-
-    # Fitness & Exercise  
-    "Fitness Routine", "Home Workout Plan", "Gym Training Plan", "Yoga Sequence",  
-    "Cardio vs Strength Training Guide", "Running Plan", "HIIT Routine",  
-
-    # Mental Health & Recovery  
-    "Mental Health Check-In", "Meditation Script", "Anxiety & Stress Relief Guide",  
-    "Cognitive Behavioral Therapy (CBT) Techniques", "Journaling Prompts for Mental Clarity",  
-
-    # Symptom & Medical Insights  
-    "Symptom Analysis", "Health Tracker", "Chronic Illness Management Plan",  
-    "Medical Information", "Preventive Healthcare Checklist",  
-
-    # Specialized & Alternative Health  
-    "Holistic Healing Plan", "Ayurveda & Herbal Remedies", "Acupuncture & Alternative Medicine",  
-    "Post-Injury Recovery Plan", "Rehabilitation Strategy",  
-],
-
-
-        "Legal": [
-    # Legal Drafting & Contracts  
-    "Contract Template", "Legal Letter", "Legal Response", "Regulatory Filing",  
-    "Terms of Service", "Privacy Statement", "Disclaimer", "Copyright Notice",  
-
-    # Business & Intellectual Property (IP)  
-    "IP Strategy", "Trademark Filing Guide", "Patent Summary", "Intellectual Property Protection Plan",  
-    "Business Compliance Checklist", "Non-Disclosure Agreement (NDA)",  
-
-    # Legal Analysis & Dispute Resolution  
-    "Legal Analysis", "Legal Research", "Dispute Resolution", "Regulatory Compliance Audit",  
-    "Risk Assessment & Mitigation", "Case Law Review",  
-
-    # Consumer & Personal Legal Support  
-    "Employment Contract Review", "Tenant Rights & Rental Agreement",  
-    "Small Claims Court Guide", "Legal Defense Outline", "Cyber Law & Data Protection Strategy",  
-],
-
-"Event": [
-    # Event Planning & Logistics  
-    "Event Plan", "Event Budget", "Venue Description", "Event Schedule", "Guest List",  
-    "Conference Agenda", "Corporate Event Strategy", "Virtual Event Setup",  
-
-    # Invitations & Announcements  
-    "Invitation", "Save-the-Date Announcement", "Event Reminder Message", "RSVP Confirmation",  
-
-    # Speeches & Messages  
-    "Wedding Speech", "Toast", "Thank You Note", "Opening Ceremony Speech",  
-    "Farewell Speech", "Award Ceremony Speech", "Eulogy",  
-
-    # Event Content & Marketing  
-    "Event Marketing", "Social Media Event Promotion", "Press Release for Event",  
-    "Sponsorship Proposal", "Hashtag Strategy for Events",  
-
-    # Entertainment & Activities  
-    "Party Theme", "Entertainment Plan", "Catering Menu", "Music Playlist Suggestion",  
-    "Photo Booth Ideas", "Games & Icebreakers", "Team Building Activity",  
-
-    # Specialized Event Plans  
-    "Wedding Planning Guide", "Birthday Party Plan", "Baby Shower Ideas",  
-    "Graduation Ceremony Plan", "Charity Fundraiser Outline", "Festival & Fair Planning",  
-],
-
-
-
-"Relationships": [
-    # Romantic Relationships  
-    "Love Letter", "Apology Letter", "Breakup Letter", "Anniversary Note", "Proposal Message",  
-    "Long-Distance Relationship Advice", "Heartfelt Compliment Generator",  
-
-    # Friendships & Social Connections  
-    "Friendship Message", "Birthday Message", "Congratulations Note", "Supportive Message",  
-    "Reconnection Message", "Group Chat Icebreaker",  
-
-    # Family & Personal Relationships  
-    "Family Communication Guide", "Parenting Advice", "Sibling Bonding Ideas",  
-    "Holiday Greeting Message", "Personalized Family Storytelling",  
-
-    # Professional & Networking  
-    "Networking Message", "LinkedIn Connection Request", "Mentor Outreach Email",  
-    "Professional Thank You Note", "Colleague Appreciation Message",  
-
-    # Emotional Support & Conflict Resolution  
-    "Relationship Advice", "Conflict Resolution Guide", "Condolence Note",  
-    "Forgiveness Letter", "Active Listening Tips", "Empathy Coaching",  
-],
-
+        "Finance": ["Budget Plan", "Financial Analysis", "Investment Strategy", "Expense Report", "Revenue Forecast",
+                   "Cash Flow", "Financial Model", "Cost Reduction", "Profit Optimization", "Tax Strategy",
+                   "Retirement Plan", "Debt Management", "Financial Education", "Savings Plan", "Equity Distribution"],
         
-
+        "Health": ["Wellness Plan", "Diet Plan", "Fitness Routine", "Mental Health", "Sleep Improvement",
+                  "Meditation Script", "Nutrition Guide", "Health Goal", "Self-Care Routine", "Stress Management",
+                  "Recovery Plan", "Symptom Analysis", "Mindfulness Exercise", "Health Tracker", "Medical Information"],
         
-
-"Industry": [
-    # Industry Research & Market Analysis  
-    "Industry Analysis", "Sector Trend", "Market Forecast", "Industry Report",  
-    "Competitive Landscape", "Market Share Analysis", "Economic Impact Report",  
-
-    # Regulations & Compliance  
-    "Regulatory Impact", "Government Policy Update", "Industry Compliance Checklist",  
-    "International Trade Law Overview", "ESG (Environmental, Social, and Governance) Compliance",  
-
-    # Technology & Innovation  
-    "Technology Adoption", "AI & Automation in Industry", "Sustainability Trends",  
-    "Industry 4.0 Strategy", "Blockchain Use Cases in Industry", "Green Energy Impact",  
-
-    # Business Growth & Strategy  
-    "Industry Disruption", "Vertical Strategy", "Expansion & Globalization Plan",  
-    "Mergers & Acquisitions Insight", "Franchise Model Analysis",  
-
-    # Supply Chain & Distribution  
-    "Supply Chain Optimization", "Logistics Strategy", "Reshoring vs Offshoring Analysis",  
-    "Distribution Channel Strategy", "Inventory Management Trends",  
-
-    # Partnerships & Networking  
-    "Industry Partnership", "Joint Venture Feasibility", "Trade Association Guide",  
-    "Industry Event Planning", "Corporate Sponsorship Strategy",  
-
-    # Future Trends & Predictions  
-    "Emerging Market Analysis", "Future of Work Report", "Disruptive Startup Watchlist",  
-    "AI Impact on Industry", "Space Economy Trends", "Cybersecurity Risk Forecast",  
-]
-
+        "Legal": ["Legal Analysis", "Contract Template", "Legal Response", "Compliance Check", "Privacy Statement",
+                 "Disclaimer", "Terms of Service", "Copyright Notice", "IP Strategy", "Legal Research",
+                 "Legal Letter", "Dispute Resolution", "Regulatory Filing", "Legal Defense", "Intellectual Property"],
+        
+        "Event": ["Event Plan", "Invitation", "Wedding Speech", "Toast", "Anniversary Message", "Party Theme",
+                 "Conference Agenda", "Event Marketing", "Catering Menu", "Venue Description", "Entertainment Plan",
+                 "Guest List", "Event Schedule", "Thank You Note", "Event Budget", "Virtual Event"],
+        
+        "Relationships": ["Relationship Advice", "Conflict Resolution", "Apology Letter", "Friendship Message",
+                         "Love Letter", "Dating Profile", "Breakup Letter", "Family Communication", "Networking Message",
+                         "Condolence Note", "Birthday Message", "Anniversary Note", "Congratulations Note", "Reconnection"],
+        
+        "Industry": ["Industry Analysis", "Sector Trend", "Market Forecast", "Industry Report", "Competitive Landscape",
+                    "Regulatory Impact", "Technology Adoption", "Industry Disruption", "Vertical Strategy", "Supply Chain",
+                    "Distribution Channel", "Industry Standards", "Industry Partnership", "Trade Association", "Industry Event"]
     }
     
     # Combine base and extended categories
     all_categories = {**base_categories, **extended_categories}
     
     # Multipliers to expand each tool category (adjectival prefixes)
-# Practical Tool Multipliers
-
-    # Descriptive Qualifiers: Focus on Actual Capabilities
     tool_multipliers = [
-        "AI-Powered", "Data-Driven", "Intelligent", "Automated", 
-        "Strategic", "Analytical", "Efficient", "Scalable"
+        "Advanced", "Custom", "Premium", "Enhanced", "Professional", "Intelligent", "Smart", "Dynamic",
+        "Interactive", "Personalized", "Strategic", "Comprehensive", "Automated", "High-Performance", "Next-Gen",
+        "Streamlined", "Optimized", "Scalable", "Innovative", "Creative", "Essential", "Ultimate", "Practical",
+        "Specialized", "Expert", "Efficient", "Versatile", "Powerful", "Flexible", "Multi-purpose"
     ]
-
-    # Tool Format Descriptors: Emphasize Functional Purpose
+    
+    # Format multipliers (output format variations)
     format_multipliers = [
-        "Engine", "Platform", "Framework", "Toolkit", 
-        "Assistant", "Optimizer", "Analyzer", "Generator"
+        "Generator", "Builder", "Creator", "Designer", "Maker", "Assistant", "Helper", "Tool", "Solution",
+        "Expert", "Consultant", "Advisor", "Planner", "Architect", "Analyst", "Strategist", "Developer",
+        "Manager", "Optimizer", "Writer", "Guide", "Template", "Framework", "System", "Toolkit"
     ]
-
     
     # Generate expanded tools by combining base tools with multipliers
     expanded_categories = {}
@@ -655,136 +300,26 @@ def generate_ai_tools():
     
     # Create specialized industry categories (new areas)
     specialized_industries = {
-"Healthcare": [
-    # Clinical & Patient Care  
-    "Patient Care Protocol", "Medical Diagnosis", "Treatment Plan", "Chronic Disease Management",  
-    "Emergency Response Plan", "Telemedicine Consultation Guide", "Healthcare AI Integration",  
-
-    # Medical Administration & Compliance  
-    "Medical Record Management", "Electronic Health Records (EHR) Strategy", "Healthcare Compliance Checklist",  
-    "HIPAA & Data Privacy", "Hospital Accreditation Requirements",  
-
-    # Medical Research & Innovation  
-    "Clinical Trial Design", "Drug Development Roadmap", "Medical Device Approval Process",  
-    "Biomedical Engineering Trends", "AI in Medical Imaging",  
-
-    # Healthcare Economics & Policy  
-    "Healthcare Policy Analysis", "Health Insurance Framework", "Universal Healthcare Debate",  
-    "Medicare & Medicaid Guide", "Value-Based Care Model",  
-
-    # Patient Engagement & Education  
-    "Patient Experience Strategy", "Healthcare Marketing", "Medical Blog & Outreach",  
-    "Wellness Program Design", "Mental Health Awareness Campaign",  
-],
-
-"E-commerce": [
-    # Product & Inventory Management  
-    "Product Listing Optimization", "Dynamic Pricing Strategy", "Inventory Forecasting",  
-    "Dropshipping Business Plan", "Product Lifecycle Management",  
-
-    # Customer Experience & Retention  
-    "Customer Review Strategy", "Shopping Experience Enhancement", "Customer Support AI Chatbot",  
-    "Loyalty Program Development", "Subscription Model Strategy",  
-
-    # Marketing & Sales Growth  
-    "E-commerce Copywriting", "SEO for Product Pages", "Email Marketing for E-commerce",  
-    "Influencer Marketing for Online Stores", "Flash Sale Campaign Strategy",  
-
-    # Logistics & Operations  
-    "Shipping Policy Optimization", "Return & Refund Policy", "Cross-Border E-commerce Strategy",  
-    "Last-Mile Delivery Innovation", "Omnichannel Retailing Strategy",  
-
-    # E-commerce Business Development  
-    "Marketplace Strategy", "D2C (Direct-to-Consumer) Business Plan", "B2B E-commerce Expansion",  
-    "Mobile Commerce (M-commerce) Strategy", "Live Shopping & Video Commerce",  
-],
-"Real Estate": [
-    # Property Marketing & Sales  
-    "Property Description", "Real Estate Listing", "Luxury Real Estate Marketing", "Virtual Tour Script",  
-    "Neighborhood Guide", "Social Media Strategy for Realtors", "Open House Invitation",  
-
-    # Market Research & Investment  
-    "Market Analysis", "Investment Property Analysis", "Rental Analysis", "Flipping Houses Strategy",  
-    "Commercial Real Estate Trends", "Multi-Family Property Investment", "Real Estate ROI Calculator",  
-
-    # Property Management & Legal Aspects  
-    "Property Management Guide", "Lease Agreement Drafting", "Tenant Screening Checklist",  
-    "HOA Communication Strategy", "Short-Term Rental Strategy (Airbnb, VRBO)",  
-
-    # Homeownership & Financing  
-    "Mortgage Information", "Home Loan Comparison", "Real Estate Tax Guide", "Closing Process Overview",  
-    "First-Time Homebuyer Guide", "Foreclosure Prevention Strategies",  
-
-    # Home Improvement & Staging  
-    "Home Staging Checklist", "Interior Design for Resale", "Curb Appeal Enhancement",  
-    "Smart Home Upgrades for Value", "Eco-Friendly Renovation Plan",  
-
-    # Commercial & Specialized Real Estate  
-    "Commercial Lease Negotiation", "Co-Working Space Strategy", "Real Estate Development Plan",  
-    "Industrial Property Investment", "Mixed-Use Development Strategy",  
-],
-"Sustainability": [
-    # Environmental Impact & Reporting  
-    "Environmental Impact Assessment", "Sustainability Report", "Carbon Footprint Reduction Plan",  
-    "Greenhouse Gas Emissions Analysis", "Corporate Sustainability Strategy",  
-
-    # Sustainable Business & Economy  
-    "ESG (Environmental, Social, Governance) Strategy", "Circular Economy Implementation",  
-    "Sustainable Supply Chain Practices", "Green Business Certification Guide",  
-
-    # Renewable Energy & Conservation  
-    "Energy Efficiency Strategy", "Solar Energy Adoption Plan", "Water Conservation Policy",  
-    "Waste Reduction & Recycling Strategy", "Carbon Offsetting Guide",  
-
-    # Climate Change & Social Responsibility  
-    "Climate Action Plan", "Biodiversity Conservation Plan", "Environmental Justice Advocacy",  
-    "Sustainable Urban Development", "Green Policy Proposal",  
-
-    # Sustainable Design & Construction  
-    "Sustainable Architecture Guide", "Eco-Friendly Building Materials", "LEED Certification Process",  
-    "Net-Zero Energy Homes", "Smart City & Urban Sustainability",  
-
-    # Consumer & Lifestyle Sustainability  
-    "Low-Waste Living Guide", "Ethical Consumerism Strategy", "Sustainable Fashion Practices",  
-    "Plant-Based Diet & Environmental Impact", "Green Travel & Ecotourism",  
-],
-
-"Technology": [
-    # **Software Development & Engineering**  
-    "Tech Specification", "Software Release Plan", "Product Roadmap", "API Documentation",  
-    "Code Optimization Strategy", "Software Architecture Design", "DevOps Best Practices",  
-
-    # **User Experience & Support**  
-    "User Guide & Documentation", "Tech Support Response", "Troubleshooting Workflow",  
-    "Accessibility & Inclusive Tech Design", "Onboarding & Training Guide",  
-
-    # **Cybersecurity & Data Protection**  
-    "Cybersecurity Framework", "Data Privacy Policy", "Threat Detection Strategy",  
-    "Ransomware Protection Plan", "Network Security Guide",  
-
-    # **Cloud & Infrastructure**  
-    "Cloud Migration Strategy", "Multi-Cloud vs Hybrid Cloud Analysis", "Serverless Architecture Guide",  
-    "IT Infrastructure Roadmap", "Disaster Recovery & Backup Plan",  
-
-    # **AI, Machine Learning & Emerging Tech**  
-    "AI Integration Strategy", "Machine Learning Model Deployment", "AI Ethics & Bias Mitigation",  
-    "Quantum Computing Roadmap", "Blockchain Use Cases",  
-
-    # **Hardware & IoT**  
-    "Hardware Design Guide", "Embedded Systems Optimization", "IoT Security Strategy",  
-    "Edge Computing Implementation", "Smart Home & Automation Guide",  
-
-    # **Enterprise IT & Digital Transformation**  
-    "IT Strategy & Governance", "Digital Transformation Roadmap", "Tech Integration Best Practices",  
-    "Enterprise Software Selection", "Legacy System Modernization",  
-
-    # **Tech Evaluation & Market Trends**  
-    "Tech Evaluation & Feasibility Study", "Emerging Tech Trend Analysis", "Gartner Hype Cycle Insights",  
-    "Future of Work & Automation", "5G & Connectivity Strategy",  
-]
-
+        "Healthcare": ["Patient Care", "Medical Record", "Clinical Trial", "Health Assessment", "Treatment Plan",
+                      "Healthcare Policy", "Medical Research", "Patient Education", "Telehealth", "Health Insurance",
+                      "Medical Device", "Healthcare Compliance", "Medical Diagnosis", "Patient Experience", "Wellness Program"],
         
- }
+        "E-commerce": ["Product Listing", "Customer Review", "E-commerce Copy", "Shipping Policy", "Return Policy",
+                       "Product Bundle", "Flash Sale", "Customer Engagement", "Shopping Experience", "Loyalty Program",
+                       "Product Recommendation", "Checkout Process", "Customer Retention", "Marketplace Strategy", "Pricing Model"],
+        
+        "Real Estate": ["Property Description", "Market Analysis", "Investment Property", "Rental Analysis", "Home Staging",
+                       "Property Marketing", "Neighborhood Guide", "Real Estate Listing", "Agent Bio", "Mortgage Information",
+                       "Home Inspection", "Lease Agreement", "Property Management", "HOA Communication", "Commercial Lease"],
+        
+        "Sustainability": ["Environmental Impact", "Sustainability Report", "Green Initiative", "Carbon Footprint", "ESG Strategy",
+                          "Circular Economy", "Sustainable Design", "Climate Action", "Conservation Plan", "Energy Efficiency",
+                          "Waste Reduction", "Water Conservation", "Sustainable Supply Chain", "Social Impact", "Eco Certification"],
+        
+        "Technology": ["Tech Specification", "Product Roadmap", "User Guide", "Tech Support", "Software Release",
+                      "Hardware Design", "Tech Solution", "IT Strategy", "Digital Transformation", "Tech Integration",
+                      "Tech Troubleshooting", "Cloud Migration", "Data Strategy", "Network Design", "Tech Evaluation"]
+    }
     
     # Add specialized industries to the expanded categories
     for industry, tools in specialized_industries.items():
@@ -886,7 +421,7 @@ with st.sidebar:
     st.session_state.api_model = st.selectbox(
         "Select AI Model:",
         ["gemini-2.0-flash", "gemini-1.5-flash", "gemini-1.5-pro","gemini-2.0-flash-lite","gemini-2.0-pro-exp-02-05",
-"gemini-2.0-flash-thinking-exp-01-21","gemini-2.5-pro-exp-03-25","gemini-1.5-flash-8b"],
+"gemini-2.0-flash-thinking-exp-01-21","gemini-1.5-flash-8b"],
         index=0
     )
     
@@ -934,50 +469,27 @@ if not st.session_state.prompt_templates or len(st.session_state.prompt_template
 # Tool Selection Section
 st.header("🛠️ Select Your Creation Tool")
 
-# Apply Scrollable Tabs CSS
-st.markdown(
-    """
+st.markdown("""
     <style>
-    div[data-testid="stTabs"] {
-        overflow-x: auto !important;
-        white-space: nowrap !important;
-        display: flex;
-        flex-wrap: nowrap;
-    }
     div[data-testid="stTabs"] button {
-        flex: 1 1 auto;
-        min-width: 150px;  /* Adjust tab width */
+        font-size: 12px !important;
+        padding: 20px !important;
     }
     </style>
-    """,
-    unsafe_allow_html=True
-)
+""", unsafe_allow_html=True)
 
-st.markdown('<div class="scroll-container">', unsafe_allow_html=True)
-# Close the Scrollable Container
-
-tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9, tab10, tab11, tab12, tab13,tab14 = st.tabs([
-    "📋 Categories", "🔍 Search", 
-    "📚 Research", "🤖 Chat", 
-    "🌍 Translate", "⚡ Code", 
-    "📊 Insights", "🎤 Interview",
-    "📧 Email Assistant", "📊 Spreadsheet",
-    "🎬 Podcast", "🎯 Learning Path",
-    "📝 Meeting Minutes","🚀 Startup Validator"
+tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs([
+    "📋 Categories", "🔍 Search Results", 
+    "📚 AI Research Assistant", "🤖 AI Chatbot", 
+    "🌍 AI Translator", "⚡ AI Code Wizard", 
+    "📊 Data Visualization & Insights"
 ])
 
 
 
-
-
-# Wrap Everything Below Tabs in a Scrollable Container
-
-st.markdown("</div>", unsafe_allow_html=True)
-
 with tab1:
-    selected_category = st.radio("Choose a category:", list(tool_categories.keys()))
+    selected_category = st.selectbox("Choose a category:", list(tool_categories.keys()))
     
-
     # Only show tools from selected category
     if selected_category:
         tools_in_category = tool_categories[selected_category]
@@ -987,7 +499,7 @@ with tab1:
         cols = st.columns(3)
         for i, tool in enumerate(tools_in_category):
             with cols[i % 3]:
-                if st.button(tool, key=f"cat_{tool}_{uuid.uuid4()}"):
+                if st.button(tool, key=f"cat_{tool}"):
                     st.session_state.selected_tool = tool
 
 with tab2:
@@ -1702,7 +1214,7 @@ with tab6:
     st.header("⚡ AI Code Wizard")
 
     # Automatically select the AI model for coding tasks
-    st.session_state.api_model = "gemini-2.5-pro-exp-03-25"
+    st.session_state.api_model = "gemini-2.0-flash-thinking-exp-01-21"
 
     # Choose AI task
     task = st.selectbox("What do you need help with?", 
@@ -2095,416 +1607,6 @@ with tab7:
         st.info("Upload a dataset to generate insights and visualizations.")
 
 
-
-with tab8:
-    st.header("🎤 AI-Powered Mock Interviewer")
-    st.markdown("### Prepare for your next job interview with AI-generated questions.")
-
-    # Job Role Selection
-    col1, col2 = st.columns(2)
-    with col1:
-        job_role = st.text_input("Enter Job Role (e.g., Data Scientist, Software Engineer):")
-    with col2:
-        experience_level = st.selectbox("Experience Level:", ["Entry Level", "Mid-Level", "Senior-Level", "Executive"])
-
-    # Interview Type Selection
-    interview_type = st.radio("Interview Type:", ["Technical", "Behavioral", "Case Study", "HR"], horizontal=True)
-
-    # Advanced Options
-    with st.expander("🎯 Customize Your Mock Interview"):
-        col1, col2 = st.columns(2)
-        with col1:
-            difficulty = st.slider("Difficulty Level:", 1, 10, 5)
-        with col2:
-            question_count = st.slider("Number of Questions:", 3, 20, 5)
-
-    # Generate Questions
-    if st.button("Start Mock Interview 🎙️"):
-        interview_prompt = f"""
-        Conduct a {interview_type} interview for a {experience_level} {job_role}. 
-        Ask {question_count} questions with increasing difficulty from level {difficulty}.
-        """
-
-        with st.spinner("Generating interview questions..."):
-            interview_questions = generate_ai_content(interview_prompt, st.session_state.api_key, st.session_state.api_model)
-
-        st.success("🎤 AI-Generated Mock Interview:")
-        st.write(interview_questions)
-
-        # Download Options
-        st.download_button("📥 Download Questions", interview_questions, "mock_interview.txt")
-
-
-with tab9:
-    st.header("📧 AI-Powered Email Assistant")
-    st.markdown("### Generate, summarize, and rewrite emails with AI.")
-
-    # Email Input
-    email_content = st.text_area("✍️ Enter Email Content or Brief:")
-
-    # Tone Selection
-    tone = st.radio("Select Tone:", ["Formal", "Informal", "Neutral", "Persuasive", "Apologetic"])
-
-    # Action Selection
-    action = st.radio("What would you like to do?", 
-                      ["Generate Email", "Summarize Email", "Rewrite Email", "Quick Reply", "Follow-Up Suggestion"], 
-                      horizontal=True)
-
-    # Email Personalization
-    recipient_type = st.selectbox("Recipient Type:", ["Boss", "Colleague", "Client", "Friend", "General"])
-
-    # Attachment Upload (for Email Summarization)
-    uploaded_file = st.file_uploader("📎 Upload a file (PDF, DOCX, TXT) for summary (Optional)", 
-                                     type=["pdf", "docx", "txt"])
-
-    # Email Scheduling Assistant
-    urgency = st.radio("📅 Email Urgency:", ["Immediate", "Within 24 Hours", "End of Week", "Next Week"])
-    if urgency == "Immediate":
-        best_time = "Send Now 🚀"
-    elif urgency == "Within 24 Hours":
-        best_time = "Send within the next few hours ⏳"
-    elif urgency == "End of Week":
-        best_time = "Send by Friday afternoon 📆"
-    else:
-        best_time = "Schedule for next Monday ⏰"
-    
-    st.markdown(f"**🕒 Suggested Send Time: {best_time}**")
-
-    # Generate Button
-    if st.button("✉️ Process Email"):
-        email_prompt = f"""
-        Perform '{action}' on this email: {email_content} with a '{tone}' tone.
-        Tailor it for a '{recipient_type}' and consider urgency level '{urgency}'.
-        """
-
-        # Handle File Upload for Summary
-        if uploaded_file is not None:
-            file_text = extract_text_from_file(uploaded_file)
-            email_prompt += f"\n\n[Attachment Summary: {file_text}]"
-
-        with st.spinner("Processing..."):
-            processed_email = generate_ai_content(email_prompt, st.session_state.api_key, st.session_state.api_model)
-
-        st.success("✅ AI-Generated Email:")
-        st.write(processed_email)
-
-        # Download Button
-        st.download_button("📥 Download Email", processed_email, "email.txt")
-
-with tab10:
-    st.header("📊 AI-Powered Spreadsheet Formula Generator")
-    st.markdown("### Convert plain English into powerful spreadsheet formulas.")
-
-    # User Input for Natural Language Query
-    query = st.text_area("📝 Describe what you need (e.g., 'Extract domain from email'):")
-
-    # Syntax Selection
-    syntax = st.radio("Choose Formula Syntax:", ["Excel", "Google Sheets", "LibreOffice Calc"])
-
-    # Formula Type Selection
-    formula_type = st.radio("Formula Type:", ["Single Cell", "Multi-Cell/Range", "Array Formula", "SQL Query"], horizontal=True)
-
-    # Debug & Optimization Option
-    debug_formula = st.checkbox("Enable Formula Debugging & Optimization", value=True)
-
-    # Function Recommendations
-    function_suggestions = st.checkbox("Suggest Best Functions for My Task", value=True)
-
-    # Data Cleaning & Formatting
-    data_cleaning = st.checkbox("Enable AI Data Cleaning & Auto-Formatting", value=True)
-
-    # Auto-Generate Pivot Tables & Charts
-    generate_pivot = st.checkbox("Generate Pivot Tables & Charts Automatically", value=False)
-
-    # Bulk Formula Generation for Large Datasets
-    bulk_formula = st.checkbox("Apply Formula in Bulk for Large Datasets", value=False)
-
-    # AI-Powered Conditional Formatting
-    conditional_formatting = st.checkbox("Enable Smart Conditional Formatting", value=False)
-
-    # Generate Button
-    if st.button("🔢 Generate Formula"):
-        formula_prompt = f"""
-        Convert this request into a {formula_type} formula for {syntax}: {query}.
-        {"Provide a breakdown and explanation." if debug_formula else ""}
-        {"Suggest the best spreadsheet functions for this task." if function_suggestions else ""}
-        {"Optimize and debug the formula for efficiency." if debug_formula else ""}
-        {"Ensure the formula works well with large datasets." if bulk_formula else ""}
-        {"Automatically clean and format the data before applying the formula." if data_cleaning else ""}
-        {"Suggest conditional formatting rules if applicable." if conditional_formatting else ""}
-        {"If relevant, generate a Pivot Table or Chart based on the query." if generate_pivot else ""}
-        """
-
-        with st.spinner("Generating formula..."):
-            generated_formula = generate_ai_content(formula_prompt, st.session_state.api_key, st.session_state.api_model)
-
-        st.success("✅ AI-Generated Formula:")
-        st.code(generated_formula, language="plaintext")
-
-        # Download Button
-        st.download_button("📥 Download Formula", generated_formula, "formula.txt")
-
-
-
-with tab11:
-    st.header("🎙️ AI-Based Podcast Script Generator")
-    st.markdown("### Create engaging, professional, and unique podcast scripts!")
-
-    # Podcast Topic & Duration
-    topic = st.text_input("🎯 Enter Podcast Topic:")
-    duration = st.slider("⏳ Select Podcast Duration (minutes):", 5, 90, 20)
-    
-    # Podcast Style & Tone
-    style = st.radio("🎭 Choose Style:", ["Conversational", "Storytelling", "Humorous", "Data-Driven", "Inspirational"])
-    tone = st.radio("🗣️ Select Tone:", ["Casual", "Professional", "Energetic", "Serious"], horizontal=True)
-
-    # Word Count Control
-    col1, col2 = st.columns(2)
-    with col1:
-        min_words = st.number_input("🔡 Min Words:", min_value=100, max_value=5000, value=300, step=50)
-    with col2:
-        max_words = st.number_input("🔠 Max Words:", min_value=200, max_value=10000, value=1500, step=100)
-
-    # Script Detail Level
-    script_detail = st.select_slider("📜 Script Detail Level:", 
-                                     options=["Short", "Standard", "Comprehensive"], 
-                                     value="Standard")
-
-    # Podcast Features & Enhancements
-    add_intro_outro = st.checkbox("🎶 Auto-Generated Podcast Intro & Outro", value=True)
-    simulate_cohost_guest = st.checkbox("🧑‍🤝‍🧑 Simulate Multi-Host & Guest Interactions", value=True)
-    add_trending_news = st.checkbox("🌎 Include Real-Time News & Trends", value=False)
-    add_music_sfx = st.checkbox("🎵 Suggest Background Music & Sound Effects", value=False)
-    ai_character_speaking = st.checkbox("🤖 Generate Script in a Famous Figure's Style", value=False)
-    add_hot_takes = st.checkbox("💡 Include Debates & Controversial Takes", value=False)
-    future_predictions = st.checkbox("🔮 AI-Powered Future Insights & Trends", value=False)
-    generate_ads = st.checkbox("📜 Create Sponsor Ad Scripts", value=False)
-    auto_schedule = st.checkbox("🛠️ Auto-Generate Social Media Promo Posts", value=False)
-    multi_language = st.checkbox("📢 Translate to Multiple Languages", value=False)
-
-    # Generate Button
-    if st.button("📜 Generate Podcast Script"):
-        podcast_prompt = f"""
-        Generate a {script_detail} {duration}-minute podcast script on '{topic}' in {style} style with a {tone} tone.
-        Ensure the script is between {min_words} and {max_words} words.
-        {"Include a dynamic podcast intro & outro." if add_intro_outro else ""}
-        {"Simulate engaging conversations between a host and a guest." if simulate_cohost_guest else ""}
-        {"Incorporate real-world trending news & insights." if add_trending_news else ""}
-        {"Suggest background music or sound effects for key moments." if add_music_sfx else ""}
-        {"Write the script in the style of a well-known personality or character." if ai_character_speaking else ""}
-        {"Add a controversial debate section or counterpoints for engagement." if add_hot_takes else ""}
-        {"Provide AI-driven future predictions related to the topic." if future_predictions else ""}
-        {"Generate sponsor messages relevant to the topic." if generate_ads else ""}
-        {"Auto-generate social media post copy for promoting this episode." if auto_schedule else ""}
-        {"Translate the script into multiple languages with regional adaptation." if multi_language else ""}
-        """
-
-        with st.spinner("Generating podcast script..."):
-            podcast_script = generate_ai_content(podcast_prompt, st.session_state.api_key, st.session_state.api_model)
-
-        st.success("✅ AI-Generated Podcast Script:")
-        st.text_area("🎙️ Your Podcast Script:", podcast_script, height=300)
-
-        # Download Button
-        st.download_button("📥 Download Script", podcast_script, "podcast_script.txt")
-
-
-with tab12:
-    st.header("🎯 AI-Powered Learning Path Generator")
-    st.markdown("### Get a personalized learning roadmap based on your skills and goals!")
-
-    # User Inputs
-    current_skill = st.text_input("🛠️ Current Skills (e.g., Python, Data Science, Web Dev):")
-    goal = st.text_input("🎯 Learning Goal (e.g., Become a Machine Learning Engineer):")
-
-    # Select Learning Style
-    learning_style = st.radio("📚 Preferred Learning Style:", 
-                                  ["Video-Based", "Hands-On Projects", "Reading-Focused", "Hybrid"])
-
-    # Select Duration
-    duration = st.slider("⏳ Select Learning Duration (Weeks):", 1, 52, 12)
-
-    # Skill Level Selection
-    skill_level = st.radio("📊 Current Proficiency Level:", 
-                           ["Beginner", "Intermediate", "Advanced"], horizontal=True)
-
-    # Word Count Control
-    col1, col2 = st.columns(2)
-    with col1:
-        min_words = st.number_input("🔡 Min Words:", min_value=100, max_value=5000, value=500, step=50,key="min_words_input")
-    with col2:
-        max_words = st.number_input("🔠 Max Words:", min_value=200, max_value=10000, value=1500, step=100,key="max_words_input")
-
-    # Additional Features
-    ai_gap_analysis = st.checkbox("🛠️ AI Skill Gap Analysis", value=True)
-    personalized_challenges = st.checkbox("📌 Generate Weekly Challenges", value=True)
-    certification_mapping = st.checkbox("🎓 Recommend Certifications & Courses", value=True)
-    resume_boost = st.checkbox("📂 AI Resume Enhancement", value=False)
-    adaptive_learning = st.checkbox("🧠 Adaptive Learning (Dynamic Updates)", value=False)
-    time_estimate = st.checkbox("⏳ Time Commitment Estimator", value=True)
-    mentor_suggestions = st.checkbox("👥 Suggest Mentors & Learning Communities", value=False)
-    quizzes = st.checkbox("📝 Generate Self-Assessment Quizzes", value=True)
-    job_insights = st.checkbox("📢 Industry Trends & Job Market Insights", value=True)
-
-    # Generate Learning Path
-    if st.button("📜 Generate Learning Path"):
-        learning_prompt = f"""
-        Create a {duration}-week personalized learning roadmap for someone with {skill_level} skills in {current_skill} 
-        who wants to achieve the goal: '{goal}'.
-        Preferred learning style: {learning_style}.
-        Ensure the response is between {min_words} and {max_words} words.
-        {"Analyze the skill gap between their current skills and their goal." if ai_gap_analysis else ""}
-        {"Generate weekly challenges to test their learning progress." if personalized_challenges else ""}
-        {"Recommend certifications, books, and online courses." if certification_mapping else ""}
-        {"Suggest how to add these skills to a resume for better job opportunities." if resume_boost else ""}
-        {"Provide an adaptive learning roadmap that changes based on progress." if adaptive_learning else ""}
-        {"Estimate the required daily/weekly study time to reach the goal." if time_estimate else ""}
-        {"Suggest relevant mentorship programs and online learning communities." if mentor_suggestions else ""}
-        {"Include self-assessment quizzes to measure progress." if quizzes else ""}
-        {"Provide industry trends and job market insights for this skill." if job_insights else ""}
-        """
-
-        with st.spinner("Generating your learning path..."):
-            learning_path = generate_ai_content(learning_prompt, st.session_state.api_key, st.session_state.api_model)
-
-        st.success("✅ AI-Generated Learning Path:")
-        st.text_area("🎯 Your Personalized Learning Roadmap:", learning_path, height=300)
-
-        # Download Option
-        st.download_button("📥 Download Learning Path", learning_path, "learning_path.txt")
-
-
-
-with tab13:
-    st.header("📝 AI-Powered Meeting Minutes Generator")
-    st.markdown("### Automatically generate structured meeting summaries from transcripts or audio files.")
-
-    # Upload Meeting File or Paste Custom Transcript
-    uploaded_meeting = st.file_uploader("📂 Upload Meeting Transcript or Audio (TXT, DOCX, PDF, MP3, WAV)", 
-                                        type=["txt", "docx", "pdf", "mp3", "wav"])
-
-    st.markdown("**OR**")
-    custom_transcript = st.text_area("✍️ Paste Your Meeting Transcript (Optional):", height=200)
-
-    # Key Features Selection
-    extract_decisions = st.checkbox("🎯 Extract Key Decisions", value=True)
-    extract_action_items = st.checkbox("✅ Identify Action Items & Owners", value=True)
-    extract_deadlines = st.checkbox("📅 Highlight Deadlines", value=True)
-    sentiment_analysis = st.checkbox("💡 Perform Sentiment Analysis", value=False)
-    search_keywords = st.text_input("🔎 Search for Specific Keywords (Optional):")
-
-    # Process Meeting File or Custom Input
-    extracted_meeting_text = ""
-    if uploaded_meeting is not None:
-        extracted_meeting_text = extract_text_from_file(uploaded_meeting)  # Function to extract text from uploaded file
-        st.success("✅ Meeting file uploaded successfully! AI will analyze it.")
-    elif custom_transcript:
-        extracted_meeting_text = custom_transcript
-        st.success("✅ Custom transcript added! AI will analyze it.")
-
-    # Generate Meeting Summary
-    if extracted_meeting_text and st.button("📜 Generate Meeting Minutes"):
-        meeting_prompt = f"""
-        Analyze the following meeting transcript and generate structured minutes.
-        {"Extract key decisions made." if extract_decisions else ""}
-        {"Identify action items, assigned members, and deadlines." if extract_action_items else ""}
-        {"Highlight upcoming deadlines and due dates." if extract_deadlines else ""}
-        {"Perform sentiment analysis to detect agreement, disagreement, or conflicts." if sentiment_analysis else ""}
-        {"Include a search-based summary for the keyword(s): " + search_keywords if search_keywords else ""}
-        
-        Meeting Transcript:
-        {extracted_meeting_text}
-        """
-
-        with st.spinner("Processing meeting minutes..."):
-            meeting_summary = generate_ai_content(meeting_prompt, st.session_state.api_key, st.session_state.api_model)
-
-        st.success("✅ AI-Generated Meeting Minutes:")
-        st.text_area("📜 Your Meeting Summary:", meeting_summary, height=300)
-
-        # Download & Copy Options
-        col1, col2 = st.columns(2)
-        with col1:
-            st.download_button("📥 Download Minutes", meeting_summary, "meeting_minutes.txt")
-        with col2:
-            st.button("📋 Copy to Clipboard", on_click=lambda: st.write(
-                "<script>navigator.clipboard.writeText(`" + meeting_summary.replace("`", "\\`") + "`);</script>", 
-                unsafe_allow_html=True))
-
-
-
-with tab14:
-    st.header("🚀 AI-Powered Startup Idea Validator")
-    st.markdown("### Validate your business idea with AI-driven market analysis!")
-
-    # Startup Idea Input
-    startup_idea = st.text_area("📝 Describe Your Startup Idea (e.g., 'AI-Powered Resume Builder'):")
-    
-    # Industry Selection
-    industry = st.radio("🏢 Select Industry:", 
-                            ["Technology", "Healthcare", "Finance", "E-Commerce", "Education", "Other"])
-    
-    # Business Model Selection
-    business_model = st.radio("💰 Select Revenue Model:", 
-                              ["Subscription-Based", "Ad-Supported", "Freemium", "E-Commerce", "Enterprise Sales"], horizontal=True)
-
-    # Additional AI Analysis Features
-    competitor_analysis = st.checkbox("🏆 Include Competitor Research", value=True)
-    market_potential = st.checkbox("📊 Analyze Market Demand", value=True)
-    scalability_risks = st.checkbox("🚀 Assess Scalability & Risks", value=True)
-    future_trends = st.checkbox("🔮 Predict Future Industry Trends", value=True)
-    branding_advice = st.checkbox("📢 Provide Marketing & Branding Strategies", value=True)
-    swot_analysis = st.checkbox("🧠 Generate SWOT Analysis", value=True)
-    target_audience = st.checkbox("📍 Identify Target Audience", value=True)
-    usp_finder = st.checkbox("💡 Find Unique Selling Proposition (USP)", value=True)
-    mvp_plan = st.checkbox("🏗️ Create Minimum Viable Product (MVP) Plan", value=True)
-    growth_strategy = st.checkbox("📈 Suggest Growth & Scaling Strategy", value=True)
-    funding_readiness = st.checkbox("💵 Evaluate Funding & Investor Readiness", value=True)
-    go_to_market = st.checkbox("🎯 Develop Go-To-Market Strategy", value=True)
-    global_vs_local = st.checkbox("🌍 Recommend Global vs Local Expansion", value=True)
-    tech_stack = st.checkbox("🛠️ Suggest Best Tech Stack & Tools", value=True)
-    business_plan = st.checkbox("📜 Generate Business Plan Summary", value=True)
-
-    # Generate Startup Report
-    if st.button("📈 Validate My Startup Idea"):
-        startup_prompt = f"""
-        Analyze the feasibility of the startup idea: '{startup_idea}' in the {industry} industry.
-        Revenue Model: {business_model}.
-        {"Include competitor research." if competitor_analysis else ""}
-        {"Analyze the market potential and demand." if market_potential else ""}
-        {"Assess scalability challenges and risks." if scalability_risks else ""}
-        {"Predict future trends in this industry." if future_trends else ""}
-        {"Provide branding and marketing strategies." if branding_advice else ""}
-        {"Generate a SWOT analysis (Strengths, Weaknesses, Opportunities, Threats)." if swot_analysis else ""}
-        {"Identify the ideal target audience and customer personas." if target_audience else ""}
-        {"Find a Unique Selling Proposition (USP) to differentiate the startup." if usp_finder else ""}
-        {"Create a Minimum Viable Product (MVP) development plan." if mvp_plan else ""}
-        {"Suggest growth, scaling, and funding strategies." if growth_strategy else ""}
-        {"Assess funding readiness and provide investor pitching advice." if funding_readiness else ""}
-        {"Develop a go-to-market strategy and customer acquisition plan." if go_to_market else ""}
-        {"Evaluate whether this startup should focus on a local or global market." if global_vs_local else ""}
-        {"Suggest the best tech stack and AI tools for development." if tech_stack else ""}
-        {"Generate a structured business plan summary for investors." if business_plan else ""}
-        """
-
-        with st.spinner("Analyzing your startup idea..."):
-            startup_report = generate_ai_content(startup_prompt, st.session_state.api_key, st.session_state.api_model)
-
-        st.success("✅ AI-Generated Startup Validation Report:")
-        st.text_area("📊 Your Startup Analysis:", startup_report, height=300)
-
-        # Download & Copy Options
-        col1, col2 = st.columns(2)
-        with col1:
-            st.download_button("📥 Download Report", startup_report, "startup_report.txt")
-        with col2:
-            st.button("📋 Copy to Clipboard", on_click=lambda: st.write(
-                "<script>navigator.clipboard.writeText(`" + startup_report.replace("`", "\\`") + "`);</script>", 
-                unsafe_allow_html=True))
-
-
-
-
 # Advanced options expander
 with st.expander("⚙️ Advanced Options"):
     # Document structure tabs
@@ -2822,44 +1924,6 @@ if st.button("🚀 Generate Content", type="primary"):
         
         # Save to history
         save_to_history(selected_tool, user_prompt, output)
-
-        # Export options
-        st.markdown("### 📥 Export Options")
-
-        # Function to create DOCX file
-        def create_docx(text):
-            doc = docx.Document()
-            doc.add_paragraph(text)
-            doc_stream = BytesIO()
-            doc.save(doc_stream)
-            doc_stream.seek(0)  # Move to the beginning of the file
-            return doc_stream
-
-        # Function to create PDF file
-        import fitz  # PyMuPDF for PDF generation
-        def create_pdf(text):
-            pdf_stream = BytesIO()
-            doc = fitz.open()  # Create a new PDF
-            page = doc.new_page(width=595, height=842)  # A4 size
-            text = text.replace("\n", "<br>")  # Maintain line breaks
-            page.insert_text((50, 50), text, fontsize=12, color=(0, 0, 0))
-            doc.save(pdf_stream)
-            pdf_stream.seek(0)
-            return pdf_stream
-
-        # Download buttons
-        col1, col2, col3 = st.columns(3)
-        with col1:
-            st.download_button("📄 Download as TXT", output, "generated_content.txt")
-        with col2:
-            docx_file = create_docx(output)
-            st.download_button("📄 Download as DOCX", docx_file, "generated_content.docx")
-        with col3:
-            pdf_file = create_pdf(output)
-            st.download_button("📄 Download as PDF", pdf_file, "generated_content.pdf")
-
-
-
               
 # Add theme selector
 st.sidebar.markdown("---")
