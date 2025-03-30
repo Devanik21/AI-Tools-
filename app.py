@@ -757,14 +757,9 @@ def generate_ai_tools():
     
     # Create specialized industry categories (new areas)
     specialized_industries = {
-        "Writing": [
-            "Resume", "Cover Letter", "Email", "Blog Post", "Content Rewrite", "Grammar Check", 
-            "Summary", "Academic Essay", "Letter", "Script", "Technical Writing", "Research Paper",
-            "Whitepaper", "Thesis Statement", "Literature Review", "Citation", "Lab Report",
-            "Case Study", "Editorial Guidelines", "Style Guide", "Professional Bio", "Executive Summary",
-            "Project Proposal", "Meeting Minutes", "Documentation", "SOP", "Policy Draft",
-            "Legal Document", "Contract Clause", "Terms & Conditions", "Privacy Policy"
-        ],
+        "Healthcare": ["Patient Care", "Medical Record", "Clinical Trial", "Health Assessment", "Treatment Plan",
+                      "Healthcare Policy", "Medical Research", "Patient Education", "Telehealth", "Health Insurance",
+                      "Medical Device", "Healthcare Compliance", "Medical Diagnosis", "Patient Experience", "Wellness Program"],
         
         "E-commerce": ["Product Listing", "Customer Review", "E-commerce Copy", "Shipping Policy", "Return Policy",
                        "Product Bundle", "Flash Sale", "Customer Engagement", "Shopping Experience", "Loyalty Program",
