@@ -757,15 +757,14 @@ def generate_ai_tools():
     
     # Create specialized industry categories (new areas)
     specialized_industries = {
-    "Artificial Intelligence": [
-        "AI Model Optimization", "Machine Learning Deployment", "AI Ethics & Bias Reduction",
-        "Natural Language Processing (NLP) Strategy", "AI-Driven Automation Plan",
-        "Generative AI Content Strategy", "AI in Cybersecurity", "Computer Vision Applications",
-        "AI for Business Intelligence", "Deep Learning in Healthcare",
-        "Autonomous Systems & Robotics", "AI Chatbot Development", "Predictive Analytics",
-        "AI Governance & Compliance", "Edge AI & On-Device Machine Learning"
-    ],
-
+        "Writing": [
+            "Resume", "Cover Letter", "Email", "Blog Post", "Content Rewrite", "Grammar Check", 
+            "Summary", "Academic Essay", "Letter", "Script", "Technical Writing", "Research Paper",
+            "Whitepaper", "Thesis Statement", "Literature Review", "Citation", "Lab Report",
+            "Case Study", "Editorial Guidelines", "Style Guide", "Professional Bio", "Executive Summary",
+            "Project Proposal", "Meeting Minutes", "Documentation", "SOP", "Policy Draft",
+            "Legal Document", "Contract Clause", "Terms & Conditions", "Privacy Policy"
+        ],
         
         "E-commerce": ["Product Listing", "Customer Review", "E-commerce Copy", "Shipping Policy", "Return Policy",
                        "Product Bundle", "Flash Sale", "Customer Engagement", "Shopping Experience", "Loyalty Program",
