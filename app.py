@@ -182,42 +182,161 @@ def extract_text_from_pdf(uploaded_file):
 def generate_ai_tools():
     # Base categories dictionary - we'll expand with multipliers later
     base_categories = {
-        "Writing": [
-            "Resume", "Cover Letter", "Email", "Blog Post", "Content Rewrite", "Grammar Check", 
-            "Summary", "Academic Essay", "Letter", "Script", "Technical Writing", "Research Paper",
-            "Whitepaper", "Thesis Statement", "Literature Review", "Citation", "Lab Report",
-            "Case Study", "Editorial Guidelines", "Style Guide", "Professional Bio", "Executive Summary",
-            "Project Proposal", "Meeting Minutes", "Documentation", "SOP", "Policy Draft",
-            "Legal Document", "Contract Clause", "Terms & Conditions", "Privacy Policy"
-        ],
+"Writing": [
+    # Professional & Business Writing  
+    "Resume", "Cover Letter", "Job Application Letter", "Recommendation Letter", "Business Proposal",  
+    "Project Proposal", "Executive Summary", "Professional Bio", "Company Profile", "Business Plan",  
+    "Marketing Copy", "Sales Pitch", "Brand Story", "Press Release", "Meeting Minutes", "Email",  
+    "SOP (Standard Operating Procedure)", "RFP (Request for Proposal)", "Policy Draft", "Employee Handbook",  
+    "Business Case Study", "Whitepaper",  
+
+    # Academic & Research Writing  
+    "Academic Essay", "Thesis Statement", "Literature Review", "Research Paper", "Citation",  
+    "Abstract & Keywords Generator", "Lab Report", "Case Study", "Grant Proposal", "Conference Paper",  
+    "Technical Report", "Editorial Guidelines", "Style Guide",  
+
+    # Creative & Content Writing  
+    "Blog Post", "Script (Movie, YouTube, Podcast)", "Short Story", "Novel Outline", "Poetry",  
+    "Creative Writing Prompt", "Character Development", "Plot Outline", "Ghostwriting",  
+    "Content Ideation & Brainstorming", "Social Media Caption & Hashtag Generator",  
+
+    # Legal & Compliance Writing  
+    "Legal Document Drafting", "Contract Clause Generator", "Terms & Conditions", "Privacy Policy",  
+    "GDPR Compliance Notice", "Non-Disclosure Agreement (NDA)", "Service-Level Agreement (SLA)",  
+    "Disclaimers & Liability Waivers",  
+
+    # Editing & Optimization  
+    "Grammar & Spell Check", "Paraphrasing Tool", "Readability Improvement", "Plagiarism Checker",  
+    "Tone Adjustment (Formal, Casual, Professional)", "Style Consistency Checker",  
+    "Sentence Expansion & Condensation",  
+
+    # Summarization & Extraction  
+    "Executive Summary Generator", "Meeting Notes & Minutes Summarization", "Article Summary",  
+    "Research Paper Summary", "Legal Document Summary", "Report Extraction", "Transcript Summarization",  
+
+    # Technical & Documentation Writing  
+    "API Documentation Generator", "Software User Manual", "Product Documentation",  
+    "Engineering Report", "Patent Writing", "Troubleshooting Guide", "FAQs & Help Desk Content",  
+
+    # UX & Product Writing  
+    "UX Writing (Microcopy for Apps & Websites)", "Chatbot Script", "Error Message Optimization",  
+    "App Store Description", "Product Descriptions",  
+
+    # Miscellaneous Writing  
+    "Personal Letter (Apology, Love, Invitation)", "Speech Writing (Wedding, Graduation, Motivational)",  
+    "Eulogy Writing", "Greeting Card Messages", "Review Writing (Product, Movie, Book)",  
+],
+
         
-        "Creative": [
-            "Poem", "Story", "Dialogue", "Character", "Book Title", "Horror Story", "Sci-Fi Story",
-            "Song Lyrics", "Children's Story", "Novel Outline", "Metaphor", "Joke", "Fantasy World",
-            "Sci-Fi Technology", "Historical Fiction", "Memoir", "Poetry Prompt", "Creative Prompt",
-            "Short Story Starter", "Screenplay Format", "Plot Twist", "Character Backstory",
-            "Setting Description", "Alternate History", "Mythical Creature", "Magic System",
-            "Fictional Language", "Story Conflict"
-        ],
+"Creative": [
+    # Poetry & Lyrics  
+    "Poem", "Haiku", "Limerick", "Sonnet", "Free Verse", "Song Lyrics", "Rap Lyrics",  
+    "Acrostic Poem", "Poetry Prompt", "Rhyming Verse",  
+
+    # Fiction & Storytelling  
+    "Story", "Short Story", "Flash Fiction", "Novella Outline", "Novel Outline",  
+    "Children's Story", "Bedtime Story", "Horror Story", "Sci-Fi Story", "Fantasy Story",  
+    "Mythology Retelling", "Historical Fiction", "Alternate History", "Fable", "Urban Legend",  
+    "Fairy Tale Rewrite", "Dystopian Story",  
+
+    # Character Development  
+    "Character", "Character Backstory", "Character Arc", "Villain Development",  
+    "Hero’s Journey", "Sidekick Generator", "Anti-Hero Development",  
+
+    # Worldbuilding & Fantasy Elements  
+    "Fantasy World", "Sci-Fi Technology", "Magic System", "Fictional Language",  
+    "Mythical Creature", "Superpower Generator", "Alien Species", "Alternate Universe",  
+    "Steampunk Invention", "Cyberpunk Society", "Post-Apocalyptic World",  
+
+    # Plot & Writing Aids  
+    "Book Title", "Plot Twist", "Story Conflict", "Story Climax", "Short Story Starter",  
+    "Creative Prompt", "Poetry Prompt", "Dialogue", "Monologue", "Setting Description",  
+    "Screenplay Format", "Scene Breakdown", "Writing Warm-Up",  
+
+    # Humor & Light-Hearted Writing  
+    "Joke", "Puns", "Satire Piece", "Parody Song", "Comedy Sketch",  
+
+    # Memoir & Personal Writing  
+    "Memoir", "Personal Essay", "Anecdote", "Inspirational Story", "Letter to Future Self",  
+
+    # Dream & Metaphysical Writing  
+    "Dream Interpreter", "Symbolic Dream Meaning", "Lucid Dream Story",  
+    "Surreal Dream Narration", "Dream Journal Entry", "Visionary Experience",  
+],
+
         
-        "Business": [
-            "Business Idea", "Startup Pitch", "SEO Keywords", "Business Consultation", "Marketing Strategy",
-            "Grant Proposal", "Freelance Proposal", "LinkedIn Bio", "Branding Guide", "Business Email",
-            "SWOT Analysis", "Business Case", "Market Research", "Competitor Analysis", "Pricing Strategy",
-            "Product Launch", "Go-to-Market", "Customer Persona", "Mission Statement", "Company Values",
-            "Business Plan", "Investor Pitch", "Funding Request", "Project Timeline", "Risk Assessment",
-            "ROI Calculator", "KPI Framework"
-        ]
+"Business": [
+    # Business Strategy & Planning  
+    "Business Idea", "Business Model Canvas", "Business Plan", "Go-to-Market Strategy",  
+    "Startup Pitch", "Investor Pitch", "Funding Request", "Bootstrapping Strategy",  
+    "Growth Hacking Techniques", "Project Timeline", "Risk Assessment", "Exit Strategy",  
+
+    # Marketing & Branding  
+    "Marketing Strategy", "Content Marketing Plan", "Branding Guide", "Social Media Strategy",  
+    "SEO Keywords", "Ad Copy Generator", "Product Launch Plan", "Rebranding Strategy",  
+    "Customer Retention Plan", "Brand Voice & Messaging",  
+
+    # Sales & Customer Development  
+    "Sales Pitch", "Freelance Proposal", "Lead Generation Strategy", "Customer Persona",  
+    "Cold Email Template", "Sales Funnel Optimization", "Customer Support Guidelines",  
+    "Loyalty Program Strategy", "Upselling & Cross-Selling Strategy",  
+
+    # Financial & Business Analysis  
+    "Grant Proposal", "ROI Calculator", "Break-even Analysis", "Pricing Strategy",  
+    "Financial Forecasting", "Cash Flow Management", "Profit Margin Analysis",  
+    "Funding Proposal", "Investor Report",  
+
+    # Market Research & Competitive Analysis  
+    "Market Research", "Competitor Analysis", "Industry Trends Report", "Customer Survey Questions",  
+    "Business Case", "SWOT Analysis", "KPI Framework", "Benchmarking Analysis",  
+
+    # Business Communication & Operations  
+    "Business Email", "LinkedIn Bio", "Professional Networking Message", "Press Release",  
+    "Mission Statement", "Company Values", "Code of Conduct", "HR Policy Draft",  
+    "Crisis Management Plan", "Standard Operating Procedure (SOP)",  
+
+    # Entrepreneurship & Consultation  
+    "Business Consultation", "Startup Incubation Strategy", "Fundraising Strategy",  
+    "Legal Compliance Checklist", "Franchise Business Plan", "Freelance Business Plan",  
+    "E-commerce Strategy", "Subscription Model Strategy",  
+]
+
     }
 
     
     # Additional categories to reach 2000+ tools
     extended_categories = {
-        "Social Media": ["Post", "Caption", "Viral Tweet", "YouTube Idea", "Tagline", "Pinterest Description",
-                        "Cold Email", "Podcast Episode", "Content Calendar", "Viral Formula", "Influencer Pitch",
-                        "Brand Partnership", "YouTube Script", "Dating Profile", "Networking Opener",
-                        "TikTok Trend", "Instagram Story", "LinkedIn Article", "Twitter Thread", "Facebook Ad",
-                        "Hashtag Strategy", "Reel Script", "Community Post", "Review Response", "Crisis Response"],
+"Social Media": [
+    # General Social Media Content  
+    "Post", "Caption", "Viral Tweet", "Hashtag Strategy", "Content Calendar", "Trending Topics Finder",  
+    "Community Post", "Meme Generator", "User Engagement Prompt", "Social Media Poll Idea",  
+
+    # YouTube & Video Content  
+    "YouTube Idea", "YouTube Script", "YouTube Thumbnail Text", "Reel Script",  
+    "TikTok Trend", "Instagram Story", "Short-Form Video Hook", "Livestream Outline",  
+
+    # Influencer & Brand Marketing  
+    "Influencer Pitch", "Brand Partnership", "Sponsorship Email", "Affiliate Marketing Copy",  
+    "Networking Opener", "Collaborative Post Idea", "Product Placement Script",  
+
+    # Advertising & Growth Strategies  
+    "Facebook Ad", "Instagram Ad Copy", "LinkedIn Ad Copy", "Twitter Ad Copy",  
+    "A/B Testing Ad Variations", "Social Media Growth Hack", "Viral Formula",  
+
+    # Engagement & Audience Interaction  
+    "Review Response", "Crisis Response", "Customer Support Reply", "Community Engagement Strategy",  
+    "DM Outreach Message", "Story Poll & Quiz Ideas",  
+
+    # Niche-Specific Content  
+    "Podcast Episode Idea", "Podcast Episode Title", "Podcast Teaser Post", "Dating Profile",  
+    "LinkedIn Article", "Twitter Thread", "Pinterest Description", "Tagline",  
+    "Event Promotion Post", "Giveaway & Contest Post",  
+
+    # SEO & Algorithm Boosting Content  
+    "SEO-Optimized Post", "Trending Hashtag Suggestions", "Social Media Headline Generator",  
+    "Evergreen Content Idea", "Cross-Platform Content Repurposing",  
+],
+
         
         "Productivity": ["Productivity Plan", "Daily Plan", "Travel Itinerary", "Note-Taking", "Brainstorming",
                          "Grocery List", "Interview Prep", "Learning Path", "Time Management", "Prioritization",
@@ -269,18 +388,20 @@ def generate_ai_tools():
     all_categories = {**base_categories, **extended_categories}
     
     # Multipliers to expand each tool category (adjectival prefixes)
+# Practical Tool Multipliers
+
+    # Descriptive Qualifiers: Focus on Actual Capabilities
     tool_multipliers = [
-        "Advanced", "Custom", "Premium", "Enhanced", "Professional", "Intelligent", "Smart", "Dynamic",
-        "Interactive", "Personalized", "Strategic", "Comprehensive", "Automated", "High-Performance", "Next-Gen",
-        "Streamlined", "Optimized", "Scalable", "Innovative", "Creative", "Essential", "Ultimate", "Practical",
-        "Specialized", "Expert", "Efficient", "Versatile", "Powerful", "Flexible", "Multi-purpose"
+        "AI-Powered", "Data-Driven", "Adaptive", "Intelligent", 
+        "Automated", "Precision", "Workflow", "Strategic", 
+        "Analytical", "Efficient", "Scalable", "Integrated"
     ]
-    
-    # Format multipliers (output format variations)
+
+    # Tool Format Descriptors: Emphasize Functional Purpose
     format_multipliers = [
-        "Generator", "Builder", "Creator", "Designer", "Maker", "Assistant", "Helper", "Tool", "Solution",
-        "Expert", "Consultant", "Advisor", "Planner", "Architect", "Analyst", "Strategist", "Developer",
-        "Manager", "Optimizer", "Writer", "Guide", "Template", "Framework", "System", "Toolkit"
+        "Engine", "Platform", "Framework", "Toolkit", 
+        "Accelerator", "Assistant", "Optimizer", "Analyzer", 
+        "Manager", "Generator", "Orchestrator", "Solution"
     ]
     
     # Generate expanded tools by combining base tools with multipliers
@@ -421,7 +542,7 @@ with st.sidebar:
     st.session_state.api_model = st.selectbox(
         "Select AI Model:",
         ["gemini-2.0-flash", "gemini-1.5-flash", "gemini-1.5-pro","gemini-2.0-flash-lite","gemini-2.0-pro-exp-02-05",
-"gemini-2.0-flash-thinking-exp-01-21","gemini-1.5-flash-8b"],
+"gemini-2.0-flash-thinking-exp-01-21","gemini-2.5-pro-exp-03-25","gemini-1.5-flash-8b"],
         index=0
     )
     
@@ -469,26 +590,48 @@ if not st.session_state.prompt_templates or len(st.session_state.prompt_template
 # Tool Selection Section
 st.header("🛠️ Select Your Creation Tool")
 
-st.markdown("""
+# Apply Scrollable Tabs CSS
+st.markdown(
+    """
     <style>
+    div[data-testid="stTabs"] {
+        overflow-x: auto !important;
+        white-space: nowrap !important;
+        display: flex;
+        flex-wrap: nowrap;
+    }
     div[data-testid="stTabs"] button {
-        font-size: 12px !important;
-        padding: 20px !important;
+        flex: 1 1 auto;
+        min-width: 150px;  /* Adjust tab width */
     }
     </style>
-""", unsafe_allow_html=True)
+    """,
+    unsafe_allow_html=True
+)
 
-tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs([
-    "📋 Categories", "🔍 Search Results", 
-    "📚 AI Research Assistant", "🤖 AI Chatbot", 
-    "🌍 AI Translator", "⚡ AI Code Wizard", 
-    "📊 Data Visualization & Insights"
+st.markdown('<div class="scroll-container">', unsafe_allow_html=True)
+# Close the Scrollable Container
+
+tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9, tab10, tab11, tab12, tab13,tab14 = st.tabs([
+    "📋 Categories", "🔍 Search", 
+    "📚 Research", "🤖 Chat", 
+    "🌍 Translate", "⚡ Code", 
+    "📊 Insights", "🎤 Interview",
+    "📧 Email Assistant", "📊 Spreadsheet",
+    "🎬 Podcast", "🎯 Learning Path",
+    "📝 Meeting Minutes","🚀 Startup Validator"
 ])
 
 
 
+
+
+# Wrap Everything Below Tabs in a Scrollable Container
+
+st.markdown("</div>", unsafe_allow_html=True)
+
 with tab1:
-    selected_category = st.selectbox("Choose a category:", list(tool_categories.keys()))
+    selected_category = st.radio("Choose a category:", list(tool_categories.keys()))
     
     # Only show tools from selected category
     if selected_category:
@@ -1214,7 +1357,7 @@ with tab6:
     st.header("⚡ AI Code Wizard")
 
     # Automatically select the AI model for coding tasks
-    st.session_state.api_model = "gemini-2.0-flash-thinking-exp-01-21"
+    st.session_state.api_model = "gemini-2.5-pro-exp-03-25"
 
     # Choose AI task
     task = st.selectbox("What do you need help with?", 
@@ -1607,6 +1750,416 @@ with tab7:
         st.info("Upload a dataset to generate insights and visualizations.")
 
 
+
+with tab8:
+    st.header("🎤 AI-Powered Mock Interviewer")
+    st.markdown("### Prepare for your next job interview with AI-generated questions.")
+
+    # Job Role Selection
+    col1, col2 = st.columns(2)
+    with col1:
+        job_role = st.text_input("Enter Job Role (e.g., Data Scientist, Software Engineer):")
+    with col2:
+        experience_level = st.selectbox("Experience Level:", ["Entry Level", "Mid-Level", "Senior-Level", "Executive"])
+
+    # Interview Type Selection
+    interview_type = st.radio("Interview Type:", ["Technical", "Behavioral", "Case Study", "HR"], horizontal=True)
+
+    # Advanced Options
+    with st.expander("🎯 Customize Your Mock Interview"):
+        col1, col2 = st.columns(2)
+        with col1:
+            difficulty = st.slider("Difficulty Level:", 1, 10, 5)
+        with col2:
+            question_count = st.slider("Number of Questions:", 3, 20, 5)
+
+    # Generate Questions
+    if st.button("Start Mock Interview 🎙️"):
+        interview_prompt = f"""
+        Conduct a {interview_type} interview for a {experience_level} {job_role}. 
+        Ask {question_count} questions with increasing difficulty from level {difficulty}.
+        """
+
+        with st.spinner("Generating interview questions..."):
+            interview_questions = generate_ai_content(interview_prompt, st.session_state.api_key, st.session_state.api_model)
+
+        st.success("🎤 AI-Generated Mock Interview:")
+        st.write(interview_questions)
+
+        # Download Options
+        st.download_button("📥 Download Questions", interview_questions, "mock_interview.txt")
+
+
+with tab9:
+    st.header("📧 AI-Powered Email Assistant")
+    st.markdown("### Generate, summarize, and rewrite emails with AI.")
+
+    # Email Input
+    email_content = st.text_area("✍️ Enter Email Content or Brief:")
+
+    # Tone Selection
+    tone = st.radio("Select Tone:", ["Formal", "Informal", "Neutral", "Persuasive", "Apologetic"])
+
+    # Action Selection
+    action = st.radio("What would you like to do?", 
+                      ["Generate Email", "Summarize Email", "Rewrite Email", "Quick Reply", "Follow-Up Suggestion"], 
+                      horizontal=True)
+
+    # Email Personalization
+    recipient_type = st.selectbox("Recipient Type:", ["Boss", "Colleague", "Client", "Friend", "General"])
+
+    # Attachment Upload (for Email Summarization)
+    uploaded_file = st.file_uploader("📎 Upload a file (PDF, DOCX, TXT) for summary (Optional)", 
+                                     type=["pdf", "docx", "txt"])
+
+    # Email Scheduling Assistant
+    urgency = st.radio("📅 Email Urgency:", ["Immediate", "Within 24 Hours", "End of Week", "Next Week"])
+    if urgency == "Immediate":
+        best_time = "Send Now 🚀"
+    elif urgency == "Within 24 Hours":
+        best_time = "Send within the next few hours ⏳"
+    elif urgency == "End of Week":
+        best_time = "Send by Friday afternoon 📆"
+    else:
+        best_time = "Schedule for next Monday ⏰"
+    
+    st.markdown(f"**🕒 Suggested Send Time: {best_time}**")
+
+    # Generate Button
+    if st.button("✉️ Process Email"):
+        email_prompt = f"""
+        Perform '{action}' on this email: {email_content} with a '{tone}' tone.
+        Tailor it for a '{recipient_type}' and consider urgency level '{urgency}'.
+        """
+
+        # Handle File Upload for Summary
+        if uploaded_file is not None:
+            file_text = extract_text_from_file(uploaded_file)
+            email_prompt += f"\n\n[Attachment Summary: {file_text}]"
+
+        with st.spinner("Processing..."):
+            processed_email = generate_ai_content(email_prompt, st.session_state.api_key, st.session_state.api_model)
+
+        st.success("✅ AI-Generated Email:")
+        st.write(processed_email)
+
+        # Download Button
+        st.download_button("📥 Download Email", processed_email, "email.txt")
+
+with tab10:
+    st.header("📊 AI-Powered Spreadsheet Formula Generator")
+    st.markdown("### Convert plain English into powerful spreadsheet formulas.")
+
+    # User Input for Natural Language Query
+    query = st.text_area("📝 Describe what you need (e.g., 'Extract domain from email'):")
+
+    # Syntax Selection
+    syntax = st.radio("Choose Formula Syntax:", ["Excel", "Google Sheets", "LibreOffice Calc"])
+
+    # Formula Type Selection
+    formula_type = st.radio("Formula Type:", ["Single Cell", "Multi-Cell/Range", "Array Formula", "SQL Query"], horizontal=True)
+
+    # Debug & Optimization Option
+    debug_formula = st.checkbox("Enable Formula Debugging & Optimization", value=True)
+
+    # Function Recommendations
+    function_suggestions = st.checkbox("Suggest Best Functions for My Task", value=True)
+
+    # Data Cleaning & Formatting
+    data_cleaning = st.checkbox("Enable AI Data Cleaning & Auto-Formatting", value=True)
+
+    # Auto-Generate Pivot Tables & Charts
+    generate_pivot = st.checkbox("Generate Pivot Tables & Charts Automatically", value=False)
+
+    # Bulk Formula Generation for Large Datasets
+    bulk_formula = st.checkbox("Apply Formula in Bulk for Large Datasets", value=False)
+
+    # AI-Powered Conditional Formatting
+    conditional_formatting = st.checkbox("Enable Smart Conditional Formatting", value=False)
+
+    # Generate Button
+    if st.button("🔢 Generate Formula"):
+        formula_prompt = f"""
+        Convert this request into a {formula_type} formula for {syntax}: {query}.
+        {"Provide a breakdown and explanation." if debug_formula else ""}
+        {"Suggest the best spreadsheet functions for this task." if function_suggestions else ""}
+        {"Optimize and debug the formula for efficiency." if debug_formula else ""}
+        {"Ensure the formula works well with large datasets." if bulk_formula else ""}
+        {"Automatically clean and format the data before applying the formula." if data_cleaning else ""}
+        {"Suggest conditional formatting rules if applicable." if conditional_formatting else ""}
+        {"If relevant, generate a Pivot Table or Chart based on the query." if generate_pivot else ""}
+        """
+
+        with st.spinner("Generating formula..."):
+            generated_formula = generate_ai_content(formula_prompt, st.session_state.api_key, st.session_state.api_model)
+
+        st.success("✅ AI-Generated Formula:")
+        st.code(generated_formula, language="plaintext")
+
+        # Download Button
+        st.download_button("📥 Download Formula", generated_formula, "formula.txt")
+
+
+
+with tab11:
+    st.header("🎙️ AI-Based Podcast Script Generator")
+    st.markdown("### Create engaging, professional, and unique podcast scripts!")
+
+    # Podcast Topic & Duration
+    topic = st.text_input("🎯 Enter Podcast Topic:")
+    duration = st.slider("⏳ Select Podcast Duration (minutes):", 5, 90, 20)
+    
+    # Podcast Style & Tone
+    style = st.radio("🎭 Choose Style:", ["Conversational", "Storytelling", "Humorous", "Data-Driven", "Inspirational"])
+    tone = st.radio("🗣️ Select Tone:", ["Casual", "Professional", "Energetic", "Serious"], horizontal=True)
+
+    # Word Count Control
+    col1, col2 = st.columns(2)
+    with col1:
+        min_words = st.number_input("🔡 Min Words:", min_value=100, max_value=5000, value=300, step=50)
+    with col2:
+        max_words = st.number_input("🔠 Max Words:", min_value=200, max_value=10000, value=1500, step=100)
+
+    # Script Detail Level
+    script_detail = st.select_slider("📜 Script Detail Level:", 
+                                     options=["Short", "Standard", "Comprehensive"], 
+                                     value="Standard")
+
+    # Podcast Features & Enhancements
+    add_intro_outro = st.checkbox("🎶 Auto-Generated Podcast Intro & Outro", value=True)
+    simulate_cohost_guest = st.checkbox("🧑‍🤝‍🧑 Simulate Multi-Host & Guest Interactions", value=True)
+    add_trending_news = st.checkbox("🌎 Include Real-Time News & Trends", value=False)
+    add_music_sfx = st.checkbox("🎵 Suggest Background Music & Sound Effects", value=False)
+    ai_character_speaking = st.checkbox("🤖 Generate Script in a Famous Figure's Style", value=False)
+    add_hot_takes = st.checkbox("💡 Include Debates & Controversial Takes", value=False)
+    future_predictions = st.checkbox("🔮 AI-Powered Future Insights & Trends", value=False)
+    generate_ads = st.checkbox("📜 Create Sponsor Ad Scripts", value=False)
+    auto_schedule = st.checkbox("🛠️ Auto-Generate Social Media Promo Posts", value=False)
+    multi_language = st.checkbox("📢 Translate to Multiple Languages", value=False)
+
+    # Generate Button
+    if st.button("📜 Generate Podcast Script"):
+        podcast_prompt = f"""
+        Generate a {script_detail} {duration}-minute podcast script on '{topic}' in {style} style with a {tone} tone.
+        Ensure the script is between {min_words} and {max_words} words.
+        {"Include a dynamic podcast intro & outro." if add_intro_outro else ""}
+        {"Simulate engaging conversations between a host and a guest." if simulate_cohost_guest else ""}
+        {"Incorporate real-world trending news & insights." if add_trending_news else ""}
+        {"Suggest background music or sound effects for key moments." if add_music_sfx else ""}
+        {"Write the script in the style of a well-known personality or character." if ai_character_speaking else ""}
+        {"Add a controversial debate section or counterpoints for engagement." if add_hot_takes else ""}
+        {"Provide AI-driven future predictions related to the topic." if future_predictions else ""}
+        {"Generate sponsor messages relevant to the topic." if generate_ads else ""}
+        {"Auto-generate social media post copy for promoting this episode." if auto_schedule else ""}
+        {"Translate the script into multiple languages with regional adaptation." if multi_language else ""}
+        """
+
+        with st.spinner("Generating podcast script..."):
+            podcast_script = generate_ai_content(podcast_prompt, st.session_state.api_key, st.session_state.api_model)
+
+        st.success("✅ AI-Generated Podcast Script:")
+        st.text_area("🎙️ Your Podcast Script:", podcast_script, height=300)
+
+        # Download Button
+        st.download_button("📥 Download Script", podcast_script, "podcast_script.txt")
+
+
+with tab12:
+    st.header("🎯 AI-Powered Learning Path Generator")
+    st.markdown("### Get a personalized learning roadmap based on your skills and goals!")
+
+    # User Inputs
+    current_skill = st.text_input("🛠️ Current Skills (e.g., Python, Data Science, Web Dev):")
+    goal = st.text_input("🎯 Learning Goal (e.g., Become a Machine Learning Engineer):")
+
+    # Select Learning Style
+    learning_style = st.radio("📚 Preferred Learning Style:", 
+                                  ["Video-Based", "Hands-On Projects", "Reading-Focused", "Hybrid"])
+
+    # Select Duration
+    duration = st.slider("⏳ Select Learning Duration (Weeks):", 1, 52, 12)
+
+    # Skill Level Selection
+    skill_level = st.radio("📊 Current Proficiency Level:", 
+                           ["Beginner", "Intermediate", "Advanced"], horizontal=True)
+
+    # Word Count Control
+    col1, col2 = st.columns(2)
+    with col1:
+        min_words = st.number_input("🔡 Min Words:", min_value=100, max_value=5000, value=500, step=50,key="min_words_input")
+    with col2:
+        max_words = st.number_input("🔠 Max Words:", min_value=200, max_value=10000, value=1500, step=100,key="max_words_input")
+
+    # Additional Features
+    ai_gap_analysis = st.checkbox("🛠️ AI Skill Gap Analysis", value=True)
+    personalized_challenges = st.checkbox("📌 Generate Weekly Challenges", value=True)
+    certification_mapping = st.checkbox("🎓 Recommend Certifications & Courses", value=True)
+    resume_boost = st.checkbox("📂 AI Resume Enhancement", value=False)
+    adaptive_learning = st.checkbox("🧠 Adaptive Learning (Dynamic Updates)", value=False)
+    time_estimate = st.checkbox("⏳ Time Commitment Estimator", value=True)
+    mentor_suggestions = st.checkbox("👥 Suggest Mentors & Learning Communities", value=False)
+    quizzes = st.checkbox("📝 Generate Self-Assessment Quizzes", value=True)
+    job_insights = st.checkbox("📢 Industry Trends & Job Market Insights", value=True)
+
+    # Generate Learning Path
+    if st.button("📜 Generate Learning Path"):
+        learning_prompt = f"""
+        Create a {duration}-week personalized learning roadmap for someone with {skill_level} skills in {current_skill} 
+        who wants to achieve the goal: '{goal}'.
+        Preferred learning style: {learning_style}.
+        Ensure the response is between {min_words} and {max_words} words.
+        {"Analyze the skill gap between their current skills and their goal." if ai_gap_analysis else ""}
+        {"Generate weekly challenges to test their learning progress." if personalized_challenges else ""}
+        {"Recommend certifications, books, and online courses." if certification_mapping else ""}
+        {"Suggest how to add these skills to a resume for better job opportunities." if resume_boost else ""}
+        {"Provide an adaptive learning roadmap that changes based on progress." if adaptive_learning else ""}
+        {"Estimate the required daily/weekly study time to reach the goal." if time_estimate else ""}
+        {"Suggest relevant mentorship programs and online learning communities." if mentor_suggestions else ""}
+        {"Include self-assessment quizzes to measure progress." if quizzes else ""}
+        {"Provide industry trends and job market insights for this skill." if job_insights else ""}
+        """
+
+        with st.spinner("Generating your learning path..."):
+            learning_path = generate_ai_content(learning_prompt, st.session_state.api_key, st.session_state.api_model)
+
+        st.success("✅ AI-Generated Learning Path:")
+        st.text_area("🎯 Your Personalized Learning Roadmap:", learning_path, height=300)
+
+        # Download Option
+        st.download_button("📥 Download Learning Path", learning_path, "learning_path.txt")
+
+
+
+with tab13:
+    st.header("📝 AI-Powered Meeting Minutes Generator")
+    st.markdown("### Automatically generate structured meeting summaries from transcripts or audio files.")
+
+    # Upload Meeting File or Paste Custom Transcript
+    uploaded_meeting = st.file_uploader("📂 Upload Meeting Transcript or Audio (TXT, DOCX, PDF, MP3, WAV)", 
+                                        type=["txt", "docx", "pdf", "mp3", "wav"])
+
+    st.markdown("**OR**")
+    custom_transcript = st.text_area("✍️ Paste Your Meeting Transcript (Optional):", height=200)
+
+    # Key Features Selection
+    extract_decisions = st.checkbox("🎯 Extract Key Decisions", value=True)
+    extract_action_items = st.checkbox("✅ Identify Action Items & Owners", value=True)
+    extract_deadlines = st.checkbox("📅 Highlight Deadlines", value=True)
+    sentiment_analysis = st.checkbox("💡 Perform Sentiment Analysis", value=False)
+    search_keywords = st.text_input("🔎 Search for Specific Keywords (Optional):")
+
+    # Process Meeting File or Custom Input
+    extracted_meeting_text = ""
+    if uploaded_meeting is not None:
+        extracted_meeting_text = extract_text_from_file(uploaded_meeting)  # Function to extract text from uploaded file
+        st.success("✅ Meeting file uploaded successfully! AI will analyze it.")
+    elif custom_transcript:
+        extracted_meeting_text = custom_transcript
+        st.success("✅ Custom transcript added! AI will analyze it.")
+
+    # Generate Meeting Summary
+    if extracted_meeting_text and st.button("📜 Generate Meeting Minutes"):
+        meeting_prompt = f"""
+        Analyze the following meeting transcript and generate structured minutes.
+        {"Extract key decisions made." if extract_decisions else ""}
+        {"Identify action items, assigned members, and deadlines." if extract_action_items else ""}
+        {"Highlight upcoming deadlines and due dates." if extract_deadlines else ""}
+        {"Perform sentiment analysis to detect agreement, disagreement, or conflicts." if sentiment_analysis else ""}
+        {"Include a search-based summary for the keyword(s): " + search_keywords if search_keywords else ""}
+        
+        Meeting Transcript:
+        {extracted_meeting_text}
+        """
+
+        with st.spinner("Processing meeting minutes..."):
+            meeting_summary = generate_ai_content(meeting_prompt, st.session_state.api_key, st.session_state.api_model)
+
+        st.success("✅ AI-Generated Meeting Minutes:")
+        st.text_area("📜 Your Meeting Summary:", meeting_summary, height=300)
+
+        # Download & Copy Options
+        col1, col2 = st.columns(2)
+        with col1:
+            st.download_button("📥 Download Minutes", meeting_summary, "meeting_minutes.txt")
+        with col2:
+            st.button("📋 Copy to Clipboard", on_click=lambda: st.write(
+                "<script>navigator.clipboard.writeText(`" + meeting_summary.replace("`", "\\`") + "`);</script>", 
+                unsafe_allow_html=True))
+
+
+
+with tab14:
+    st.header("🚀 AI-Powered Startup Idea Validator")
+    st.markdown("### Validate your business idea with AI-driven market analysis!")
+
+    # Startup Idea Input
+    startup_idea = st.text_area("📝 Describe Your Startup Idea (e.g., 'AI-Powered Resume Builder'):")
+    
+    # Industry Selection
+    industry = st.radio("🏢 Select Industry:", 
+                            ["Technology", "Healthcare", "Finance", "E-Commerce", "Education", "Other"])
+    
+    # Business Model Selection
+    business_model = st.radio("💰 Select Revenue Model:", 
+                              ["Subscription-Based", "Ad-Supported", "Freemium", "E-Commerce", "Enterprise Sales"], horizontal=True)
+
+    # Additional AI Analysis Features
+    competitor_analysis = st.checkbox("🏆 Include Competitor Research", value=True)
+    market_potential = st.checkbox("📊 Analyze Market Demand", value=True)
+    scalability_risks = st.checkbox("🚀 Assess Scalability & Risks", value=True)
+    future_trends = st.checkbox("🔮 Predict Future Industry Trends", value=True)
+    branding_advice = st.checkbox("📢 Provide Marketing & Branding Strategies", value=True)
+    swot_analysis = st.checkbox("🧠 Generate SWOT Analysis", value=True)
+    target_audience = st.checkbox("📍 Identify Target Audience", value=True)
+    usp_finder = st.checkbox("💡 Find Unique Selling Proposition (USP)", value=True)
+    mvp_plan = st.checkbox("🏗️ Create Minimum Viable Product (MVP) Plan", value=True)
+    growth_strategy = st.checkbox("📈 Suggest Growth & Scaling Strategy", value=True)
+    funding_readiness = st.checkbox("💵 Evaluate Funding & Investor Readiness", value=True)
+    go_to_market = st.checkbox("🎯 Develop Go-To-Market Strategy", value=True)
+    global_vs_local = st.checkbox("🌍 Recommend Global vs Local Expansion", value=True)
+    tech_stack = st.checkbox("🛠️ Suggest Best Tech Stack & Tools", value=True)
+    business_plan = st.checkbox("📜 Generate Business Plan Summary", value=True)
+
+    # Generate Startup Report
+    if st.button("📈 Validate My Startup Idea"):
+        startup_prompt = f"""
+        Analyze the feasibility of the startup idea: '{startup_idea}' in the {industry} industry.
+        Revenue Model: {business_model}.
+        {"Include competitor research." if competitor_analysis else ""}
+        {"Analyze the market potential and demand." if market_potential else ""}
+        {"Assess scalability challenges and risks." if scalability_risks else ""}
+        {"Predict future trends in this industry." if future_trends else ""}
+        {"Provide branding and marketing strategies." if branding_advice else ""}
+        {"Generate a SWOT analysis (Strengths, Weaknesses, Opportunities, Threats)." if swot_analysis else ""}
+        {"Identify the ideal target audience and customer personas." if target_audience else ""}
+        {"Find a Unique Selling Proposition (USP) to differentiate the startup." if usp_finder else ""}
+        {"Create a Minimum Viable Product (MVP) development plan." if mvp_plan else ""}
+        {"Suggest growth, scaling, and funding strategies." if growth_strategy else ""}
+        {"Assess funding readiness and provide investor pitching advice." if funding_readiness else ""}
+        {"Develop a go-to-market strategy and customer acquisition plan." if go_to_market else ""}
+        {"Evaluate whether this startup should focus on a local or global market." if global_vs_local else ""}
+        {"Suggest the best tech stack and AI tools for development." if tech_stack else ""}
+        {"Generate a structured business plan summary for investors." if business_plan else ""}
+        """
+
+        with st.spinner("Analyzing your startup idea..."):
+            startup_report = generate_ai_content(startup_prompt, st.session_state.api_key, st.session_state.api_model)
+
+        st.success("✅ AI-Generated Startup Validation Report:")
+        st.text_area("📊 Your Startup Analysis:", startup_report, height=300)
+
+        # Download & Copy Options
+        col1, col2 = st.columns(2)
+        with col1:
+            st.download_button("📥 Download Report", startup_report, "startup_report.txt")
+        with col2:
+            st.button("📋 Copy to Clipboard", on_click=lambda: st.write(
+                "<script>navigator.clipboard.writeText(`" + startup_report.replace("`", "\\`") + "`);</script>", 
+                unsafe_allow_html=True))
+
+
+
+
 # Advanced options expander
 with st.expander("⚙️ Advanced Options"):
     # Document structure tabs
@@ -1924,6 +2477,44 @@ if st.button("🚀 Generate Content", type="primary"):
         
         # Save to history
         save_to_history(selected_tool, user_prompt, output)
+
+        # Export options
+        st.markdown("### 📥 Export Options")
+
+        # Function to create DOCX file
+        def create_docx(text):
+            doc = docx.Document()
+            doc.add_paragraph(text)
+            doc_stream = BytesIO()
+            doc.save(doc_stream)
+            doc_stream.seek(0)  # Move to the beginning of the file
+            return doc_stream
+
+        # Function to create PDF file
+        import fitz  # PyMuPDF for PDF generation
+        def create_pdf(text):
+            pdf_stream = BytesIO()
+            doc = fitz.open()  # Create a new PDF
+            page = doc.new_page(width=595, height=842)  # A4 size
+            text = text.replace("\n", "<br>")  # Maintain line breaks
+            page.insert_text((50, 50), text, fontsize=12, color=(0, 0, 0))
+            doc.save(pdf_stream)
+            pdf_stream.seek(0)
+            return pdf_stream
+
+        # Download buttons
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            st.download_button("📄 Download as TXT", output, "generated_content.txt")
+        with col2:
+            docx_file = create_docx(output)
+            st.download_button("📄 Download as DOCX", docx_file, "generated_content.docx")
+        with col3:
+            pdf_file = create_pdf(output)
+            st.download_button("📄 Download as PDF", pdf_file, "generated_content.pdf")
+
+
+
               
 # Add theme selector
 st.sidebar.markdown("---")
