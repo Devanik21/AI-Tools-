@@ -626,17 +626,16 @@ def generate_ai_tools():
 
     # Descriptive Qualifiers: Focus on Actual Capabilities
     tool_multipliers = [
-        "AI-Powered", "Data-Driven", "Adaptive", "Intelligent", 
-        "Automated", "Precision", "Workflow", "Strategic", 
-        "Analytical", "Efficient", "Scalable", "Integrated"
+        "AI-Powered", "Data-Driven", "Intelligent", "Automated", 
+        "Strategic", "Analytical", "Efficient", "Scalable"
     ]
 
     # Tool Format Descriptors: Emphasize Functional Purpose
     format_multipliers = [
         "Engine", "Platform", "Framework", "Toolkit", 
-        "Accelerator", "Assistant", "Optimizer", "Analyzer", 
-        "Manager", "Generator", "Orchestrator", "Solution"
+        "Assistant", "Optimizer", "Analyzer", "Generator"
     ]
+
     
     # Generate expanded tools by combining base tools with multipliers
     expanded_categories = {}
