@@ -1433,7 +1433,7 @@ st.markdown(f"### Currently using: **{st.session_state.selected_tool}**")
 
 # Create buttons for each tool and update session state when clicked
 for tool in ai_tools:
-    if st.button(tool, key=f"cat_{tool}"):
+    for idx, tool in enumerate(ai_tools): 
         select_tool(tool)  # Call function to update session state
 
 # Content prompt area
