@@ -974,16 +974,8 @@ tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9, tab10, tab11, tab12, tab13
 st.markdown("</div>", unsafe_allow_html=True)
 
 with tab1:
-    category_columns = st.columns(4)  # Creates 4 columns for better layout
+    selected_category = st.radio("Choose a category:", list(tool_categories.keys()))
     
-    categories = list(tool_categories.keys())
-
-    # Arrange categories in a grid layout
-    selected_category = None
-    for i, category in enumerate(categories):
-        with category_columns[i % 4]:  # Distribute across columns
-            if st.button(category):
-                selected_category = category
 
     # Only show tools from selected category
     if selected_category:
