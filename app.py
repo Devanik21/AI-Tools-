@@ -183,13 +183,50 @@ def generate_ai_tools():
     # Base categories dictionary - we'll expand with multipliers later
     base_categories = {
         "Writing": [
-            "Resume", "Cover Letter", "Email", "Blog Post", "Content Rewrite", "Grammar Check", 
-            "Summary", "Academic Essay", "Letter", "Script", "Technical Writing", "Research Paper",
-            "Whitepaper", "Thesis Statement", "Literature Review", "Citation", "Lab Report",
-            "Case Study", "Editorial Guidelines", "Style Guide", "Professional Bio", "Executive Summary",
-            "Project Proposal", "Meeting Minutes", "Documentation", "SOP", "Policy Draft",
-            "Legal Document", "Contract Clause", "Terms & Conditions", "Privacy Policy"
+            # Professional & Business Writing  
+            "Resume", "Cover Letter", "Job Application Letter", "Recommendation Letter", "Business Proposal",  
+            "Project Proposal", "Executive Summary", "Professional Bio", "Company Profile", "Business Plan",  
+            "Marketing Copy", "Sales Pitch", "Brand Story", "Press Release", "Meeting Minutes", "Email",  
+            "SOP (Standard Operating Procedure)", "RFP (Request for Proposal)", "Policy Draft", "Employee Handbook",  
+            "Business Case Study", "Whitepaper",  
+
+            # Academic & Research Writing  
+            "Academic Essay", "Thesis Statement", "Literature Review", "Research Paper", "Citation",  
+            "Abstract & Keywords Generator", "Lab Report", "Case Study", "Grant Proposal", "Conference Paper",  
+            "Technical Report", "Editorial Guidelines", "Style Guide",  
+
+            # Creative & Content Writing  
+            "Blog Post", "Script (Movie, YouTube, Podcast)", "Short Story", "Novel Outline", "Poetry",  
+            "Creative Writing Prompt", "Character Development", "Plot Outline", "Ghostwriting",  
+            "Content Ideation & Brainstorming", "Social Media Caption & Hashtag Generator",  
+
+            # Legal & Compliance Writing  
+            "Legal Document Drafting", "Contract Clause Generator", "Terms & Conditions", "Privacy Policy",  
+            "GDPR Compliance Notice", "Non-Disclosure Agreement (NDA)", "Service-Level Agreement (SLA)",  
+            "Disclaimers & Liability Waivers",  
+
+            # Editing & Optimization  
+            "Grammar & Spell Check", "Paraphrasing Tool", "Readability Improvement", "Plagiarism Checker",  
+            "Tone Adjustment (Formal, Casual, Professional)", "Style Consistency Checker",  
+            "Sentence Expansion & Condensation",  
+
+            # Summarization & Extraction  
+            "Executive Summary Generator", "Meeting Notes & Minutes Summarization", "Article Summary",  
+            "Research Paper Summary", "Legal Document Summary", "Report Extraction", "Transcript Summarization",  
+
+            # Technical & Documentation Writing  
+            "API Documentation Generator", "Software User Manual", "Product Documentation",  
+            "Engineering Report", "Patent Writing", "Troubleshooting Guide", "FAQs & Help Desk Content",  
+
+            # UX & Product Writing  
+            "UX Writing (Microcopy for Apps & Websites)", "Chatbot Script", "Error Message Optimization",  
+            "App Store Description", "Product Descriptions",  
+
+            # Miscellaneous Writing  
+            "Personal Letter (Apology, Love, Invitation)", "Speech Writing (Wedding, Graduation, Motivational)",  
+            "Eulogy Writing", "Greeting Card Messages", "Review Writing (Product, Movie, Book)"  
         ],
+
         
         "Creative": [
             "Poem", "Story", "Dialogue", "Character", "Book Title", "Horror Story", "Sci-Fi Story",
