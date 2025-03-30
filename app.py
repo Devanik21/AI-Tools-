@@ -306,11 +306,37 @@ def generate_ai_tools():
     
     # Additional categories to reach 2000+ tools
     extended_categories = {
-        "Social Media": ["Post", "Caption", "Viral Tweet", "YouTube Idea", "Tagline", "Pinterest Description",
-                        "Cold Email", "Podcast Episode", "Content Calendar", "Viral Formula", "Influencer Pitch",
-                        "Brand Partnership", "YouTube Script", "Dating Profile", "Networking Opener",
-                        "TikTok Trend", "Instagram Story", "LinkedIn Article", "Twitter Thread", "Facebook Ad",
-                        "Hashtag Strategy", "Reel Script", "Community Post", "Review Response", "Crisis Response"],
+"Social Media": [
+    # General Social Media Content  
+    "Post", "Caption", "Viral Tweet", "Hashtag Strategy", "Content Calendar", "Trending Topics Finder",  
+    "Community Post", "Meme Generator", "User Engagement Prompt", "Social Media Poll Idea",  
+
+    # YouTube & Video Content  
+    "YouTube Idea", "YouTube Script", "YouTube Thumbnail Text", "Reel Script",  
+    "TikTok Trend", "Instagram Story", "Short-Form Video Hook", "Livestream Outline",  
+
+    # Influencer & Brand Marketing  
+    "Influencer Pitch", "Brand Partnership", "Sponsorship Email", "Affiliate Marketing Copy",  
+    "Networking Opener", "Collaborative Post Idea", "Product Placement Script",  
+
+    # Advertising & Growth Strategies  
+    "Facebook Ad", "Instagram Ad Copy", "LinkedIn Ad Copy", "Twitter Ad Copy",  
+    "A/B Testing Ad Variations", "Social Media Growth Hack", "Viral Formula",  
+
+    # Engagement & Audience Interaction  
+    "Review Response", "Crisis Response", "Customer Support Reply", "Community Engagement Strategy",  
+    "DM Outreach Message", "Story Poll & Quiz Ideas",  
+
+    # Niche-Specific Content  
+    "Podcast Episode Idea", "Podcast Episode Title", "Podcast Teaser Post", "Dating Profile",  
+    "LinkedIn Article", "Twitter Thread", "Pinterest Description", "Tagline",  
+    "Event Promotion Post", "Giveaway & Contest Post",  
+
+    # SEO & Algorithm Boosting Content  
+    "SEO-Optimized Post", "Trending Hashtag Suggestions", "Social Media Headline Generator",  
+    "Evergreen Content Idea", "Cross-Platform Content Repurposing",  
+],
+
         
         "Productivity": ["Productivity Plan", "Daily Plan", "Travel Itinerary", "Note-Taking", "Brainstorming",
                          "Grocery List", "Interview Prep", "Learning Path", "Time Management", "Prioritization",
