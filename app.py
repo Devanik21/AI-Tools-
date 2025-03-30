@@ -12,6 +12,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import plotly.express as px
 import seaborn as sns
+import uuid
 import pyperclip
 
 
@@ -986,7 +987,7 @@ with tab1:
         cols = st.columns(3)
         for i, tool in enumerate(tools_in_category):
             with cols[i % 3]:
-                if st.button(tool, key=f"cat_{hash(tool)}"):
+                if st.button(tool, key=f"cat_{tool}_{uuid.uuid4()}"):
                     st.session_state.selected_tool = tool
 
 with tab2:
