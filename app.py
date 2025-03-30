@@ -338,14 +338,52 @@ def generate_ai_tools():
 ],
 
         
-        "Productivity": ["Productivity Plan", "Daily Plan", "Travel Itinerary", "Note-Taking", "Brainstorming",
-                         "Grocery List", "Interview Prep", "Learning Path", "Time Management", "Prioritization",
-                         "Decision Matrix", "Problem-Solving", "Critical Thinking", "Goal Setting", "Habit Tracker",
-                         "Professional Development", "Weekly Schedule", "Project Management", "Task Breakdown"],
+"Productivity": [
+    # Planning & Scheduling  
+    "Productivity Plan", "Daily Plan", "Weekly Schedule", "Monthly Planner", "Yearly Goal Planner",  
+    "Project Management", "Task Breakdown", "Meeting Agenda", "Time Blocking Planner",  
+    "Work-Life Balance Plan", "Pomodoro Session Planner",  
+
+    # Organization & Efficiency  
+    "Note-Taking", "Brainstorming", "Mind Mapping", "Decision Matrix", "Prioritization",  
+    "Time Management", "Kanban Board Organizer", "Checklist Generator", "Routine Optimization",  
+
+    # Goal Setting & Self-Improvement  
+    "Goal Setting", "Habit Tracker", "Professional Development Plan", "Self-Reflection Journal",  
+    "Personal SWOT Analysis", "Skill Development Roadmap", "Morning & Night Routine Guide",  
+
+    # Travel & Logistics  
+    "Travel Itinerary", "Packing List", "Grocery List", "Meal Planning", "Event Planning",  
+
+    # Career & Productivity Tools  
+    "Interview Prep", "Performance Review Template", "Networking Plan", "Work Presentation Structure",  
+    "Work Journal", "Bullet Journal Prompts", "Crisis Management Plan",  
+],
+
+        "Education": [
+    # Teaching & Curriculum Design  
+    "Lesson Plan", "Course Outline", "Curriculum", "Syllabus", "Workshop Plan",  
+    "Classroom Activity Idea", "Lecture Notes", "Tutoring Session Plan",  
+
+    # Student Learning & Study Aids  
+    "Educational Quiz", "Study Guide", "Subject Summary", "Assignment", "Test Questions",  
+    "Flashcard Generator", "Formula Cheat Sheet", "Learning Path", "Research Topic Suggestions",  
+
+    # Interactive & Alternative Learning  
+    "Educational Game", "Puzzle-Based Learning", "Simulation-Based Teaching", "Case Study Analysis",  
+    "Peer Learning Strategy", "Role-Playing Educational Exercise",  
+
+    # Higher Education & Academic Tools  
+    "Academic Resource List", "Research Paper Guide", "Thesis Outline", "Citation Generator",  
+    "Critical Thinking Exercise", "Problem-Solving Challenge",  
+
+    # Skill Development & Self-Learning  
+    "Tutorial", "Self-Study Plan", "Lifelong Learning Roadmap", "Language Learning Plan",  
+    "Career-Oriented Learning Path", "Skill-Building Guide",  
+],
+
         
-        "Education": ["Lesson Plan", "Course Outline", "Curriculum", "Educational Quiz", "Study Guide",
-                     "Teaching Material", "Assignment", "Workshop", "Test Questions", "Learning Objectives",
-                     "Educational Game", "Academic Resource", "Subject Summary", "Syllabus", "Tutorial"],
+
         
         "Design": ["Design Brief", "Color Palette", "Typography Guide", "Design System", "Logo Concept",
                   "UI Element", "UX Flow", "Website Layout", "Print Material", "Product Packaging",
