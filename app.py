@@ -1419,8 +1419,25 @@ with tab6:
 st.header("✨ Create Content")
 
 # Display selected tool or default
-selected_tool = st.session_state.get('selected_tool', 'Smart Content Creator')
-st.markdown(f"### Currently using: **{selected_tool}**")
+# Initialize session state if not set
+if "selected_tool" not in st.session_state:
+    st.session_state.selected_tool = "Smart Content Creator"
+
+# Function to update selected tool
+def select_tool(tool_name):
+    st.session_state.selected_tool = tool_name
+    st.rerun()  # Ensures UI updates immediately
+
+# Display the currently selected tool
+st.markdown(f"### Currently using: **{st.session_state.selected_tool}**")
+
+# Create buttons and update session state on click
+for category, tools in ai_tools.items():
+    st.subheader(category)  # Show category name
+    for tool in tools:
+        if st.button(tool, key=f"cat_{tool}"):
+            select_tool(tool)  # Call function to update state
+
 
 # Content prompt area
 user_prompt = st.text_area("Enter your prompt:", "", height=150)
