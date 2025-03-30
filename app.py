@@ -1431,13 +1431,10 @@ def select_tool(tool_name):
 # Display the currently selected tool
 st.markdown(f"### Currently using: **{st.session_state.selected_tool}**")
 
-# Create buttons and update session state on click
-for category, tools in ai_tools.items():
-    st.subheader(category)  # Show category name
-    for tool in tools:
-        if st.button(tool, key=f"cat_{tool}"):
-            select_tool(tool)  # Call function to update state
-
+# Create buttons for each tool and update session state when clicked
+for tool in ai_tools:
+    if st.button(tool, key=f"cat_{tool}"):
+        select_tool(tool)  # Call function to update session state
 
 # Content prompt area
 user_prompt = st.text_area("Enter your prompt:", "", height=150)
