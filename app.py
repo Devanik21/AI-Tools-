@@ -986,7 +986,7 @@ with tab1:
         cols = st.columns(3)
         for i, tool in enumerate(tools_in_category):
             with cols[i % 3]:
-                if st.button(tool, key=f"cat_{tool}"):
+                if st.button(tool, key=f"cat_{hash(tool)}"):
                     st.session_state.selected_tool = tool
 
 with tab2:
