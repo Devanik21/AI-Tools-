@@ -13,6 +13,7 @@ import matplotlib.pyplot as plt
 import plotly.express as px
 import seaborn as sns
 import pyperclip
+import uuid
 
 
 # Configure Streamlit page
@@ -631,7 +632,7 @@ tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9, tab10, tab11, tab12, tab13
 st.markdown("</div>", unsafe_allow_html=True)
 
 with tab1:
-    selected_category = st.radio("Choose a category:", list(tool_categories.keys()))
+    selected_category = st.selectbox("Choose a category:", list(tool_categories.keys()))
     
     # Only show tools from selected category
     if selected_category:
@@ -642,7 +643,7 @@ with tab1:
         cols = st.columns(3)
         for i, tool in enumerate(tools_in_category):
             with cols[i % 3]:
-                if st.button(tool, key=f"cat_{tool}"):
+                if st.button(tool, key=f"cat_{tool}_{uuid.uuid4()}"):
                     st.session_state.selected_tool = tool
 
 with tab2:
