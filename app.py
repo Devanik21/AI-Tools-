@@ -226,498 +226,80 @@ def generate_ai_tools():
             "Personal Letter (Apology, Love, Invitation)", "Speech Writing (Wedding, Graduation, Motivational)",  
             "Eulogy Writing", "Greeting Card Messages", "Review Writing (Product, Movie, Book)"  
         ],
+
         
         "Creative": [
-            # Poetry & Lyrics  
-            "Poem", "Haiku", "Limerick", "Sonnet", "Free Verse", "Song Lyrics", "Rap Lyrics",  
-            "Acrostic Poem", "Poetry Prompt", "Rhyming Verse",  
-
-            # Fiction & Storytelling  
-            "Story", "Short Story", "Flash Fiction", "Novella Outline", "Novel Outline",  
-            "Children's Story", "Bedtime Story", "Horror Story", "Sci-Fi Story", "Fantasy Story",  
-            "Mythology Retelling", "Historical Fiction", "Alternate History", "Fable", "Urban Legend",  
-            "Fairy Tale Rewrite", "Dystopian Story",  
-
-            # Character Development  
-            "Character", "Character Backstory", "Character Arc", "Villain Development",  
-            "Hero’s Journey", "Sidekick Generator", "Anti-Hero Development",  
-
-            # Worldbuilding & Fantasy Elements  
-            "Fantasy World", "Sci-Fi Technology", "Magic System", "Fictional Language",  
-            "Mythical Creature", "Superpower Generator", "Alien Species", "Alternate Universe",  
-            "Steampunk Invention", "Cyberpunk Society", "Post-Apocalyptic World",  
-
-            # Plot & Writing Aids  
-            "Book Title", "Plot Twist", "Story Conflict", "Story Climax", "Short Story Starter",  
-            "Creative Prompt", "Poetry Prompt", "Dialogue", "Monologue", "Setting Description",  
-            "Screenplay Format", "Scene Breakdown", "Writing Warm-Up",  
-
-            # Humor & Light-Hearted Writing  
-            "Joke", "Puns", "Satire Piece", "Parody Song", "Comedy Sketch",  
-
-            # Memoir & Personal Writing  
-            "Memoir", "Personal Essay", "Anecdote", "Inspirational Story", "Letter to Future Self",  
-
-            # Dream & Metaphysical Writing  
-            "Dream Interpreter", "Symbolic Dream Meaning", "Lucid Dream Story",  
-            "Surreal Dream Narration", "Dream Journal Entry", "Visionary Experience"  
+            "Poem", "Story", "Dialogue", "Character", "Book Title", "Horror Story", "Sci-Fi Story",
+            "Song Lyrics", "Children's Story", "Novel Outline", "Metaphor", "Joke", "Fantasy World",
+            "Sci-Fi Technology", "Historical Fiction", "Memoir", "Poetry Prompt", "Creative Prompt",
+            "Short Story Starter", "Screenplay Format", "Plot Twist", "Character Backstory",
+            "Setting Description", "Alternate History", "Mythical Creature", "Magic System",
+            "Fictional Language", "Story Conflict"
         ],
         
-
-        
         "Business": [
-            # Business Strategy & Planning  
-            "Business Idea", "Business Model Canvas", "Business Plan", "Go-to-Market Strategy",  
-            "Startup Pitch", "Investor Pitch", "Funding Request", "Bootstrapping Strategy",  
-            "Growth Hacking Techniques", "Project Timeline", "Risk Assessment", "Exit Strategy",  
-
-            # Marketing & Branding  
-            "Marketing Strategy", "Content Marketing Plan", "Branding Guide", "Social Media Strategy",  
-            "SEO Keywords", "Ad Copy Generator", "Product Launch Plan", "Rebranding Strategy",  
-            "Customer Retention Plan", "Brand Voice & Messaging",  
-
-            # Sales & Customer Development  
-            "Sales Pitch", "Freelance Proposal", "Lead Generation Strategy", "Customer Persona",  
-            "Cold Email Template", "Sales Funnel Optimization", "Customer Support Guidelines",  
-            "Loyalty Program Strategy", "Upselling & Cross-Selling Strategy",  
-
-            # Financial & Business Analysis  
-            "Grant Proposal", "ROI Calculator", "Break-even Analysis", "Pricing Strategy",  
-            "Financial Forecasting", "Cash Flow Management", "Profit Margin Analysis",  
-            "Funding Proposal", "Investor Report",  
-
-            # Market Research & Competitive Analysis  
-            "Market Research", "Competitor Analysis", "Industry Trends Report", "Customer Survey Questions",  
-            "Business Case", "SWOT Analysis", "KPI Framework", "Benchmarking Analysis",  
-
-            # Business Communication & Operations  
-            "Business Email", "LinkedIn Bio", "Professional Networking Message", "Press Release",  
-            "Mission Statement", "Company Values", "Code of Conduct", "HR Policy Draft",  
-            "Crisis Management Plan", "Standard Operating Procedure (SOP)",  
-
-            # Entrepreneurship & Consultation  
-            "Business Consultation", "Startup Incubation Strategy", "Fundraising Strategy",  
-            "Legal Compliance Checklist", "Franchise Business Plan", "Freelance Business Plan",  
-            "E-commerce Strategy", "Subscription Model Strategy"  
+            "Business Idea", "Startup Pitch", "SEO Keywords", "Business Consultation", "Marketing Strategy",
+            "Grant Proposal", "Freelance Proposal", "LinkedIn Bio", "Branding Guide", "Business Email",
+            "SWOT Analysis", "Business Case", "Market Research", "Competitor Analysis", "Pricing Strategy",
+            "Product Launch", "Go-to-Market", "Customer Persona", "Mission Statement", "Company Values",
+            "Business Plan", "Investor Pitch", "Funding Request", "Project Timeline", "Risk Assessment",
+            "ROI Calculator", "KPI Framework"
         ]
-
     }
 
     
     # Additional categories to reach 2000+ tools
     extended_categories = {
-        "Social Media": [
-            # General Social Media Content  
-            "Post", "Caption", "Viral Tweet", "Hashtag Strategy", "Content Calendar", "Trending Topics Finder",  
-            "Community Post", "Meme Generator", "User Engagement Prompt", "Social Media Poll Idea",  
-
-            # YouTube & Video Content  
-            "YouTube Idea", "YouTube Script", "YouTube Thumbnail Text", "Reel Script",  
-            "TikTok Trend", "Instagram Story", "Short-Form Video Hook", "Livestream Outline",  
-
-            # Influencer & Brand Marketing  
-            "Influencer Pitch", "Brand Partnership", "Sponsorship Email", "Affiliate Marketing Copy",  
-            "Networking Opener", "Collaborative Post Idea", "Product Placement Script",  
-
-            # Advertising & Growth Strategies  
-            "Facebook Ad", "Instagram Ad Copy", "LinkedIn Ad Copy", "Twitter Ad Copy",  
-            "A/B Testing Ad Variations", "Social Media Growth Hack", "Viral Formula",  
-
-            # Engagement & Audience Interaction  
-            "Review Response", "Crisis Response", "Customer Support Reply", "Community Engagement Strategy",  
-            "DM Outreach Message", "Story Poll & Quiz Ideas",  
-
-            # Niche-Specific Content  
-            "Podcast Episode Idea", "Podcast Episode Title", "Podcast Teaser Post", "Dating Profile",  
-            "LinkedIn Article", "Twitter Thread", "Pinterest Description", "Tagline",  
-            "Event Promotion Post", "Giveaway & Contest Post",  
-
-            # SEO & Algorithm Boosting Content  
-            "SEO-Optimized Post", "Trending Hashtag Suggestions", "Social Media Headline Generator",  
-            "Evergreen Content Idea", "Cross-Platform Content Repurposing"  
-        ],
-        "Productivity": [
-            # Planning & Scheduling  
-            "Productivity Plan", "Daily Plan", "Weekly Schedule", "Monthly Planner", "Yearly Goal Planner",  
-            "Project Management", "Task Breakdown", "Meeting Agenda", "Time Blocking Planner",  
-            "Work-Life Balance Plan", "Pomodoro Session Planner",  
-
-            # Organization & Efficiency  
-            "Note-Taking", "Brainstorming", "Mind Mapping", "Decision Matrix", "Prioritization",  
-            "Time Management", "Kanban Board Organizer", "Checklist Generator", "Routine Optimization",  
-
-            # Goal Setting & Self-Improvement  
-            "Goal Setting", "Habit Tracker", "Professional Development Plan", "Self-Reflection Journal",  
-            "Personal SWOT Analysis", "Skill Development Roadmap", "Morning & Night Routine Guide",  
-
-            # Travel & Logistics  
-            "Travel Itinerary", "Packing List", "Grocery List", "Meal Planning", "Event Planning",  
-
-            # Career & Productivity Tools  
-            "Interview Prep", "Performance Review Template", "Networking Plan", "Work Presentation Structure",  
-            "Work Journal", "Bullet Journal Prompts", "Crisis Management Plan"  
-        ],
-        "Education": [
-            # Teaching & Curriculum Design  
-            "Lesson Plan", "Course Outline", "Curriculum", "Syllabus", "Workshop Plan",  
-            "Classroom Activity Idea", "Lecture Notes", "Tutoring Session Plan",  
-
-            # Student Learning & Study Aids  
-            "Educational Quiz", "Study Guide", "Subject Summary", "Assignment", "Test Questions",  
-            "Flashcard Generator", "Formula Cheat Sheet", "Learning Path", "Research Topic Suggestions",  
-
-            # Interactive & Alternative Learning  
-            "Educational Game", "Puzzle-Based Learning", "Simulation-Based Teaching", "Case Study Analysis",  
-            "Peer Learning Strategy", "Role-Playing Educational Exercise",  
-
-            # Higher Education & Academic Tools  
-            "Academic Resource List", "Research Paper Guide", "Thesis Outline", "Citation Generator",  
-            "Critical Thinking Exercise", "Problem-Solving Challenge",  
-
-            # Skill Development & Self-Learning  
-            "Tutorial", "Self-Study Plan", "Lifelong Learning Roadmap", "Language Learning Plan",  
-            "Career-Oriented Learning Path", "Skill-Building Guide"  
-        ],
-
-
-        "Design": [
-            # Branding & Identity  
-            "Design Brief", "Logo Concept", "Brand Identity", "Typography Guide", "Color Palette",  
-            "Mood Board", "Style Tile", "Visual Hierarchy Guide",  
-
-            # UI/UX & Digital Design  
-            "UI Element", "UX Flow", "Wireframe Sketch", "Website Layout", "Mobile App UI",  
-            "Dashboard UI", "Landing Page Wireframe", "Accessibility Guidelines",  
-
-            # Print & Packaging Design  
-            "Print Material", "Product Packaging", "Brochure Layout", "Business Card Design",  
-            "Poster Concept", "Book Cover Design",  
-
-            # Illustration & Graphic Elements  
-            "Illustration Concept", "Icon Set", "Custom Vector Art", "Infographic Layout",  
-            "Social Media Graphics", "Sticker Pack", "3D Design Concept",  
-
-            # Advanced & Systematic Design  
-            "Design System", "UI Component Library", "Grid System Guide", "Motion Design Concept",  
-            "Microinteraction Design", "Design Tokens"  
-        ],
-        "Development": [
-            # Software Planning & Architecture  
-            "Development Plan", "Code Architecture", "Tech Stack", "System Architecture",  
-            "Software Requirements", "Scalability Strategy", "Performance Optimization Guide",  
-
-            # Coding & Documentation  
-            "Code Review", "Code Snippet", "Code Refactoring", "Algorithm", "API Documentation",  
-            "Database Schema", "Technical Spec", "Feature Spec",  
-
-            # Testing & Debugging  
-            "Testing Strategy", "Unit Test Case", "Bug Report", "Debugging Guide",  
-            "Security Best Practices",  
-
-            # DevOps & Deployment  
-            "CI/CD Pipeline Plan", "Infrastructure as Code", "Deployment Strategy",  
-            "Server Configuration", "Monitoring & Logging Setup",  
-
-            # Web & Mobile Development  
-            "Frontend Framework Guide", "Backend API Design", "Full-Stack Development Plan",  
-            "Responsive Web Design Principles", "Cross-Platform Development Strategy",  
-
-            # AI & Data Science Development  
-            "ML Model Deployment Guide", "Data Pipeline Design", "AI Ethics & Bias Mitigation",  
-            "Deep Learning Framework Selection", "Edge AI Development Plan"  
-        ],
-
-        "Marketing": [
-            # Strategy & Planning  
-            "Marketing Plan", "Campaign Brief", "Growth Hack", "Product Launch Strategy", "Rebranding Strategy",  
-            "Customer Journey", "Competitive Positioning", "Go-to-Market Plan", "Market Segmentation",  
-
-            # Advertising & Promotion  
-            "Ad Copy", "Landing Page", "Promotion", "Social Media Ad Script", "Native Advertising Copy",  
-            "Influencer Marketing Strategy", "Referral Marketing Plan", "Affiliate Marketing Plan",  
-
-            # Content & Engagement  
-            "Email Campaign", "Newsletter Strategy", "Content Calendar", "SEO-Optimized Blog Strategy",  
-            "Video Marketing Plan", "Podcast Promotion Plan", "Webinar Outline",  
-
-            # Sales & Conversion Optimization  
-            "Conversion Strategy", "Sales Script", "Lead Magnet Idea", "Customer Retention Plan",  
-            "Call-to-Action Optimization", "Upselling & Cross-Selling Strategy",  
-
-            # Branding & Messaging  
-            "Value Proposition", "USP", "Elevator Pitch", "Messaging Framework", "Brand Storytelling",  
-            "Emotional Branding Guide", "Tagline & Slogan Generator",  
-
-            # Market Research & Analytics  
-            "Customer Persona", "A/B Testing Plan", "Performance Metrics Dashboard", "Marketing ROI Calculator",  
-            "Competitor Analysis", "Consumer Trend Report", "Pricing Psychology Strategy"  
-        ],
-        "Finance": [
-            # Budgeting & Financial Planning  
-            "Budget Plan", "Expense Report", "Savings Plan", "Personal Finance Tracker", "Cash Flow Management",  
-            "Debt Management", "Cost Reduction Strategy", "Emergency Fund Planning",  
-
-            # Investment & Business Finance  
-            "Investment Strategy", "Stock Market Analysis", "Wealth Management Plan", "Equity Distribution",  
-            "Fundraising Strategy", "Investor Pitch Financials", "Mergers & Acquisitions Strategy",  
-
-            # Revenue & Profit Optimization  
-            "Revenue Forecast", "Profit Optimization", "Monetization Strategy", "Pricing Model",  
-            "Financial Risk Assessment", "Financial Growth Projection",  
-
-            # Tax & Compliance  
-            "Tax Strategy", "Legal & Compliance Checklist", "Audit Preparation Guide",  
-
-            # Retirement & Long-Term Planning  
-            "Retirement Plan", "Passive Income Strategy", "Estate Planning Guide",  
-
-            # Financial Education & Analysis  
-            "Financial Model", "Financial Education", "Personal Net Worth Calculation",  
-            "Business Valuation Analysis", "Break-Even Analysis"  
-        ],
-        "Health": [
-            # General Wellness & Lifestyle  
-            "Wellness Plan", "Self-Care Routine", "Health Goal", "Stress Management", "Work-Life Balance Guide",  
-            "Sleep Improvement", "Mindfulness Exercise", "Daily Energy Optimization",  
-
-            # Diet & Nutrition  
-            "Diet Plan", "Meal Prep Guide", "Nutrition Guide", "Hydration Plan", "Superfood Recommendations",  
-            "Vitamins & Supplements Guide", "Intermittent Fasting Plan",  
-
-            # Fitness & Exercise  
-            "Fitness Routine", "Home Workout Plan", "Gym Training Plan", "Yoga Sequence",  
-            "Cardio vs Strength Training Guide", "Running Plan", "HIIT Routine",  
-
-            # Mental Health & Recovery  
-            "Mental Health Check-In", "Meditation Script", "Anxiety & Stress Relief Guide",  
-            "Cognitive Behavioral Therapy (CBT) Techniques", "Journaling Prompts for Mental Clarity",  
-
-            # Symptom & Medical Insights  
-            "Symptom Analysis", "Health Tracker", "Chronic Illness Management Plan",  
-            "Medical Information", "Preventive Healthcare Checklist",  
-
-            # Specialized & Alternative Health  
-            "Holistic Healing Plan", "Ayurveda & Herbal Remedies", "Acupuncture & Alternative Medicine",  
-            "Post-Injury Recovery Plan", "Rehabilitation Strategy"  
-        ],
-        "Legal": [
-            # Legal Drafting & Contracts  
-            "Contract Template", "Legal Letter", "Legal Response", "Regulatory Filing",  
-            "Terms of Service", "Privacy Statement", "Disclaimer", "Copyright Notice",  
-
-            # Business & Intellectual Property (IP)  
-            "IP Strategy", "Trademark Filing Guide", "Patent Summary", "Intellectual Property Protection Plan",  
-            "Business Compliance Checklist", "Non-Disclosure Agreement (NDA)",  
-
-            # Legal Analysis & Dispute Resolution  
-            "Legal Analysis", "Legal Research", "Dispute Resolution", "Regulatory Compliance Audit",  
-            "Risk Assessment & Mitigation", "Case Law Review",  
-
-            # Consumer & Personal Legal Support  
-            "Employment Contract Review", "Tenant Rights & Rental Agreement",  
-            "Small Claims Court Guide", "Legal Defense Outline", "Cyber Law & Data Protection Strategy"  
-        ],
-        "Event": [
-            # Event Planning & Logistics  
-            "Event Plan", "Event Budget", "Venue Description", "Event Schedule", "Guest List",  
-            "Conference Agenda", "Corporate Event Strategy", "Virtual Event Setup",  
-
-            # Invitations & Announcements  
-            "Invitation", "Save-the-Date Announcement", "Event Reminder Message", "RSVP Confirmation",  
-
-            # Speeches & Messages  
-            "Wedding Speech", "Toast", "Thank You Note", "Opening Ceremony Speech",  
-            "Farewell Speech", "Award Ceremony Speech", "Eulogy",  
-
-            # Event Content & Marketing  
-            "Event Marketing", "Social Media Event Promotion", "Press Release for Event",  
-            "Sponsorship Proposal", "Hashtag Strategy for Events",  
-
-            # Entertainment & Activities  
-            "Party Theme", "Entertainment Plan", "Catering Menu", "Music Playlist Suggestion",  
-            "Photo Booth Ideas", "Games & Icebreakers", "Team Building Activity",  
-
-            # Specialized Event Plans  
-            "Wedding Planning Guide", "Birthday Party Plan", "Baby Shower Ideas",  
-            "Graduation Ceremony Plan", "Charity Fundraiser Outline", "Festival & Fair Planning"  
-        ],
-        "Relationships": [
-            # Romantic Relationships  
-            "Love Letter", "Apology Letter", "Breakup Letter", "Anniversary Note", "Proposal Message",  
-            "Long-Distance Relationship Advice", "Heartfelt Compliment Generator",  
-
-            # Friendships & Social Connections  
-            "Friendship Message", "Birthday Message", "Congratulations Note", "Supportive Message",  
-            "Reconnection Message", "Group Chat Icebreaker",  
-
-            # Family & Personal Relationships  
-            "Family Communication Guide", "Parenting Advice", "Sibling Bonding Ideas",  
-            "Holiday Greeting Message", "Personalized Family Storytelling",  
-
-            # Professional & Networking  
-            "Networking Message", "LinkedIn Connection Request", "Mentor Outreach Email",  
-            "Professional Thank You Note", "Colleague Appreciation Message",  
-
-            # Emotional Support & Conflict Resolution  
-            "Relationship Advice", "Conflict Resolution Guide", "Condolence Note",  
-            "Forgiveness Letter", "Active Listening Tips", "Empathy Coaching"  
-        ],
-        "Industry": [
-            # Industry Research & Market Analysis  
-            "Industry Analysis", "Sector Trend", "Market Forecast", "Industry Report",  
-            "Competitive Landscape", "Market Share Analysis", "Economic Impact Report",  
-
-            # Regulations & Compliance  
-            "Regulatory Impact", "Government Policy Update", "Industry Compliance Checklist",  
-            "International Trade Law Overview", "ESG (Environmental, Social, and Governance) Compliance",  
-
-            # Technology & Innovation  
-            "Technology Adoption", "AI & Automation in Industry", "Sustainability Trends",  
-            "Industry 4.0 Strategy", "Blockchain Use Cases in Industry", "Green Energy Impact",  
-
-            # Business Growth & Strategy  
-            "Industry Disruption", "Vertical Strategy", "Expansion & Globalization Plan",  
-            "Mergers & Acquisitions Insight", "Franchise Model Analysis",  
-
-            # Supply Chain & Distribution  
-            "Supply Chain Optimization", "Logistics Strategy", "Reshoring vs Offshoring Analysis",  
-            "Distribution Channel Strategy", "Inventory Management Trends",  
-
-            # Partnerships & Networking  
-            "Industry Partnership", "Joint Venture Feasibility", "Trade Association Guide",  
-            "Industry Event Planning", "Corporate Sponsorship Strategy",  
-
-            # Future Trends & Predictions  
-            "Emerging Market Analysis", "Future of Work Report", "Disruptive Startup Watchlist",  
-            "AI Impact on Industry", "Space Economy Trends", "Cybersecurity Risk Forecast"  
-        ],
-        "Healthcare": [
-            # Clinical & Patient Care  
-            "Patient Care Protocol", "Medical Diagnosis", "Treatment Plan", "Chronic Disease Management",  
-            "Emergency Response Plan", "Telemedicine Consultation Guide", "Healthcare AI Integration",  
-
-            # Medical Administration & Compliance  
-            "Medical Record Management", "Electronic Health Records (EHR) Strategy", "Healthcare Compliance Checklist",  
-            "HIPAA & Data Privacy", "Hospital Accreditation Requirements",  
-
-            # Medical Research & Innovation  
-            "Clinical Trial Design", "Drug Development Roadmap", "Medical Device Approval Process",  
-            "Biomedical Engineering Trends", "AI in Medical Imaging",  
-
-            # Healthcare Economics & Policy  
-            "Healthcare Policy Analysis", "Health Insurance Framework", "Universal Healthcare Debate",  
-            "Medicare & Medicaid Guide", "Value-Based Care Model",  
-
-            # Patient Engagement & Education  
-            "Patient Experience Strategy", "Healthcare Marketing", "Medical Blog & Outreach",  
-            "Wellness Program Design", "Mental Health Awareness Campaign"  
-        ],
-        "E-commerce": [
-            # Product & Inventory Management  
-            "Product Listing Optimization", "Dynamic Pricing Strategy", "Inventory Forecasting",  
-            "Dropshipping Business Plan", "Product Lifecycle Management",  
-
-            # Customer Experience & Retention  
-            "Customer Review Strategy", "Shopping Experience Enhancement", "Customer Support AI Chatbot",  
-            "Loyalty Program Development", "Subscription Model Strategy",  
-
-            # Marketing & Sales Growth  
-            "E-commerce Copywriting", "SEO for Product Pages", "Email Marketing for E-commerce",  
-            "Influencer Marketing for Online Stores", "Flash Sale Campaign Strategy",  
-
-            # Logistics & Operations  
-            "Shipping Policy Optimization", "Return & Refund Policy", "Cross-Border E-commerce Strategy",  
-            "Last-Mile Delivery Innovation", "Omnichannel Retailing Strategy",  
-
-            # E-commerce Business Development  
-            "Marketplace Strategy", "D2C (Direct-to-Consumer) Business Plan", "B2B E-commerce Expansion",  
-            "Mobile Commerce (M-commerce) Strategy", "Live Shopping & Video Commerce"  
-        ],
-        "Real Estate": [
-            # Property Marketing & Sales  
-            "Property Description", "Real Estate Listing", "Luxury Real Estate Marketing", "Virtual Tour Script",  
-            "Neighborhood Guide", "Social Media Strategy for Realtors", "Open House Invitation",  
-
-            # Market Research & Investment  
-            "Market Analysis", "Investment Property Analysis", "Rental Analysis", "Flipping Houses Strategy",  
-            "Commercial Real Estate Trends", "Multi-Family Property Investment", "Real Estate ROI Calculator",  
-
-            # Property Management & Legal Aspects  
-            "Property Management Guide", "Lease Agreement Drafting", "Tenant Screening Checklist",  
-            "HOA Communication Strategy", "Short-Term Rental Strategy (Airbnb, VRBO)",  
-
-            # Homeownership & Financing  
-            "Mortgage Information", "Home Loan Comparison", "Real Estate Tax Guide", "Closing Process Overview",  
-            "First-Time Homebuyer Guide", "Foreclosure Prevention Strategies",  
-
-            # Home Improvement & Staging  
-            "Home Staging Checklist", "Interior Design for Resale", "Curb Appeal Enhancement",  
-            "Smart Home Upgrades for Value", "Eco-Friendly Renovation Plan",  
-
-            # Commercial & Specialized Real Estate  
-            "Commercial Lease Negotiation", "Co-Working Space Strategy", "Real Estate Development Plan",  
-            "Industrial Property Investment", "Mixed-Use Development Strategy"  
-        ],
-        "Sustainability": [
-            # Environmental Impact & Reporting  
-            "Environmental Impact Assessment", "Sustainability Report", "Carbon Footprint Reduction Plan",  
-            "Greenhouse Gas Emissions Analysis", "Corporate Sustainability Strategy",  
-
-            # Sustainable Business & Economy  
-            "ESG (Environmental, Social, Governance) Strategy", "Circular Economy Implementation",  
-            "Sustainable Supply Chain Practices", "Green Business Certification Guide",  
-
-            # Renewable Energy & Conservation  
-            "Energy Efficiency Strategy", "Solar Energy Adoption Plan", "Water Conservation Policy",  
-            "Waste Reduction & Recycling Strategy", "Carbon Offsetting Guide",  
-
-            # Climate Change & Social Responsibility  
-            "Climate Action Plan", "Biodiversity Conservation Plan", "Environmental Justice Advocacy",  
-            "Sustainable Urban Development", "Green Policy Proposal",  
-
-            # Sustainable Design & Construction  
-            "Sustainable Architecture Guide", "Eco-Friendly Building Materials", "LEED Certification Process",  
-            "Net-Zero Energy Homes", "Smart City & Urban Sustainability",  
-
-            # Consumer & Lifestyle Sustainability  
-            "Low-Waste Living Guide", "Ethical Consumerism Strategy", "Sustainable Fashion Practices",  
-            "Plant-Based Diet & Environmental Impact", "Green Travel & Ecotourism"  
-        ],
-        "Technology": [
-            # **Software Development & Engineering**  
-            "Tech Specification", "Software Release Plan", "Product Roadmap", "API Documentation",  
-            "Code Optimization Strategy", "Software Architecture Design", "DevOps Best Practices",  
-
-            # **User Experience & Support**  
-            "User Guide & Documentation", "Tech Support Response", "Troubleshooting Workflow",  
-            "Accessibility & Inclusive Tech Design", "Onboarding & Training Guide",  
-
-            # **Cybersecurity & Data Protection**  
-            "Cybersecurity Framework", "Data Privacy Policy", "Threat Detection Strategy",  
-            "Ransomware Protection Plan", "Network Security Guide",  
-
-            # **Cloud & Infrastructure**  
-            "Cloud Migration Strategy", "Multi-Cloud vs Hybrid Cloud Analysis", "Serverless Architecture Guide",  
-            "IT Infrastructure Roadmap", "Disaster Recovery & Backup Plan",  
-
-            # **AI, Machine Learning & Emerging Tech**  
-            "AI Integration Strategy", "Machine Learning Model Deployment", "AI Ethics & Bias Mitigation",  
-            "Quantum Computing Roadmap", "Blockchain Use Cases",  
-
-            # **Hardware & IoT**  
-            "Hardware Design Guide", "Embedded Systems Optimization", "IoT Security Strategy",  
-            "Edge Computing Implementation", "Smart Home & Automation Guide",  
-
-            # **Enterprise IT & Digital Transformation**  
-            "IT Strategy & Governance", "Digital Transformation Roadmap", "Tech Integration Best Practices",  
-            "Enterprise Software Selection", "Legacy System Modernization",  
-
-            # **Tech Evaluation & Market Trends**  
-            "Tech Evaluation & Feasibility Study", "Emerging Tech Trend Analysis", "Gartner Hype Cycle Insights",  
-            "Future of Work & Automation", "5G & Connectivity Strategy"  
-        ]
-
+        "Social Media": ["Post", "Caption", "Viral Tweet", "YouTube Idea", "Tagline", "Pinterest Description",
+                        "Cold Email", "Podcast Episode", "Content Calendar", "Viral Formula", "Influencer Pitch",
+                        "Brand Partnership", "YouTube Script", "Dating Profile", "Networking Opener",
+                        "TikTok Trend", "Instagram Story", "LinkedIn Article", "Twitter Thread", "Facebook Ad",
+                        "Hashtag Strategy", "Reel Script", "Community Post", "Review Response", "Crisis Response"],
         
+        "Productivity": ["Productivity Plan", "Daily Plan", "Travel Itinerary", "Note-Taking", "Brainstorming",
+                         "Grocery List", "Interview Prep", "Learning Path", "Time Management", "Prioritization",
+                         "Decision Matrix", "Problem-Solving", "Critical Thinking", "Goal Setting", "Habit Tracker",
+                         "Professional Development", "Weekly Schedule", "Project Management", "Task Breakdown"],
+        
+        "Education": ["Lesson Plan", "Course Outline", "Curriculum", "Educational Quiz", "Study Guide",
+                     "Teaching Material", "Assignment", "Workshop", "Test Questions", "Learning Objectives",
+                     "Educational Game", "Academic Resource", "Subject Summary", "Syllabus", "Tutorial"],
+        
+        "Design": ["Design Brief", "Color Palette", "Typography Guide", "Design System", "Logo Concept",
+                  "UI Element", "UX Flow", "Website Layout", "Print Material", "Product Packaging",
+                  "Illustration Concept", "Icon Set", "Brand Identity", "Style Tile", "Mood Board"],
+        
+        "Development": ["Code Review", "Technical Spec", "API Documentation", "Development Plan", "Code Architecture",
+                       "Database Schema", "Software Requirements", "Testing Strategy", "Bug Report", "Feature Spec",
+                       "Code Refactoring", "Algorithm", "Tech Stack", "System Architecture", "Code Snippet"],
+        
+        "Marketing": ["Marketing Plan", "Campaign Brief", "Ad Copy", "Landing Page", "Email Campaign",
+                     "Conversion Strategy", "Growth Hack", "Product Description", "Promotion", "Sales Script",
+                     "Value Proposition", "USP", "Elevator Pitch", "Customer Journey", "Messaging Framework"],
+        
+        "Finance": ["Budget Plan", "Financial Analysis", "Investment Strategy", "Expense Report", "Revenue Forecast",
+                   "Cash Flow", "Financial Model", "Cost Reduction", "Profit Optimization", "Tax Strategy",
+                   "Retirement Plan", "Debt Management", "Financial Education", "Savings Plan", "Equity Distribution"],
+        
+        "Health": ["Wellness Plan", "Diet Plan", "Fitness Routine", "Mental Health", "Sleep Improvement",
+                  "Meditation Script", "Nutrition Guide", "Health Goal", "Self-Care Routine", "Stress Management",
+                  "Recovery Plan", "Symptom Analysis", "Mindfulness Exercise", "Health Tracker", "Medical Information"],
+        
+        "Legal": ["Legal Analysis", "Contract Template", "Legal Response", "Compliance Check", "Privacy Statement",
+                 "Disclaimer", "Terms of Service", "Copyright Notice", "IP Strategy", "Legal Research",
+                 "Legal Letter", "Dispute Resolution", "Regulatory Filing", "Legal Defense", "Intellectual Property"],
+        
+        "Event": ["Event Plan", "Invitation", "Wedding Speech", "Toast", "Anniversary Message", "Party Theme",
+                 "Conference Agenda", "Event Marketing", "Catering Menu", "Venue Description", "Entertainment Plan",
+                 "Guest List", "Event Schedule", "Thank You Note", "Event Budget", "Virtual Event"],
+        
+        "Relationships": ["Relationship Advice", "Conflict Resolution", "Apology Letter", "Friendship Message",
+                         "Love Letter", "Dating Profile", "Breakup Letter", "Family Communication", "Networking Message",
+                         "Condolence Note", "Birthday Message", "Anniversary Note", "Congratulations Note", "Reconnection"],
+        
+        "Industry": ["Industry Analysis", "Sector Trend", "Market Forecast", "Industry Report", "Competitive Landscape",
+                    "Regulatory Impact", "Technology Adoption", "Industry Disruption", "Vertical Strategy", "Supply Chain",
+                    "Distribution Channel", "Industry Standards", "Industry Partnership", "Trade Association", "Industry Event"]
     }
     
     # Combine base and extended categories
@@ -967,7 +549,7 @@ tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9, tab10, tab11, tab12, tab13
 st.markdown("</div>", unsafe_allow_html=True)
 
 with tab1:
-    selected_category = st.radio("Choose a category:", list(tool_categories.keys()))
+    selected_category = st.selectbox("Choose a category:", list(tool_categories.keys()))
     
     # Only show tools from selected category
     if selected_category:
