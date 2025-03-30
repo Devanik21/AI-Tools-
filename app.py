@@ -896,8 +896,8 @@ with st.sidebar:
     # Statistics
     # Statistics
     st.sidebar.markdown("### 📊 Stats")
-    st.sidebar.markdown(f"**Total Tools:** 5000+")
-    st.sidebar.markdown(f"**Categories:** 20")
+    st.sidebar.markdown(f"**Total Tools:** {len(ai_tools)}")
+    st.sidebar.markdown(f"**Categories:** {len(tool_categories)}")
     
     # History button in sidebar
     st.sidebar.markdown("---")
