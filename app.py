@@ -757,9 +757,15 @@ def generate_ai_tools():
     
     # Create specialized industry categories (new areas)
     specialized_industries = {
-        "Healthcare": ["Patient Care", "Medical Record", "Clinical Trial", "Health Assessment", "Treatment Plan",
-                      "Healthcare Policy", "Medical Research", "Patient Education", "Telehealth", "Health Insurance",
-                      "Medical Device", "Healthcare Compliance", "Medical Diagnosis", "Patient Experience", "Wellness Program"],
+    "Artificial Intelligence": [
+        "AI Model Optimization", "Machine Learning Deployment", "AI Ethics & Bias Reduction",
+        "Natural Language Processing (NLP) Strategy", "AI-Driven Automation Plan",
+        "Generative AI Content Strategy", "AI in Cybersecurity", "Computer Vision Applications",
+        "AI for Business Intelligence", "Deep Learning in Healthcare",
+        "Autonomous Systems & Robotics", "AI Chatbot Development", "Predictive Analytics",
+        "AI Governance & Compliance", "Edge AI & On-Device Machine Learning"
+    ],
+
         
         "E-commerce": ["Product Listing", "Customer Review", "E-commerce Copy", "Shipping Policy", "Return Policy",
                        "Product Bundle", "Flash Sale", "Customer Engagement", "Shopping Experience", "Loyalty Program",
