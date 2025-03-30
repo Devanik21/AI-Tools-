@@ -13,7 +13,6 @@ import matplotlib.pyplot as plt
 import plotly.express as px
 import seaborn as sns
 import pyperclip
-import uuid
 
 
 # Configure Streamlit page
@@ -183,161 +182,42 @@ def extract_text_from_pdf(uploaded_file):
 def generate_ai_tools():
     # Base categories dictionary - we'll expand with multipliers later
     base_categories = {
-"Writing": [
-    # Professional & Business Writing  
-    "Resume", "Cover Letter", "Job Application Letter", "Recommendation Letter", "Business Proposal",  
-    "Project Proposal", "Executive Summary", "Professional Bio", "Company Profile", "Business Plan",  
-    "Marketing Copy", "Sales Pitch", "Brand Story", "Press Release", "Meeting Minutes", "Email",  
-    "SOP (Standard Operating Procedure)", "RFP (Request for Proposal)", "Policy Draft", "Employee Handbook",  
-    "Business Case Study", "Whitepaper",  
-
-    # Academic & Research Writing  
-    "Academic Essay", "Thesis Statement", "Literature Review", "Research Paper", "Citation",  
-    "Abstract & Keywords Generator", "Lab Report", "Case Study", "Grant Proposal", "Conference Paper",  
-    "Technical Report", "Editorial Guidelines", "Style Guide",  
-
-    # Creative & Content Writing  
-    "Blog Post", "Script (Movie, YouTube, Podcast)", "Short Story", "Novel Outline", "Poetry",  
-    "Creative Writing Prompt", "Character Development", "Plot Outline", "Ghostwriting",  
-    "Content Ideation & Brainstorming", "Social Media Caption & Hashtag Generator",  
-
-    # Legal & Compliance Writing  
-    "Legal Document Drafting", "Contract Clause Generator", "Terms & Conditions", "Privacy Policy",  
-    "GDPR Compliance Notice", "Non-Disclosure Agreement (NDA)", "Service-Level Agreement (SLA)",  
-    "Disclaimers & Liability Waivers",  
-
-    # Editing & Optimization  
-    "Grammar & Spell Check", "Paraphrasing Tool", "Readability Improvement", "Plagiarism Checker",  
-    "Tone Adjustment (Formal, Casual, Professional)", "Style Consistency Checker",  
-    "Sentence Expansion & Condensation",  
-
-    # Summarization & Extraction  
-    "Executive Summary Generator", "Meeting Notes & Minutes Summarization", "Article Summary",  
-    "Research Paper Summary", "Legal Document Summary", "Report Extraction", "Transcript Summarization",  
-
-    # Technical & Documentation Writing  
-    "API Documentation Generator", "Software User Manual", "Product Documentation",  
-    "Engineering Report", "Patent Writing", "Troubleshooting Guide", "FAQs & Help Desk Content",  
-
-    # UX & Product Writing  
-    "UX Writing (Microcopy for Apps & Websites)", "Chatbot Script", "Error Message Optimization",  
-    "App Store Description", "Product Descriptions",  
-
-    # Miscellaneous Writing  
-    "Personal Letter (Apology, Love, Invitation)", "Speech Writing (Wedding, Graduation, Motivational)",  
-    "Eulogy Writing", "Greeting Card Messages", "Review Writing (Product, Movie, Book)",  
-],
-
+        "Writing": [
+            "Resume", "Cover Letter", "Email", "Blog Post", "Content Rewrite", "Grammar Check", 
+            "Summary", "Academic Essay", "Letter", "Script", "Technical Writing", "Research Paper",
+            "Whitepaper", "Thesis Statement", "Literature Review", "Citation", "Lab Report",
+            "Case Study", "Editorial Guidelines", "Style Guide", "Professional Bio", "Executive Summary",
+            "Project Proposal", "Meeting Minutes", "Documentation", "SOP", "Policy Draft",
+            "Legal Document", "Contract Clause", "Terms & Conditions", "Privacy Policy"
+        ],
         
-"Creative": [
-    # Poetry & Lyrics  
-    "Poem", "Haiku", "Limerick", "Sonnet", "Free Verse", "Song Lyrics", "Rap Lyrics",  
-    "Acrostic Poem", "Poetry Prompt", "Rhyming Verse",  
-
-    # Fiction & Storytelling  
-    "Story", "Short Story", "Flash Fiction", "Novella Outline", "Novel Outline",  
-    "Children's Story", "Bedtime Story", "Horror Story", "Sci-Fi Story", "Fantasy Story",  
-    "Mythology Retelling", "Historical Fiction", "Alternate History", "Fable", "Urban Legend",  
-    "Fairy Tale Rewrite", "Dystopian Story",  
-
-    # Character Development  
-    "Character", "Character Backstory", "Character Arc", "Villain Development",  
-    "Hero’s Journey", "Sidekick Generator", "Anti-Hero Development",  
-
-    # Worldbuilding & Fantasy Elements  
-    "Fantasy World", "Sci-Fi Technology", "Magic System", "Fictional Language",  
-    "Mythical Creature", "Superpower Generator", "Alien Species", "Alternate Universe",  
-    "Steampunk Invention", "Cyberpunk Society", "Post-Apocalyptic World",  
-
-    # Plot & Writing Aids  
-    "Book Title", "Plot Twist", "Story Conflict", "Story Climax", "Short Story Starter",  
-    "Creative Prompt", "Poetry Prompt", "Dialogue", "Monologue", "Setting Description",  
-    "Screenplay Format", "Scene Breakdown", "Writing Warm-Up",  
-
-    # Humor & Light-Hearted Writing  
-    "Joke", "Puns", "Satire Piece", "Parody Song", "Comedy Sketch",  
-
-    # Memoir & Personal Writing  
-    "Memoir", "Personal Essay", "Anecdote", "Inspirational Story", "Letter to Future Self",  
-
-    # Dream & Metaphysical Writing  
-    "Dream Interpreter", "Symbolic Dream Meaning", "Lucid Dream Story",  
-    "Surreal Dream Narration", "Dream Journal Entry", "Visionary Experience",  
-],
-
+        "Creative": [
+            "Poem", "Story", "Dialogue", "Character", "Book Title", "Horror Story", "Sci-Fi Story",
+            "Song Lyrics", "Children's Story", "Novel Outline", "Metaphor", "Joke", "Fantasy World",
+            "Sci-Fi Technology", "Historical Fiction", "Memoir", "Poetry Prompt", "Creative Prompt",
+            "Short Story Starter", "Screenplay Format", "Plot Twist", "Character Backstory",
+            "Setting Description", "Alternate History", "Mythical Creature", "Magic System",
+            "Fictional Language", "Story Conflict"
+        ],
         
-"Business": [
-    # Business Strategy & Planning  
-    "Business Idea", "Business Model Canvas", "Business Plan", "Go-to-Market Strategy",  
-    "Startup Pitch", "Investor Pitch", "Funding Request", "Bootstrapping Strategy",  
-    "Growth Hacking Techniques", "Project Timeline", "Risk Assessment", "Exit Strategy",  
-
-    # Marketing & Branding  
-    "Marketing Strategy", "Content Marketing Plan", "Branding Guide", "Social Media Strategy",  
-    "SEO Keywords", "Ad Copy Generator", "Product Launch Plan", "Rebranding Strategy",  
-    "Customer Retention Plan", "Brand Voice & Messaging",  
-
-    # Sales & Customer Development  
-    "Sales Pitch", "Freelance Proposal", "Lead Generation Strategy", "Customer Persona",  
-    "Cold Email Template", "Sales Funnel Optimization", "Customer Support Guidelines",  
-    "Loyalty Program Strategy", "Upselling & Cross-Selling Strategy",  
-
-    # Financial & Business Analysis  
-    "Grant Proposal", "ROI Calculator", "Break-even Analysis", "Pricing Strategy",  
-    "Financial Forecasting", "Cash Flow Management", "Profit Margin Analysis",  
-    "Funding Proposal", "Investor Report",  
-
-    # Market Research & Competitive Analysis  
-    "Market Research", "Competitor Analysis", "Industry Trends Report", "Customer Survey Questions",  
-    "Business Case", "SWOT Analysis", "KPI Framework", "Benchmarking Analysis",  
-
-    # Business Communication & Operations  
-    "Business Email", "LinkedIn Bio", "Professional Networking Message", "Press Release",  
-    "Mission Statement", "Company Values", "Code of Conduct", "HR Policy Draft",  
-    "Crisis Management Plan", "Standard Operating Procedure (SOP)",  
-
-    # Entrepreneurship & Consultation  
-    "Business Consultation", "Startup Incubation Strategy", "Fundraising Strategy",  
-    "Legal Compliance Checklist", "Franchise Business Plan", "Freelance Business Plan",  
-    "E-commerce Strategy", "Subscription Model Strategy",  
-]
-
+        "Business": [
+            "Business Idea", "Startup Pitch", "SEO Keywords", "Business Consultation", "Marketing Strategy",
+            "Grant Proposal", "Freelance Proposal", "LinkedIn Bio", "Branding Guide", "Business Email",
+            "SWOT Analysis", "Business Case", "Market Research", "Competitor Analysis", "Pricing Strategy",
+            "Product Launch", "Go-to-Market", "Customer Persona", "Mission Statement", "Company Values",
+            "Business Plan", "Investor Pitch", "Funding Request", "Project Timeline", "Risk Assessment",
+            "ROI Calculator", "KPI Framework"
+        ]
     }
 
     
     # Additional categories to reach 2000+ tools
     extended_categories = {
-"Social Media": [
-    # General Social Media Content  
-    "Post", "Caption", "Viral Tweet", "Hashtag Strategy", "Content Calendar", "Trending Topics Finder",  
-    "Community Post", "Meme Generator", "User Engagement Prompt", "Social Media Poll Idea",  
-
-    # YouTube & Video Content  
-    "YouTube Idea", "YouTube Script", "YouTube Thumbnail Text", "Reel Script",  
-    "TikTok Trend", "Instagram Story", "Short-Form Video Hook", "Livestream Outline",  
-
-    # Influencer & Brand Marketing  
-    "Influencer Pitch", "Brand Partnership", "Sponsorship Email", "Affiliate Marketing Copy",  
-    "Networking Opener", "Collaborative Post Idea", "Product Placement Script",  
-
-    # Advertising & Growth Strategies  
-    "Facebook Ad", "Instagram Ad Copy", "LinkedIn Ad Copy", "Twitter Ad Copy",  
-    "A/B Testing Ad Variations", "Social Media Growth Hack", "Viral Formula",  
-
-    # Engagement & Audience Interaction  
-    "Review Response", "Crisis Response", "Customer Support Reply", "Community Engagement Strategy",  
-    "DM Outreach Message", "Story Poll & Quiz Ideas",  
-
-    # Niche-Specific Content  
-    "Podcast Episode Idea", "Podcast Episode Title", "Podcast Teaser Post", "Dating Profile",  
-    "LinkedIn Article", "Twitter Thread", "Pinterest Description", "Tagline",  
-    "Event Promotion Post", "Giveaway & Contest Post",  
-
-    # SEO & Algorithm Boosting Content  
-    "SEO-Optimized Post", "Trending Hashtag Suggestions", "Social Media Headline Generator",  
-    "Evergreen Content Idea", "Cross-Platform Content Repurposing",  
-],
-
+        "Social Media": ["Post", "Caption", "Viral Tweet", "YouTube Idea", "Tagline", "Pinterest Description",
+                        "Cold Email", "Podcast Episode", "Content Calendar", "Viral Formula", "Influencer Pitch",
+                        "Brand Partnership", "YouTube Script", "Dating Profile", "Networking Opener",
+                        "TikTok Trend", "Instagram Story", "LinkedIn Article", "Twitter Thread", "Facebook Ad",
+                        "Hashtag Strategy", "Reel Script", "Community Post", "Review Response", "Crisis Response"],
         
         "Productivity": ["Productivity Plan", "Daily Plan", "Travel Itinerary", "Note-Taking", "Brainstorming",
                          "Grocery List", "Interview Prep", "Learning Path", "Time Management", "Prioritization",
@@ -632,7 +512,7 @@ tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9, tab10, tab11, tab12, tab13
 st.markdown("</div>", unsafe_allow_html=True)
 
 with tab1:
-    selected_category = st.radio("Choose a category:", list(tool_categories.keys()))
+    selected_category = st.selectbox("Choose a category:", list(tool_categories.keys()))
     
     # Only show tools from selected category
     if selected_category:
@@ -643,7 +523,7 @@ with tab1:
         cols = st.columns(3)
         for i, tool in enumerate(tools_in_category):
             with cols[i % 3]:
-                if st.button(tool, key=f"cat_{tool}_{uuid.uuid4()}"):
+                if st.button(tool, key=f"cat_{tool}"):
                     st.session_state.selected_tool = tool
 
 with tab2:
@@ -1419,22 +1299,8 @@ with tab6:
 st.header("✨ Create Content")
 
 # Display selected tool or default
-# Initialize session state if not set
-if "selected_tool" not in st.session_state:
-    st.session_state.selected_tool = "Smart Content Creator"
-
-# Function to update selected tool
-def select_tool(tool_name):
-    st.session_state.selected_tool = tool_name
-    st.rerun()  # Ensures UI updates immediately
-
-# Display the currently selected tool
-st.markdown(f"### Currently using: **{st.session_state.selected_tool}**")
-
-# Create buttons for each tool and update session state when clicked
-for tool in ai_tools:
-    for idx, tool in enumerate(ai_tools): 
-        select_tool(tool)  # Call function to update session state
+selected_tool = st.session_state.get('selected_tool', 'Smart Content Creator')
+st.markdown(f"### Currently using: **{selected_tool}**")
 
 # Content prompt area
 user_prompt = st.text_area("Enter your prompt:", "", height=150)
