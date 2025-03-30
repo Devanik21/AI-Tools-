@@ -655,26 +655,136 @@ def generate_ai_tools():
     
     # Create specialized industry categories (new areas)
     specialized_industries = {
-        "Healthcare": ["Patient Care", "Medical Record", "Clinical Trial", "Health Assessment", "Treatment Plan",
-                      "Healthcare Policy", "Medical Research", "Patient Education", "Telehealth", "Health Insurance",
-                      "Medical Device", "Healthcare Compliance", "Medical Diagnosis", "Patient Experience", "Wellness Program"],
+"Healthcare": [
+    # Clinical & Patient Care  
+    "Patient Care Protocol", "Medical Diagnosis", "Treatment Plan", "Chronic Disease Management",  
+    "Emergency Response Plan", "Telemedicine Consultation Guide", "Healthcare AI Integration",  
+
+    # Medical Administration & Compliance  
+    "Medical Record Management", "Electronic Health Records (EHR) Strategy", "Healthcare Compliance Checklist",  
+    "HIPAA & Data Privacy", "Hospital Accreditation Requirements",  
+
+    # Medical Research & Innovation  
+    "Clinical Trial Design", "Drug Development Roadmap", "Medical Device Approval Process",  
+    "Biomedical Engineering Trends", "AI in Medical Imaging",  
+
+    # Healthcare Economics & Policy  
+    "Healthcare Policy Analysis", "Health Insurance Framework", "Universal Healthcare Debate",  
+    "Medicare & Medicaid Guide", "Value-Based Care Model",  
+
+    # Patient Engagement & Education  
+    "Patient Experience Strategy", "Healthcare Marketing", "Medical Blog & Outreach",  
+    "Wellness Program Design", "Mental Health Awareness Campaign",  
+],
+
+"E-commerce": [
+    # Product & Inventory Management  
+    "Product Listing Optimization", "Dynamic Pricing Strategy", "Inventory Forecasting",  
+    "Dropshipping Business Plan", "Product Lifecycle Management",  
+
+    # Customer Experience & Retention  
+    "Customer Review Strategy", "Shopping Experience Enhancement", "Customer Support AI Chatbot",  
+    "Loyalty Program Development", "Subscription Model Strategy",  
+
+    # Marketing & Sales Growth  
+    "E-commerce Copywriting", "SEO for Product Pages", "Email Marketing for E-commerce",  
+    "Influencer Marketing for Online Stores", "Flash Sale Campaign Strategy",  
+
+    # Logistics & Operations  
+    "Shipping Policy Optimization", "Return & Refund Policy", "Cross-Border E-commerce Strategy",  
+    "Last-Mile Delivery Innovation", "Omnichannel Retailing Strategy",  
+
+    # E-commerce Business Development  
+    "Marketplace Strategy", "D2C (Direct-to-Consumer) Business Plan", "B2B E-commerce Expansion",  
+    "Mobile Commerce (M-commerce) Strategy", "Live Shopping & Video Commerce",  
+],
+"Real Estate": [
+    # Property Marketing & Sales  
+    "Property Description", "Real Estate Listing", "Luxury Real Estate Marketing", "Virtual Tour Script",  
+    "Neighborhood Guide", "Social Media Strategy for Realtors", "Open House Invitation",  
+
+    # Market Research & Investment  
+    "Market Analysis", "Investment Property Analysis", "Rental Analysis", "Flipping Houses Strategy",  
+    "Commercial Real Estate Trends", "Multi-Family Property Investment", "Real Estate ROI Calculator",  
+
+    # Property Management & Legal Aspects  
+    "Property Management Guide", "Lease Agreement Drafting", "Tenant Screening Checklist",  
+    "HOA Communication Strategy", "Short-Term Rental Strategy (Airbnb, VRBO)",  
+
+    # Homeownership & Financing  
+    "Mortgage Information", "Home Loan Comparison", "Real Estate Tax Guide", "Closing Process Overview",  
+    "First-Time Homebuyer Guide", "Foreclosure Prevention Strategies",  
+
+    # Home Improvement & Staging  
+    "Home Staging Checklist", "Interior Design for Resale", "Curb Appeal Enhancement",  
+    "Smart Home Upgrades for Value", "Eco-Friendly Renovation Plan",  
+
+    # Commercial & Specialized Real Estate  
+    "Commercial Lease Negotiation", "Co-Working Space Strategy", "Real Estate Development Plan",  
+    "Industrial Property Investment", "Mixed-Use Development Strategy",  
+],
+"Sustainability": [
+    # Environmental Impact & Reporting  
+    "Environmental Impact Assessment", "Sustainability Report", "Carbon Footprint Reduction Plan",  
+    "Greenhouse Gas Emissions Analysis", "Corporate Sustainability Strategy",  
+
+    # Sustainable Business & Economy  
+    "ESG (Environmental, Social, Governance) Strategy", "Circular Economy Implementation",  
+    "Sustainable Supply Chain Practices", "Green Business Certification Guide",  
+
+    # Renewable Energy & Conservation  
+    "Energy Efficiency Strategy", "Solar Energy Adoption Plan", "Water Conservation Policy",  
+    "Waste Reduction & Recycling Strategy", "Carbon Offsetting Guide",  
+
+    # Climate Change & Social Responsibility  
+    "Climate Action Plan", "Biodiversity Conservation Plan", "Environmental Justice Advocacy",  
+    "Sustainable Urban Development", "Green Policy Proposal",  
+
+    # Sustainable Design & Construction  
+    "Sustainable Architecture Guide", "Eco-Friendly Building Materials", "LEED Certification Process",  
+    "Net-Zero Energy Homes", "Smart City & Urban Sustainability",  
+
+    # Consumer & Lifestyle Sustainability  
+    "Low-Waste Living Guide", "Ethical Consumerism Strategy", "Sustainable Fashion Practices",  
+    "Plant-Based Diet & Environmental Impact", "Green Travel & Ecotourism",  
+],
+
+"Technology": [
+    # **Software Development & Engineering**  
+    "Tech Specification", "Software Release Plan", "Product Roadmap", "API Documentation",  
+    "Code Optimization Strategy", "Software Architecture Design", "DevOps Best Practices",  
+
+    # **User Experience & Support**  
+    "User Guide & Documentation", "Tech Support Response", "Troubleshooting Workflow",  
+    "Accessibility & Inclusive Tech Design", "Onboarding & Training Guide",  
+
+    # **Cybersecurity & Data Protection**  
+    "Cybersecurity Framework", "Data Privacy Policy", "Threat Detection Strategy",  
+    "Ransomware Protection Plan", "Network Security Guide",  
+
+    # **Cloud & Infrastructure**  
+    "Cloud Migration Strategy", "Multi-Cloud vs Hybrid Cloud Analysis", "Serverless Architecture Guide",  
+    "IT Infrastructure Roadmap", "Disaster Recovery & Backup Plan",  
+
+    # **AI, Machine Learning & Emerging Tech**  
+    "AI Integration Strategy", "Machine Learning Model Deployment", "AI Ethics & Bias Mitigation",  
+    "Quantum Computing Roadmap", "Blockchain Use Cases",  
+
+    # **Hardware & IoT**  
+    "Hardware Design Guide", "Embedded Systems Optimization", "IoT Security Strategy",  
+    "Edge Computing Implementation", "Smart Home & Automation Guide",  
+
+    # **Enterprise IT & Digital Transformation**  
+    "IT Strategy & Governance", "Digital Transformation Roadmap", "Tech Integration Best Practices",  
+    "Enterprise Software Selection", "Legacy System Modernization",  
+
+    # **Tech Evaluation & Market Trends**  
+    "Tech Evaluation & Feasibility Study", "Emerging Tech Trend Analysis", "Gartner Hype Cycle Insights",  
+    "Future of Work & Automation", "5G & Connectivity Strategy",  
+]
+
         
-        "E-commerce": ["Product Listing", "Customer Review", "E-commerce Copy", "Shipping Policy", "Return Policy",
-                       "Product Bundle", "Flash Sale", "Customer Engagement", "Shopping Experience", "Loyalty Program",
-                       "Product Recommendation", "Checkout Process", "Customer Retention", "Marketplace Strategy", "Pricing Model"],
-        
-        "Real Estate": ["Property Description", "Market Analysis", "Investment Property", "Rental Analysis", "Home Staging",
-                       "Property Marketing", "Neighborhood Guide", "Real Estate Listing", "Agent Bio", "Mortgage Information",
-                       "Home Inspection", "Lease Agreement", "Property Management", "HOA Communication", "Commercial Lease"],
-        
-        "Sustainability": ["Environmental Impact", "Sustainability Report", "Green Initiative", "Carbon Footprint", "ESG Strategy",
-                          "Circular Economy", "Sustainable Design", "Climate Action", "Conservation Plan", "Energy Efficiency",
-                          "Waste Reduction", "Water Conservation", "Sustainable Supply Chain", "Social Impact", "Eco Certification"],
-        
-        "Technology": ["Tech Specification", "Product Roadmap", "User Guide", "Tech Support", "Software Release",
-                      "Hardware Design", "Tech Solution", "IT Strategy", "Digital Transformation", "Tech Integration",
-                      "Tech Troubleshooting", "Cloud Migration", "Data Strategy", "Network Design", "Tech Evaluation"]
-    }
+ }
     
     # Add specialized industries to the expanded categories
     for industry, tools in specialized_industries.items():
