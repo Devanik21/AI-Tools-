@@ -229,39 +229,12 @@ def generate_ai_tools():
 
         
         "Creative": [
-            # Poetry & Lyrics  
-            "Poem", "Haiku", "Limerick", "Sonnet", "Free Verse", "Song Lyrics", "Rap Lyrics",  
-            "Acrostic Poem", "Poetry Prompt", "Rhyming Verse",  
-
-            # Fiction & Storytelling  
-            "Story", "Short Story", "Flash Fiction", "Novella Outline", "Novel Outline",  
-            "Children's Story", "Bedtime Story", "Horror Story", "Sci-Fi Story", "Fantasy Story",  
-            "Mythology Retelling", "Historical Fiction", "Alternate History", "Fable", "Urban Legend",  
-            "Fairy Tale Rewrite", "Dystopian Story",  
-
-            # Character Development  
-            "Character", "Character Backstory", "Character Arc", "Villain Development",  
-            "Hero’s Journey", "Sidekick Generator", "Anti-Hero Development",  
-
-            # Worldbuilding & Fantasy Elements  
-            "Fantasy World", "Sci-Fi Technology", "Magic System", "Fictional Language",  
-            "Mythical Creature", "Superpower Generator", "Alien Species", "Alternate Universe",  
-            "Steampunk Invention", "Cyberpunk Society", "Post-Apocalyptic World",  
-
-            # Plot & Writing Aids  
-            "Book Title", "Plot Twist", "Story Conflict", "Story Climax", "Short Story Starter",  
-            "Creative Prompt", "Poetry Prompt", "Dialogue", "Monologue", "Setting Description",  
-            "Screenplay Format", "Scene Breakdown", "Writing Warm-Up",  
-
-            # Humor & Light-Hearted Writing  
-            "Joke", "Puns", "Satire Piece", "Parody Song", "Comedy Sketch",  
-
-            # Memoir & Personal Writing  
-            "Memoir", "Personal Essay", "Anecdote", "Inspirational Story", "Letter to Future Self",  
-
-            # Dream & Metaphysical Writing  
-            "Dream Interpreter", "Symbolic Dream Meaning", "Lucid Dream Story",  
-            "Surreal Dream Narration", "Dream Journal Entry", "Visionary Experience"  
+            "Poem", "Story", "Dialogue", "Character", "Book Title", "Horror Story", "Sci-Fi Story",
+            "Song Lyrics", "Children's Story", "Novel Outline", "Metaphor", "Joke", "Fantasy World",
+            "Sci-Fi Technology", "Historical Fiction", "Memoir", "Poetry Prompt", "Creative Prompt",
+            "Short Story Starter", "Screenplay Format", "Plot Twist", "Character Backstory",
+            "Setting Description", "Alternate History", "Mythical Creature", "Magic System",
+            "Fictional Language", "Story Conflict","Dream Interpreter", "Symbolic Dream Meaning", "Lucid Dream Story", "Surreal Dream Narration", "Dream Journal Entry", "Visionary Experience"  
         ],
 
         
