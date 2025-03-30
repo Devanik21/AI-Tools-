@@ -181,108 +181,149 @@ def extract_text_from_pdf(uploaded_file):
 @st.cache_data
 def generate_ai_tools():
     # Base categories dictionary - we'll expand with multipliers later
-    base_categories = {
+base_categories = {
         "Writing": [
             "Resume", "Cover Letter", "Email", "Blog Post", "Content Rewrite", "Grammar Check", 
-            "Summary", "Academic Essay", "Letter", "Script", "Technical Writing", "Research Paper",
-            "Whitepaper", "Thesis Statement", "Literature Review", "Citation", "Lab Report",
-            "Case Study", "Editorial Guidelines", "Style Guide", "Professional Bio", "Executive Summary",
-            "Project Proposal", "Meeting Minutes", "Documentation", "SOP", "Policy Draft",
-            "Legal Document", "Contract Clause", "Terms & Conditions", "Privacy Policy"
+            "Summary", "Academic Essay", "Research Paper", "Technical Documentation", "Case Study", 
+            "White Paper", "Business Proposal", "Press Release", "Newsletter", "User Guide",
+            "Product Description", "Executive Summary", "Report", "Meeting Minutes", "Style Guide",
+            "Policy Document", "Legal Contract", "Privacy Policy", "Terms of Service", "Procedural Guide",
+            "Troubleshooting Manual", "API Documentation", "Knowledge Base Article", "Translation"
         ],
         
         "Creative": [
-            "Poem", "Story", "Dialogue", "Character", "Book Title", "Horror Story", "Sci-Fi Story",
-            "Song Lyrics", "Children's Story", "Novel Outline", "Metaphor", "Joke", "Fantasy World",
-            "Sci-Fi Technology", "Historical Fiction", "Memoir", "Poetry Prompt", "Creative Prompt",
-            "Short Story Starter", "Screenplay Format", "Plot Twist", "Character Backstory",
-            "Setting Description", "Alternate History", "Mythical Creature", "Magic System",
-            "Fictional Language", "Story Conflict"
+            "Short Story", "Novel Outline", "Character Profile", "Dialogue Script", "Poem", 
+            "Song Lyrics", "Film Screenplay", "Creative Prompt", "World Building", "Plot Structure",
+            "Narrative Arc", "Character Development", "Scene Description", "Setting Design", 
+            "Storyboard Concept", "Fantasy Creature", "Alternate History", "Science Fiction Concept",
+            "Metaphor Generator", "Storytelling Framework", "Comic Script", "Children's Story",
+            "Mythology Creation", "Interactive Fiction", "Fictional Language", "Visual Narrative",
+            "Dramatic Monologue", "Historical Fiction"
         ],
         
         "Business": [
-            "Business Idea", "Startup Pitch", "SEO Keywords", "Business Consultation", "Marketing Strategy",
-            "Grant Proposal", "Freelance Proposal", "LinkedIn Bio", "Branding Guide", "Business Email",
-            "SWOT Analysis", "Business Case", "Market Research", "Competitor Analysis", "Pricing Strategy",
-            "Product Launch", "Go-to-Market", "Customer Persona", "Mission Statement", "Company Values",
-            "Business Plan", "Investor Pitch", "Funding Request", "Project Timeline", "Risk Assessment",
-            "ROI Calculator", "KPI Framework"
+            "Business Plan", "SWOT Analysis", "Market Research", "Competitor Analysis", "Pricing Strategy",
+            "Sales Script", "Customer Persona", "Value Proposition", "Marketing Strategy", "Brand Guidelines",
+            "Project Timeline", "Risk Assessment", "KPI Framework", "Mission Statement", "Business Model Canvas",
+            "Pitch Deck", "Financial Forecast", "Operational Plan", "Franchise Model", "Exit Strategy",
+            "Partnership Agreement", "Vendor Contract", "Investor Update", "Startup Validation", "Revenue Model",
+            "Go-to-Market Plan", "Supply Chain Analysis"
         ]
     }
 
     
     # Additional categories to reach 2000+ tools
     extended_categories = {
-        "Social Media": ["Post", "Caption", "Viral Tweet", "YouTube Idea", "Tagline", "Pinterest Description",
-                        "Cold Email", "Podcast Episode", "Content Calendar", "Viral Formula", "Influencer Pitch",
-                        "Brand Partnership", "YouTube Script", "Dating Profile", "Networking Opener",
-                        "TikTok Trend", "Instagram Story", "LinkedIn Article", "Twitter Thread", "Facebook Ad",
-                        "Hashtag Strategy", "Reel Script", "Community Post", "Review Response", "Crisis Response"],
+        "Social Media": [
+            "Content Calendar", "Campaign Strategy", "Engagement Post", "Video Script", "Hashtag Research",
+            "Influencer Outreach", "Community Guidelines", "Crisis Response", "Platform-Specific Content",
+            "Analytics Report", "Audience Analysis", "Social Media Policy", "Content Repurposing Plan",
+            "Live Stream Outline", "Advertisement Copy", "Engagement Strategy", "Social Contest",
+            "UGC Campaign", "Performance Analysis", "Comment Response Template", "Social Media Audit"
+        ],
         
-        "Productivity": ["Productivity Plan", "Daily Plan", "Travel Itinerary", "Note-Taking", "Brainstorming",
-                         "Grocery List", "Interview Prep", "Learning Path", "Time Management", "Prioritization",
-                         "Decision Matrix", "Problem-Solving", "Critical Thinking", "Goal Setting", "Habit Tracker",
-                         "Professional Development", "Weekly Schedule", "Project Management", "Task Breakdown"],
+        "Productivity": [
+            "Project Management Plan", "Workflow Automation", "Time Tracking System", "Task Prioritization",
+            "Meeting Framework", "Decision Matrix", "Process Documentation", "Resource Allocation",
+            "Remote Work Policy", "Team Collaboration Guide", "Knowledge Management", "Daily Planner",
+            "Goal Setting Framework", "Habit Tracking System", "Focus Technique", "Delegation Framework",
+            "Personal Development Plan", "Productivity Audit", "Systems Integration", "Communication Protocol"
+        ],
         
-        "Education": ["Lesson Plan", "Course Outline", "Curriculum", "Educational Quiz", "Study Guide",
-                     "Teaching Material", "Assignment", "Workshop", "Test Questions", "Learning Objectives",
-                     "Educational Game", "Academic Resource", "Subject Summary", "Syllabus", "Tutorial"],
+        "Education": [
+            "Curriculum Design", "Lesson Plan", "Assessment Framework", "Learning Objectives", "Educational Rubric",
+            "Student Feedback Form", "Teaching Methodology", "Learning Path", "Course Outline", "Training Module",
+            "Educational Game Design", "Instructional Material", "Study Guide", "Academic Research Plan",
+            "Classroom Management", "Educational Assessment", "Learning Evaluation", "Workshop Structure",
+            "Educational Technology Integration", "Differentiated Instruction Plan", "E-Learning Strategy"
+        ],
         
-        "Design": ["Design Brief", "Color Palette", "Typography Guide", "Design System", "Logo Concept",
-                  "UI Element", "UX Flow", "Website Layout", "Print Material", "Product Packaging",
-                  "Illustration Concept", "Icon Set", "Brand Identity", "Style Tile", "Mood Board"],
+        "Design": [
+            "Design System", "Brand Identity", "User Interface", "User Experience Flow", "Visual Hierarchy",
+            "Responsive Layout", "Style Guide", "Color Palette", "Typography System", "Iconography Set",
+            "Wireframe Template", "Prototype Framework", "Design Brief", "User Testing Plan", "Design Sprint",
+            "Design Thinking Workshop", "Accessibility Guidelines", "Interactive Prototype", "Information Architecture",
+            "Motion Design Specification", "Product Design Specification"
+        ],
         
-        "Development": ["Code Review", "Technical Spec", "API Documentation", "Development Plan", "Code Architecture",
-                       "Database Schema", "Software Requirements", "Testing Strategy", "Bug Report", "Feature Spec",
-                       "Code Refactoring", "Algorithm", "Tech Stack", "System Architecture", "Code Snippet"],
+        "Development": [
+            "Technical Specification", "API Documentation", "Code Architecture", "Development Roadmap",
+            "Database Schema", "Testing Strategy", "Version Control Workflow", "Deployment Pipeline",
+            "Security Protocol", "Performance Optimization", "Code Review Guidelines", "Microservices Architecture",
+            "Serverless Framework", "Mobile Development Strategy", "Web Application Structure", "DevOps Implementation",
+            "Integration Framework", "Technical Debt Assessment", "Software Requirements", "System Architecture"
+        ],
         
-        "Marketing": ["Marketing Plan", "Campaign Brief", "Ad Copy", "Landing Page", "Email Campaign",
-                     "Conversion Strategy", "Growth Hack", "Product Description", "Promotion", "Sales Script",
-                     "Value Proposition", "USP", "Elevator Pitch", "Customer Journey", "Messaging Framework"],
+        "Marketing": [
+            "Marketing Plan", "Funnel Strategy", "Conversion Optimization", "Customer Journey Map", "SEO Strategy",
+            "Content Marketing Plan", "Email Campaign", "Lead Generation System", "Growth Strategy", "A/B Testing Plan",
+            "Landing Page Structure", "Analytics Implementation", "Attribution Model", "Messaging Framework", 
+            "Campaign Performance Metrics", "Brand Positioning Strategy", "Product Marketing Plan", "Market Entry Strategy",
+            "Competitive Differentiation", "Marketing Automation", "Loyalty Program"
+        ],
         
-        "Finance": ["Budget Plan", "Financial Analysis", "Investment Strategy", "Expense Report", "Revenue Forecast",
-                   "Cash Flow", "Financial Model", "Cost Reduction", "Profit Optimization", "Tax Strategy",
-                   "Retirement Plan", "Debt Management", "Financial Education", "Savings Plan", "Equity Distribution"],
+        "Finance": [
+            "Financial Model", "Investment Strategy", "Budget Planning", "Cash Flow Projection", "Profit Optimization",
+            "Tax Planning Strategy", "Fundraising Strategy", "Equity Structure", "Financial Analysis", "Valuation Model",
+            "Capital Allocation", "Risk Management Framework", "Financial Reporting Structure", "Cost Reduction Plan",
+            "Financial Compliance", "Asset Management Strategy", "Debt Restructuring", "Financial Due Diligence",
+            "Pricing Analysis", "Revenue Forecasting", "Financial Controls"
+        ],
         
-        "Health": ["Wellness Plan", "Diet Plan", "Fitness Routine", "Mental Health", "Sleep Improvement",
-                  "Meditation Script", "Nutrition Guide", "Health Goal", "Self-Care Routine", "Stress Management",
-                  "Recovery Plan", "Symptom Analysis", "Mindfulness Exercise", "Health Tracker", "Medical Information"],
+        "Health": [
+            "Wellness Program", "Nutrition Plan", "Fitness Routine", "Mental Health Framework", "Sleep Optimization",
+            "Stress Management Protocol", "Health Tracking System", "Medical Information Guide", "Patient Education Material",
+            "Healthcare Workflow", "Preventive Health Strategy", "Rehabilitation Plan", "Telehealth Implementation",
+            "Health Risk Assessment", "Medical Documentation", "Clinical Protocol", "Public Health Communication",
+            "Health Policy Framework", "Mindfulness Practice", "Behavioral Health Intervention"
+        ],
         
-        "Legal": ["Legal Analysis", "Contract Template", "Legal Response", "Compliance Check", "Privacy Statement",
-                 "Disclaimer", "Terms of Service", "Copyright Notice", "IP Strategy", "Legal Research",
-                 "Legal Letter", "Dispute Resolution", "Regulatory Filing", "Legal Defense", "Intellectual Property"],
+        "Legal": [
+            "Contract Template", "Legal Compliance Checklist", "Intellectual Property Strategy", "Dispute Resolution Process",
+            "Regulatory Framework", "Legal Risk Assessment", "Data Protection Policy", "Employment Policy", "Corporate Governance",
+            "Legal Document Management", "Compliance Training", "Legal Research Framework", "Licensing Agreement",
+            "Corporate Structure", "Legal Process Optimization", "Litigation Strategy", "International Legal Compliance",
+            "Due Diligence Checklist", "Legal Project Management", "Regulatory Filing Process"
+        ],
         
-        "Event": ["Event Plan", "Invitation", "Wedding Speech", "Toast", "Anniversary Message", "Party Theme",
-                 "Conference Agenda", "Event Marketing", "Catering Menu", "Venue Description", "Entertainment Plan",
-                 "Guest List", "Event Schedule", "Thank You Note", "Event Budget", "Virtual Event"],
+        "Event": [
+            "Event Strategy", "Event Budget", "Venue Selection Criteria", "Event Schedule", "Speaker Management",
+            "Attendee Experience Design", "Technical Production Plan", "Marketing Timeline", "Sponsorship Strategy",
+            "Registration Process", "Logistics Management", "Virtual Event Platform", "Hybrid Event Strategy",
+            "Event Evaluation Framework", "Accessibility Planning", "Risk Management Plan", "Sustainability Guidelines",
+            "Catering Management", "Event Technology Integration", "Post-Event Analysis"
+        ],
         
-        "Relationships": ["Relationship Advice", "Conflict Resolution", "Apology Letter", "Friendship Message",
-                         "Love Letter", "Dating Profile", "Breakup Letter", "Family Communication", "Networking Message",
-                         "Condolence Note", "Birthday Message", "Anniversary Note", "Congratulations Note", "Reconnection"],
+        "Relationships": [
+            "Communication Framework", "Conflict Resolution Protocol", "Team Building Strategy", "Leadership Development",
+            "Feedback System", "Cultural Integration", "Relationship Management", "Networking Strategy", "Partnership Framework",
+            "Client Relationship Plan", "Employee Engagement", "Mentorship Program", "Community Building", "Stakeholder Management",
+            "Trust Building Protocol", "Negotiation Framework", "Relationship Recovery Plan", "International Relations",
+            "Inclusion Strategy", "Emotional Intelligence Development"
+        ],
         
-        "Industry": ["Industry Analysis", "Sector Trend", "Market Forecast", "Industry Report", "Competitive Landscape",
-                    "Regulatory Impact", "Technology Adoption", "Industry Disruption", "Vertical Strategy", "Supply Chain",
-                    "Distribution Channel", "Industry Standards", "Industry Partnership", "Trade Association", "Industry Event"]
+        "Industry": [
+            "Industry Analysis", "Market Opportunity Assessment", "Sector Trend Report", "Competitive Landscape",
+            "Technology Implementation", "Supply Chain Optimization", "Distribution Strategy", "Regulatory Impact Analysis",
+            "Industry Standards Compliance", "Vertical Integration Strategy", "Disruption Response Plan", "Emerging Technology Adoption",
+            "Industry Partnership Framework", "Sector Specialization Strategy", "Industry Expansion Plan", "Trade Relationship Management",
+            "Industry Transformation Roadmap", "Resource Efficiency Strategy", "Industry 4.0 Implementation", "Sustainable Practice Integration"
+        ]
     }
     
     # Combine base and extended categories
     all_categories = {**base_categories, **extended_categories}
     
-    # Multipliers to expand each tool category (adjectival prefixes)
-# Practical Tool Multipliers
-
-    # Descriptive Qualifiers: Focus on Actual Capabilities
+    # Reduced multipliers with focused practical descriptors
     tool_multipliers = [
-        "AI-Powered", "Data-Driven", "Adaptive", "Intelligent", 
-        "Automated", "Precision", "Workflow", "Strategic", 
-        "Analytical", "Efficient", "Scalable", "Integrated"
+        "Advanced", "Automated", "Strategic", "Analytical", 
+        "Integrated", "Scalable", "Optimized"
     ]
 
-    # Tool Format Descriptors: Emphasize Functional Purpose
+    # Simplified format descriptors
     format_multipliers = [
-        "Engine", "Platform", "Framework", "Toolkit", 
-        "Accelerator", "Assistant", "Optimizer", "Analyzer", 
-        "Manager", "Generator", "Orchestrator", "Solution"
+        "Platform", "Framework", "Assistant", "Toolkit", 
+        "Solution", "System", "Engine"
     ]
     
     # Generate expanded tools by combining base tools with multipliers
