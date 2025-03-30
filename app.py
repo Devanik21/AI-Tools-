@@ -974,8 +974,14 @@ tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9, tab10, tab11, tab12, tab13
 st.markdown("</div>", unsafe_allow_html=True)
 
 with tab1:
-    selected_category = st.radio("Choose a category:", list(tool_categories.keys()))
+    col1, col2 = st.columns(2)
     
+    with col1:
+        selected_category = st.radio("Choose a category:", list(tool_categories.keys())[:len(tool_categories)//2])
+    
+    with col2:
+        selected_category = st.radio("", list(tool_categories.keys())[len(tool_categories)//2:])
+
     # Only show tools from selected category
     if selected_category:
         tools_in_category = tool_categories[selected_category]
