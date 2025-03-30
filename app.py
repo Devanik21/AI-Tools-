@@ -181,140 +181,109 @@ def extract_text_from_pdf(uploaded_file):
 @st.cache_data
 def generate_ai_tools():
     # Base categories dictionary - we'll expand with multipliers later
-# Core Categories with Practical Tools
-base_categories = {
- "Writing": [
-  "Resume", "Cover Letter", "Email", "Blog Post", "Content Rewrite", "Grammar Check", 
-  "Summary", "Academic Essay", "Letter", "Script", "Technical Manual", "Research Paper",
-  "Whitepaper", "Thesis Statement", "Literature Review", "Citation Generator", "Lab Report",
-  "Case Study", "Editorial Guidelines", "Style Guide", "Professional Bio", "Executive Summary",
-  "Project Proposal", "Meeting Minutes", "Documentation", "Standard Procedure", "Policy Draft",
-  "Legal Document", "Contract Clause", "Terms & Conditions", "Privacy Policy", "Press Release",
-  "Product Description", "Instruction Manual", "Tutorial", "FAQ Generator"
- ],
- 
- "Creative": [
-  "Poem", "Story", "Dialogue", "Character Profile", "Book Title", "Horror Story", "Sci-Fi Story",
-  "Song Lyrics", "Children's Story", "Novel Outline", "Metaphor Generator", "Joke Writer", 
-  "Fantasy World Builder", "Sci-Fi Technology Concept", "Historical Fiction", "Memoir Outline", 
-  "Poetry Prompt", "Creative Writing Prompt", "Short Story Starter", "Screenplay Format", 
-  "Plot Developer", "Character Background", "Setting Description", "Alternate History Scenario", 
-  "Fictional Species Creator", "Magic System Designer", "Fictional Language Guide", 
-  "Story Conflict Generator", "Dialogue Polisher", "Plot Twist Generator"
- ],
- 
- "Business": [
-  "Business Plan", "Startup Pitch", "SEO Keyword Generator", "Business Consultant", "Marketing Strategy",
-  "Grant Proposal", "Freelance Proposal", "LinkedIn Profile", "Branding Guide", "Business Email Template",
-  "SWOT Analysis", "Business Case", "Market Research", "Competitor Analysis", "Pricing Strategy",
-  "Product Launch Plan", "Go-to-Market Strategy", "Customer Persona", "Mission Statement", "Company Values",
-  "Investor Pitch", "Funding Request", "Project Timeline", "Risk Assessment", "ROI Calculator",
-  "KPI Framework", "Sales Script", "Customer Journey Map", "Value Proposition", "Elevator Pitch",
-  "Business Model Canvas", "Negotiation Script", "Partnership Agreement", "Vendor Evaluation"
- ]
-}
+    base_categories = {
+        "Writing": [
+            "Resume", "Cover Letter", "Email", "Blog Post", "Content Rewrite", "Grammar Check", 
+            "Summary", "Academic Essay", "Letter", "Script", "Technical Writing", "Research Paper",
+            "Whitepaper", "Thesis Statement", "Literature Review", "Citation", "Lab Report",
+            "Case Study", "Editorial Guidelines", "Style Guide", "Professional Bio", "Executive Summary",
+            "Project Proposal", "Meeting Minutes", "Documentation", "SOP", "Policy Draft",
+            "Legal Document", "Contract Clause", "Terms & Conditions", "Privacy Policy"
+        ],
+        
+        "Creative": [
+            "Poem", "Story", "Dialogue", "Character", "Book Title", "Horror Story", "Sci-Fi Story",
+            "Song Lyrics", "Children's Story", "Novel Outline", "Metaphor", "Joke", "Fantasy World",
+            "Sci-Fi Technology", "Historical Fiction", "Memoir", "Poetry Prompt", "Creative Prompt",
+            "Short Story Starter", "Screenplay Format", "Plot Twist", "Character Backstory",
+            "Setting Description", "Alternate History", "Mythical Creature", "Magic System",
+            "Fictional Language", "Story Conflict"
+        ],
+        
+        "Business": [
+            "Business Idea", "Startup Pitch", "SEO Keywords", "Business Consultation", "Marketing Strategy",
+            "Grant Proposal", "Freelance Proposal", "LinkedIn Bio", "Branding Guide", "Business Email",
+            "SWOT Analysis", "Business Case", "Market Research", "Competitor Analysis", "Pricing Strategy",
+            "Product Launch", "Go-to-Market", "Customer Persona", "Mission Statement", "Company Values",
+            "Business Plan", "Investor Pitch", "Funding Request", "Project Timeline", "Risk Assessment",
+            "ROI Calculator", "KPI Framework"
+        ]
+    }
 
-# Extended Practical Categories
-extended_categories = {
- "Social Media": [
-  "Content Strategy", "Caption Generator", "Engagement Post", "Video Script", "Tagline Creator",
-  "Platform-Specific Content", "Outreach Email", "Podcast Outline", "Content Calendar", 
-  "Viral Content Formula", "Influencer Pitch", "Brand Partnership Proposal", "Video Script", 
-  "Profile Optimizer", "Networking Message", "Trend Analysis", "Story Sequence", 
-  "Article Outline", "Thread Planner", "Ad Copy Generator", "Hashtag Researcher", 
-  "Community Guidelines", "Audience Response Template", "Crisis Communication Plan"
- ],
- 
- "Productivity": [
-  "Workflow Designer", "Daily Planner", "Travel Itinerary", "Note Template", "Brainstorm Facilitator",
-  "Task Organizer", "Interview Preparation", "Learning Roadmap", "Time Blocking Template", "Priority Matrix",
-  "Decision Framework", "Problem-Solving Guide", "Critical Thinking Exercise", "Goal Setting Framework", 
-  "Habit Tracker", "Development Plan", "Schedule Optimizer", "Project Management Template", 
-  "Task Breakdown Tool", "Meeting Agenda", "Retrospective Guide", "Focus Technique"
- ],
     
- "Education": [
-  "Lesson Plan", "Course Structure", "Curriculum Designer", "Quiz Generator", "Study Guide",
-  "Instructional Material", "Assignment Creator", "Workshop Outline", "Test Bank", "Learning Objectives",
-  "Educational Game Design", "Resource Compiler", "Subject Summarizer", "Syllabus Template", 
-  "Tutorial Creator", "Concept Explainer", "Rubric Designer", "Student Feedback Template",
-  "Lecture Notes", "Discussion Prompt", "Learning Assessment", "Inclusive Teaching Guide"
- ],
- 
- "Development": [
-  "Code Reviewer", "Technical Specification", "API Documentation", "Development Roadmap", "Architecture Guide",
-  "Database Schema Designer", "Requirements Documenter", "Testing Strategy", "Bug Report Template", 
-  "Feature Specification", "Code Refactoring Guide", "Algorithm Designer", "Tech Stack Evaluator", 
-  "System Architect", "Code Snippet Library", "Deployment Checklist", "Security Review",
-  "Accessibility Compliance", "Performance Optimizer", "Version Control Guide"
- ],
+    # Additional categories to reach 2000+ tools
+    extended_categories = {
+        "Social Media": ["Post", "Caption", "Viral Tweet", "YouTube Idea", "Tagline", "Pinterest Description",
+                        "Cold Email", "Podcast Episode", "Content Calendar", "Viral Formula", "Influencer Pitch",
+                        "Brand Partnership", "YouTube Script", "Dating Profile", "Networking Opener",
+                        "TikTok Trend", "Instagram Story", "LinkedIn Article", "Twitter Thread", "Facebook Ad",
+                        "Hashtag Strategy", "Reel Script", "Community Post", "Review Response", "Crisis Response"],
+        
+        "Productivity": ["Productivity Plan", "Daily Plan", "Travel Itinerary", "Note-Taking", "Brainstorming",
+                         "Grocery List", "Interview Prep", "Learning Path", "Time Management", "Prioritization",
+                         "Decision Matrix", "Problem-Solving", "Critical Thinking", "Goal Setting", "Habit Tracker",
+                         "Professional Development", "Weekly Schedule", "Project Management", "Task Breakdown"],
+        
+        "Education": ["Lesson Plan", "Course Outline", "Curriculum", "Educational Quiz", "Study Guide",
+                     "Teaching Material", "Assignment", "Workshop", "Test Questions", "Learning Objectives",
+                     "Educational Game", "Academic Resource", "Subject Summary", "Syllabus", "Tutorial"],
+        
+        "Design": ["Design Brief", "Color Palette", "Typography Guide", "Design System", "Logo Concept",
+                  "UI Element", "UX Flow", "Website Layout", "Print Material", "Product Packaging",
+                  "Illustration Concept", "Icon Set", "Brand Identity", "Style Tile", "Mood Board"],
+        
+        "Development": ["Code Review", "Technical Spec", "API Documentation", "Development Plan", "Code Architecture",
+                       "Database Schema", "Software Requirements", "Testing Strategy", "Bug Report", "Feature Spec",
+                       "Code Refactoring", "Algorithm", "Tech Stack", "System Architecture", "Code Snippet"],
+        
+        "Marketing": ["Marketing Plan", "Campaign Brief", "Ad Copy", "Landing Page", "Email Campaign",
+                     "Conversion Strategy", "Growth Hack", "Product Description", "Promotion", "Sales Script",
+                     "Value Proposition", "USP", "Elevator Pitch", "Customer Journey", "Messaging Framework"],
+        
+        "Finance": ["Budget Plan", "Financial Analysis", "Investment Strategy", "Expense Report", "Revenue Forecast",
+                   "Cash Flow", "Financial Model", "Cost Reduction", "Profit Optimization", "Tax Strategy",
+                   "Retirement Plan", "Debt Management", "Financial Education", "Savings Plan", "Equity Distribution"],
+        
+        "Health": ["Wellness Plan", "Diet Plan", "Fitness Routine", "Mental Health", "Sleep Improvement",
+                  "Meditation Script", "Nutrition Guide", "Health Goal", "Self-Care Routine", "Stress Management",
+                  "Recovery Plan", "Symptom Analysis", "Mindfulness Exercise", "Health Tracker", "Medical Information"],
+        
+        "Legal": ["Legal Analysis", "Contract Template", "Legal Response", "Compliance Check", "Privacy Statement",
+                 "Disclaimer", "Terms of Service", "Copyright Notice", "IP Strategy", "Legal Research",
+                 "Legal Letter", "Dispute Resolution", "Regulatory Filing", "Legal Defense", "Intellectual Property"],
+        
+        "Event": ["Event Plan", "Invitation", "Wedding Speech", "Toast", "Anniversary Message", "Party Theme",
+                 "Conference Agenda", "Event Marketing", "Catering Menu", "Venue Description", "Entertainment Plan",
+                 "Guest List", "Event Schedule", "Thank You Note", "Event Budget", "Virtual Event"],
+        
+        "Relationships": ["Relationship Advice", "Conflict Resolution", "Apology Letter", "Friendship Message",
+                         "Love Letter", "Dating Profile", "Breakup Letter", "Family Communication", "Networking Message",
+                         "Condolence Note", "Birthday Message", "Anniversary Note", "Congratulations Note", "Reconnection"],
+        
+        "Industry": ["Industry Analysis", "Sector Trend", "Market Forecast", "Industry Report", "Competitive Landscape",
+                    "Regulatory Impact", "Technology Adoption", "Industry Disruption", "Vertical Strategy", "Supply Chain",
+                    "Distribution Channel", "Industry Standards", "Industry Partnership", "Trade Association", "Industry Event"]
+    }
     
- "Marketing": [
-  "Campaign Planner", "Brief Template", "Conversion Copy", "Landing Page Design", "Email Sequence",
-  "Funnel Strategy", "Growth Tactic Generator", "Product Storytelling", "Promotion Planner", 
-  "Sales Enablement", "Value Proposition Designer", "USP Formulator", "Customer Journey Mapper", 
-  "Messaging Framework", "Brand Voice Guide", "Analytics Interpreter", "A/B Test Designer",
-  "Audience Segmentation", "Content Distribution Plan", "Remarketing Strategy"
- ],
- 
- "Finance": [
-  "Budget Template", "Financial Analyzer", "Investment Planner", "Expense Tracker", "Revenue Forecaster",
-  "Cash Flow Manager", "Financial Modeler", "Cost Reduction Planner", "Profit Optimizer", "Tax Planning Guide",
-  "Retirement Calculator", "Debt Reduction Plan", "Financial Literacy Guide", "Savings Calculator", 
-  "Equity Structure", "Funding Strategy", "Valuation Framework", "Financial Risk Assessment",
-  "Pricing Model", "Compensation Structure"
- ],
+    # Combine base and extended categories
+    all_categories = {**base_categories, **extended_categories}
     
- "Health": [
-  "Wellness Planner", "Meal Planner", "Fitness Program", "Mental Health Resource", "Sleep Improvement Guide",
-  "Meditation Script", "Nutrition Analyzer", "Health Goal Tracker", "Self-Care Planner", "Stress Management Guide",
-  "Recovery Plan", "Symptom Journal", "Mindfulness Exercise", "Health Progress Tracker", 
-  "Medical Information Organizer", "Exercise Library", "Habit Formation Guide", "Wellness Challenge"
- ],
- 
- "Legal": [
-  "Legal Analyzer", "Contract Template", "Legal Response Generator", "Compliance Checklist", "Privacy Statement",
-  "Disclaimer Generator", "Terms of Service", "Copyright Notice", "IP Strategy", "Legal Research Assistant",
-  "Legal Letter Template", "Dispute Resolution Framework", "Regulatory Guide", "Legal Defense Strategy", 
-  "Intellectual Property Audit", "Agreement Reviewer", "Policy Compliance", "Legal Risk Assessment"
- ],
-    
- "Design": [
-  "Design Brief Template", "Color Palette Generator", "Typography Guide", "Design System Creator", 
-  "Logo Concept Generator", "UI Component Library", "UX Flow Designer", "Layout Planner", 
-  "Print Design Template", "Package Design Guide", "Illustration Brief", "Icon Library", 
-  "Brand Guidelines", "Style Guide", "Mood Board Creator", "Accessibility Standards",
-  "Responsive Design Checker", "Asset Organizer", "Visual Hierarchy Guide"
- ],
- 
- "Project Management": [
-  "Project Charter", "Scope Document", "Resource Allocator", "Timeline Generator", "Risk Register",
-  "Stakeholder Communication", "Change Management Plan", "Status Report Template", "Team Charter",
-  "Process Documentation", "Milestone Tracker", "Quality Assurance Plan", "Project Closeout",
-  "Budget Tracker", "Team Capacity Planner", "Agile Workflow", "Dependency Mapper"
- ],
-    
- "Communication": [
-  "Message Framework", "Presentation Outline", "Negotiation Guide", "Feedback Template",
-  "Conflict Resolution Script", "Public Speaking Guide", "Storytelling Framework",
-  "Persuasive Argument Builder", "Technical Translator", "Cross-Cultural Communication",
-  "Visual Communication Guide", "Difficult Conversation Script", "Executive Briefing",
-  "Team Announcement", "Interview Question Bank", "Active Listening Guide"
- ]
-}
+    # Multipliers to expand each tool category (adjectival prefixes)
+# Practical Tool Multipliers
 
-# Combine base and extended categories
-all_categories = {**base_categories, **extended_categories}
+    # Descriptive Qualifiers: Focus on Actual Capabilities
+    tool_multipliers = [
+        "AI-Powered", "Data-Driven", "Adaptive", "Intelligent", 
+        "Automated", "Precision", "Workflow", "Strategic", 
+        "Analytical", "Efficient", "Scalable", "Integrated"
+    ]
 
-# Reduced, more practical multipliers
-tool_multipliers = [
- "Smart", "Advanced", "Professional", "Essential", "Premium", "Expert"
-]
-
-# Reduced, more practical format descriptors
-format_multipliers = [
- "Tool", "Assistant", "System", "Suite", "Solution", "Pro"
-]
+    # Tool Format Descriptors: Emphasize Functional Purpose
+    format_multipliers = [
+        "Engine", "Platform", "Framework", "Toolkit", 
+        "Accelerator", "Assistant", "Optimizer", "Analyzer", 
+        "Manager", "Generator", "Orchestrator", "Solution"
+    ]
     
     # Generate expanded tools by combining base tools with multipliers
     expanded_categories = {}
