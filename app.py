@@ -632,7 +632,7 @@ tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9, tab10, tab11, tab12, tab13
 st.markdown("</div>", unsafe_allow_html=True)
 
 with tab1:
-    selected_category = st.selectbox("Choose a category:", list(tool_categories.keys()))
+    selected_category = st.radio("Choose a category:", list(tool_categories.keys()))
     
     # Only show tools from selected category
     if selected_category:
