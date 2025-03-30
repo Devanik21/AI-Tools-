@@ -228,23 +228,79 @@ def generate_ai_tools():
 ],
 
         
-        "Creative": [
-            "Poem", "Story", "Dialogue", "Character", "Book Title", "Horror Story", "Sci-Fi Story",
-            "Song Lyrics", "Children's Story", "Novel Outline", "Metaphor", "Joke", "Fantasy World",
-            "Sci-Fi Technology", "Historical Fiction", "Memoir", "Poetry Prompt", "Creative Prompt",
-            "Short Story Starter", "Screenplay Format", "Plot Twist", "Character Backstory",
-            "Setting Description", "Alternate History", "Mythical Creature", "Magic System",
-            "Fictional Language", "Story Conflict"
-        ],
+"Creative": [
+    # Poetry & Lyrics  
+    "Poem", "Haiku", "Limerick", "Sonnet", "Free Verse", "Song Lyrics", "Rap Lyrics",  
+    "Acrostic Poem", "Poetry Prompt", "Rhyming Verse",  
+
+    # Fiction & Storytelling  
+    "Story", "Short Story", "Flash Fiction", "Novella Outline", "Novel Outline",  
+    "Children's Story", "Bedtime Story", "Horror Story", "Sci-Fi Story", "Fantasy Story",  
+    "Mythology Retelling", "Historical Fiction", "Alternate History", "Fable", "Urban Legend",  
+    "Fairy Tale Rewrite", "Dystopian Story",  
+
+    # Character Development  
+    "Character", "Character Backstory", "Character Arc", "Villain Development",  
+    "Hero’s Journey", "Sidekick Generator", "Anti-Hero Development",  
+
+    # Worldbuilding & Fantasy Elements  
+    "Fantasy World", "Sci-Fi Technology", "Magic System", "Fictional Language",  
+    "Mythical Creature", "Superpower Generator", "Alien Species", "Alternate Universe",  
+    "Steampunk Invention", "Cyberpunk Society", "Post-Apocalyptic World",  
+
+    # Plot & Writing Aids  
+    "Book Title", "Plot Twist", "Story Conflict", "Story Climax", "Short Story Starter",  
+    "Creative Prompt", "Poetry Prompt", "Dialogue", "Monologue", "Setting Description",  
+    "Screenplay Format", "Scene Breakdown", "Writing Warm-Up",  
+
+    # Humor & Light-Hearted Writing  
+    "Joke", "Puns", "Satire Piece", "Parody Song", "Comedy Sketch",  
+
+    # Memoir & Personal Writing  
+    "Memoir", "Personal Essay", "Anecdote", "Inspirational Story", "Letter to Future Self",  
+
+    # Dream & Metaphysical Writing  
+    "Dream Interpreter", "Symbolic Dream Meaning", "Lucid Dream Story",  
+    "Surreal Dream Narration", "Dream Journal Entry", "Visionary Experience",  
+],
+
         
-        "Business": [
-            "Business Idea", "Startup Pitch", "SEO Keywords", "Business Consultation", "Marketing Strategy",
-            "Grant Proposal", "Freelance Proposal", "LinkedIn Bio", "Branding Guide", "Business Email",
-            "SWOT Analysis", "Business Case", "Market Research", "Competitor Analysis", "Pricing Strategy",
-            "Product Launch", "Go-to-Market", "Customer Persona", "Mission Statement", "Company Values",
-            "Business Plan", "Investor Pitch", "Funding Request", "Project Timeline", "Risk Assessment",
-            "ROI Calculator", "KPI Framework"
-        ]
+"Business": [
+    # Business Strategy & Planning  
+    "Business Idea", "Business Model Canvas", "Business Plan", "Go-to-Market Strategy",  
+    "Startup Pitch", "Investor Pitch", "Funding Request", "Bootstrapping Strategy",  
+    "Growth Hacking Techniques", "Project Timeline", "Risk Assessment", "Exit Strategy",  
+
+    # Marketing & Branding  
+    "Marketing Strategy", "Content Marketing Plan", "Branding Guide", "Social Media Strategy",  
+    "SEO Keywords", "Ad Copy Generator", "Product Launch Plan", "Rebranding Strategy",  
+    "Customer Retention Plan", "Brand Voice & Messaging",  
+
+    # Sales & Customer Development  
+    "Sales Pitch", "Freelance Proposal", "Lead Generation Strategy", "Customer Persona",  
+    "Cold Email Template", "Sales Funnel Optimization", "Customer Support Guidelines",  
+    "Loyalty Program Strategy", "Upselling & Cross-Selling Strategy",  
+
+    # Financial & Business Analysis  
+    "Grant Proposal", "ROI Calculator", "Break-even Analysis", "Pricing Strategy",  
+    "Financial Forecasting", "Cash Flow Management", "Profit Margin Analysis",  
+    "Funding Proposal", "Investor Report",  
+
+    # Market Research & Competitive Analysis  
+    "Market Research", "Competitor Analysis", "Industry Trends Report", "Customer Survey Questions",  
+    "Business Case", "SWOT Analysis", "KPI Framework", "Benchmarking Analysis",  
+
+    # Business Communication & Operations  
+    "Business Email", "LinkedIn Bio", "Professional Networking Message", "Press Release",  
+    "Mission Statement", "Company Values", "Code of Conduct", "HR Policy Draft",  
+    "Crisis Management Plan", "Standard Operating Procedure (SOP)",  
+
+    # Entrepreneurship & Consultation  
+    "Business Consultation", "Startup Incubation Strategy", "Fundraising Strategy",  
+    "Legal Compliance Checklist", "Franchise Business Plan", "Freelance Business Plan",  
+    "E-commerce Strategy", "Subscription Model Strategy",  
+]
+
     }
 
     
