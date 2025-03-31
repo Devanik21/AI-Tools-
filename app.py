@@ -279,20 +279,80 @@ def generate_ai_tools():
     
     # Additional categories to reach 2000+ tools
     extended_categories = {
-        "Social Media": ["Post", "Caption", "Viral Tweet", "YouTube Idea", "Tagline", "Pinterest Description",
-                        "Cold Email", "Podcast Episode", "Content Calendar", "Viral Formula", "Influencer Pitch",
-                        "Brand Partnership", "YouTube Script", "Dating Profile", "Networking Opener",
-                        "TikTok Trend", "Instagram Story", "LinkedIn Article", "Twitter Thread", "Facebook Ad",
-                        "Hashtag Strategy", "Reel Script", "Community Post", "Review Response", "Crisis Response"],
+        "Social Media": [
+            # General Social Media Content  
+            "Post", "Caption", "Viral Tweet", "Hashtag Strategy", "Content Calendar", "Trending Topics Finder",  
+            "Community Post", "Meme Generator", "User Engagement Prompt", "Social Media Poll Idea",  
+
+            # YouTube & Video Content  
+            "YouTube Idea", "YouTube Script", "YouTube Thumbnail Text", "Reel Script",  
+            "TikTok Trend", "Instagram Story", "Short-Form Video Hook", "Livestream Outline",  
+
+            # Influencer & Brand Marketing  
+            "Influencer Pitch", "Brand Partnership", "Sponsorship Email", "Affiliate Marketing Copy",  
+            "Networking Opener", "Collaborative Post Idea", "Product Placement Script",  
+
+            # Advertising & Growth Strategies  
+            "Facebook Ad", "Instagram Ad Copy", "LinkedIn Ad Copy", "Twitter Ad Copy",  
+            "A/B Testing Ad Variations", "Social Media Growth Hack", "Viral Formula",  
+
+            # Engagement & Audience Interaction  
+            "Review Response", "Crisis Response", "Customer Support Reply", "Community Engagement Strategy",  
+            "DM Outreach Message", "Story Poll & Quiz Ideas",  
+
+            # Niche-Specific Content  
+            "Podcast Episode Idea", "Podcast Episode Title", "Podcast Teaser Post", "Dating Profile",  
+            "LinkedIn Article", "Twitter Thread", "Pinterest Description", "Tagline",  
+            "Event Promotion Post", "Giveaway & Contest Post",  
+
+            # SEO & Algorithm Boosting Content  
+            "SEO-Optimized Post", "Trending Hashtag Suggestions", "Social Media Headline Generator",  
+            "Evergreen Content Idea", "Cross-Platform Content Repurposing"  
+        ],
         
-        "Productivity": ["Productivity Plan", "Daily Plan", "Travel Itinerary", "Note-Taking", "Brainstorming",
-                         "Grocery List", "Interview Prep", "Learning Path", "Time Management", "Prioritization",
-                         "Decision Matrix", "Problem-Solving", "Critical Thinking", "Goal Setting", "Habit Tracker",
-                         "Professional Development", "Weekly Schedule", "Project Management", "Task Breakdown"],
+        "Productivity": [
+            # Planning & Scheduling  
+            "Productivity Plan", "Daily Plan", "Weekly Schedule", "Monthly Planner", "Yearly Goal Planner",  
+            "Project Management", "Task Breakdown", "Meeting Agenda", "Time Blocking Planner",  
+            "Work-Life Balance Plan", "Pomodoro Session Planner",  
+
+            # Organization & Efficiency  
+            "Note-Taking", "Brainstorming", "Mind Mapping", "Decision Matrix", "Prioritization",  
+            "Time Management", "Kanban Board Organizer", "Checklist Generator", "Routine Optimization",  
+
+            # Goal Setting & Self-Improvement  
+            "Goal Setting", "Habit Tracker", "Professional Development Plan", "Self-Reflection Journal",  
+            "Personal SWOT Analysis", "Skill Development Roadmap", "Morning & Night Routine Guide",  
+
+            # Travel & Logistics  
+            "Travel Itinerary", "Packing List", "Grocery List", "Meal Planning", "Event Planning",  
+
+            # Career & Productivity Tools  
+            "Interview Prep", "Performance Review Template", "Networking Plan", "Work Presentation Structure",  
+            "Work Journal", "Bullet Journal Prompts", "Crisis Management Plan"  
+        ],
         
-        "Education": ["Lesson Plan", "Course Outline", "Curriculum", "Educational Quiz", "Study Guide",
-                     "Teaching Material", "Assignment", "Workshop", "Test Questions", "Learning Objectives",
-                     "Educational Game", "Academic Resource", "Subject Summary", "Syllabus", "Tutorial"],
+        "Education": [
+            # Teaching & Curriculum Design  
+            "Lesson Plan", "Course Outline", "Curriculum", "Syllabus", "Workshop Plan",  
+            "Classroom Activity Idea", "Lecture Notes", "Tutoring Session Plan",  
+
+            # Student Learning & Study Aids  
+            "Educational Quiz", "Study Guide", "Subject Summary", "Assignment", "Test Questions",  
+            "Flashcard Generator", "Formula Cheat Sheet", "Learning Path", "Research Topic Suggestions",  
+
+            # Interactive & Alternative Learning  
+            "Educational Game", "Puzzle-Based Learning", "Simulation-Based Teaching", "Case Study Analysis",  
+            "Peer Learning Strategy", "Role-Playing Educational Exercise",  
+
+            # Higher Education & Academic Tools  
+            "Academic Resource List", "Research Paper Guide", "Thesis Outline", "Citation Generator",  
+            "Critical Thinking Exercise", "Problem-Solving Challenge",  
+
+            # Skill Development & Self-Learning  
+            "Tutorial", "Self-Study Plan", "Lifelong Learning Roadmap", "Language Learning Plan",  
+            "Career-Oriented Learning Path", "Skill-Building Guide"  
+        ],
         
         "Design": ["Design Brief", "Color Palette", "Typography Guide", "Design System", "Logo Concept",
                   "UI Element", "UX Flow", "Website Layout", "Print Material", "Product Packaging",
