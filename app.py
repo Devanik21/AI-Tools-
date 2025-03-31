@@ -354,30 +354,147 @@ def generate_ai_tools():
             "Career-Oriented Learning Path", "Skill-Building Guide"  
         ],
         
-        "Design": ["Design Brief", "Color Palette", "Typography Guide", "Design System", "Logo Concept",
-                  "UI Element", "UX Flow", "Website Layout", "Print Material", "Product Packaging",
-                  "Illustration Concept", "Icon Set", "Brand Identity", "Style Tile", "Mood Board"],
+        "Design": [
+            # Branding & Identity  
+            "Design Brief", "Logo Concept", "Brand Identity", "Typography Guide", "Color Palette",  
+            "Mood Board", "Style Tile", "Visual Hierarchy Guide",  
+
+            # UI/UX & Digital Design  
+            "UI Element", "UX Flow", "Wireframe Sketch", "Website Layout", "Mobile App UI",  
+            "Dashboard UI", "Landing Page Wireframe", "Accessibility Guidelines",  
+
+            # Print & Packaging Design  
+            "Print Material", "Product Packaging", "Brochure Layout", "Business Card Design",  
+            "Poster Concept", "Book Cover Design",  
+
+            # Illustration & Graphic Elements  
+            "Illustration Concept", "Icon Set", "Custom Vector Art", "Infographic Layout",  
+            "Social Media Graphics", "Sticker Pack", "3D Design Concept",  
+
+            # Advanced & Systematic Design  
+            "Design System", "UI Component Library", "Grid System Guide", "Motion Design Concept",  
+            "Microinteraction Design", "Design Tokens"  
+        ],
+
         
-        "Development": ["Code Review", "Technical Spec", "API Documentation", "Development Plan", "Code Architecture",
-                       "Database Schema", "Software Requirements", "Testing Strategy", "Bug Report", "Feature Spec",
-                       "Code Refactoring", "Algorithm", "Tech Stack", "System Architecture", "Code Snippet"],
-        
-        "Marketing": ["Marketing Plan", "Campaign Brief", "Ad Copy", "Landing Page", "Email Campaign",
-                     "Conversion Strategy", "Growth Hack", "Product Description", "Promotion", "Sales Script",
-                     "Value Proposition", "USP", "Elevator Pitch", "Customer Journey", "Messaging Framework"],
-        
-        "Finance": ["Budget Plan", "Financial Analysis", "Investment Strategy", "Expense Report", "Revenue Forecast",
-                   "Cash Flow", "Financial Model", "Cost Reduction", "Profit Optimization", "Tax Strategy",
-                   "Retirement Plan", "Debt Management", "Financial Education", "Savings Plan", "Equity Distribution"],
-        
-        "Health": ["Wellness Plan", "Diet Plan", "Fitness Routine", "Mental Health", "Sleep Improvement",
-                  "Meditation Script", "Nutrition Guide", "Health Goal", "Self-Care Routine", "Stress Management",
-                  "Recovery Plan", "Symptom Analysis", "Mindfulness Exercise", "Health Tracker", "Medical Information"],
-        
-        "Legal": ["Legal Analysis", "Contract Template", "Legal Response", "Compliance Check", "Privacy Statement",
-                 "Disclaimer", "Terms of Service", "Copyright Notice", "IP Strategy", "Legal Research",
-                 "Legal Letter", "Dispute Resolution", "Regulatory Filing", "Legal Defense", "Intellectual Property"],
-        
+        "Development": [
+            # Software Planning & Architecture  
+            "Development Plan", "Code Architecture", "Tech Stack", "System Architecture",  
+            "Software Requirements", "Scalability Strategy", "Performance Optimization Guide",  
+
+            # Coding & Documentation  
+            "Code Review", "Code Snippet", "Code Refactoring", "Algorithm", "API Documentation",  
+            "Database Schema", "Technical Spec", "Feature Spec",  
+
+            # Testing & Debugging  
+            "Testing Strategy", "Unit Test Case", "Bug Report", "Debugging Guide",  
+            "Security Best Practices",  
+
+            # DevOps & Deployment  
+            "CI/CD Pipeline Plan", "Infrastructure as Code", "Deployment Strategy",  
+            "Server Configuration", "Monitoring & Logging Setup",  
+
+            # Web & Mobile Development  
+            "Frontend Framework Guide", "Backend API Design", "Full-Stack Development Plan",  
+            "Responsive Web Design Principles", "Cross-Platform Development Strategy",  
+
+            # AI & Data Science Development  
+            "ML Model Deployment Guide", "Data Pipeline Design", "AI Ethics & Bias Mitigation",  
+            "Deep Learning Framework Selection", "Edge AI Development Plan"  
+        ],
+
+        "Marketing": [
+            # Strategy & Planning  
+            "Marketing Plan", "Campaign Brief", "Growth Hack", "Product Launch Strategy", "Rebranding Strategy",  
+            "Customer Journey", "Competitive Positioning", "Go-to-Market Plan", "Market Segmentation",  
+
+            # Advertising & Promotion  
+            "Ad Copy", "Landing Page", "Promotion", "Social Media Ad Script", "Native Advertising Copy",  
+            "Influencer Marketing Strategy", "Referral Marketing Plan", "Affiliate Marketing Plan",  
+
+            # Content & Engagement  
+            "Email Campaign", "Newsletter Strategy", "Content Calendar", "SEO-Optimized Blog Strategy",  
+            "Video Marketing Plan", "Podcast Promotion Plan", "Webinar Outline",  
+
+            # Sales & Conversion Optimization  
+            "Conversion Strategy", "Sales Script", "Lead Magnet Idea", "Customer Retention Plan",  
+            "Call-to-Action Optimization", "Upselling & Cross-Selling Strategy",  
+
+            # Branding & Messaging  
+            "Value Proposition", "USP", "Elevator Pitch", "Messaging Framework", "Brand Storytelling",  
+            "Emotional Branding Guide", "Tagline & Slogan Generator",  
+
+            # Market Research & Analytics  
+            "Customer Persona", "A/B Testing Plan", "Performance Metrics Dashboard", "Marketing ROI Calculator",  
+            "Competitor Analysis", "Consumer Trend Report", "Pricing Psychology Strategy"  
+        ],
+        "Finance": [
+            # Budgeting & Financial Planning  
+            "Budget Plan", "Expense Report", "Savings Plan", "Personal Finance Tracker", "Cash Flow Management",  
+            "Debt Management", "Cost Reduction Strategy", "Emergency Fund Planning",  
+
+            # Investment & Business Finance  
+            "Investment Strategy", "Stock Market Analysis", "Wealth Management Plan", "Equity Distribution",  
+            "Fundraising Strategy", "Investor Pitch Financials", "Mergers & Acquisitions Strategy",  
+
+            # Revenue & Profit Optimization  
+            "Revenue Forecast", "Profit Optimization", "Monetization Strategy", "Pricing Model",  
+            "Financial Risk Assessment", "Financial Growth Projection",  
+
+            # Tax & Compliance  
+            "Tax Strategy", "Legal & Compliance Checklist", "Audit Preparation Guide",  
+
+            # Retirement & Long-Term Planning  
+            "Retirement Plan", "Passive Income Strategy", "Estate Planning Guide",  
+
+            # Financial Education & Analysis  
+            "Financial Model", "Financial Education", "Personal Net Worth Calculation",  
+            "Business Valuation Analysis", "Break-Even Analysis"  
+        ],
+
+        "Health": [
+            # General Wellness & Lifestyle  
+            "Wellness Plan", "Self-Care Routine", "Health Goal", "Stress Management", "Work-Life Balance Guide",  
+            "Sleep Improvement", "Mindfulness Exercise", "Daily Energy Optimization",  
+
+            # Diet & Nutrition  
+            "Diet Plan", "Meal Prep Guide", "Nutrition Guide", "Hydration Plan", "Superfood Recommendations",  
+            "Vitamins & Supplements Guide", "Intermittent Fasting Plan",  
+
+            # Fitness & Exercise  
+            "Fitness Routine", "Home Workout Plan", "Gym Training Plan", "Yoga Sequence",  
+            "Cardio vs Strength Training Guide", "Running Plan", "HIIT Routine",  
+
+            # Mental Health & Recovery  
+            "Mental Health Check-In", "Meditation Script", "Anxiety & Stress Relief Guide",  
+            "Cognitive Behavioral Therapy (CBT) Techniques", "Journaling Prompts for Mental Clarity",  
+
+            # Symptom & Medical Insights  
+            "Symptom Analysis", "Health Tracker", "Chronic Illness Management Plan",  
+            "Medical Information", "Preventive Healthcare Checklist",  
+
+            # Specialized & Alternative Health  
+            "Holistic Healing Plan", "Ayurveda & Herbal Remedies", "Acupuncture & Alternative Medicine",  
+            "Post-Injury Recovery Plan", "Rehabilitation Strategy"  
+        ],
+        "Legal": [
+            # Legal Drafting & Contracts  
+            "Contract Template", "Legal Letter", "Legal Response", "Regulatory Filing",  
+            "Terms of Service", "Privacy Statement", "Disclaimer", "Copyright Notice",  
+
+            # Business & Intellectual Property (IP)  
+            "IP Strategy", "Trademark Filing Guide", "Patent Summary", "Intellectual Property Protection Plan",  
+            "Business Compliance Checklist", "Non-Disclosure Agreement (NDA)",  
+
+            # Legal Analysis & Dispute Resolution  
+            "Legal Analysis", "Legal Research", "Dispute Resolution", "Regulatory Compliance Audit",  
+            "Risk Assessment & Mitigation", "Case Law Review",  
+
+            # Consumer & Personal Legal Support  
+            "Employment Contract Review", "Tenant Rights & Rental Agreement",  
+            "Small Claims Court Guide", "Legal Defense Outline", "Cyber Law & Data Protection Strategy"  
+        ],
+
         "Event": ["Event Plan", "Invitation", "Wedding Speech", "Toast", "Anniversary Message", "Party Theme",
                  "Conference Agenda", "Event Marketing", "Catering Menu", "Venue Description", "Entertainment Plan",
                  "Guest List", "Event Schedule", "Thank You Note", "Event Budget", "Virtual Event"],
