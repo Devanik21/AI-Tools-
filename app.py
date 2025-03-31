@@ -495,18 +495,83 @@ def generate_ai_tools():
             "Small Claims Court Guide", "Legal Defense Outline", "Cyber Law & Data Protection Strategy"  
         ],
 
-        "Event": ["Event Plan", "Invitation", "Wedding Speech", "Toast", "Anniversary Message", "Party Theme",
-                 "Conference Agenda", "Event Marketing", "Catering Menu", "Venue Description", "Entertainment Plan",
-                 "Guest List", "Event Schedule", "Thank You Note", "Event Budget", "Virtual Event"],
+        "Event": [
+            # Event Planning & Logistics  
+            "Event Plan", "Event Budget", "Venue Description", "Event Schedule", "Guest List",  
+            "Conference Agenda", "Corporate Event Strategy", "Virtual Event Setup",  
+
+            # Invitations & Announcements  
+            "Invitation", "Save-the-Date Announcement", "Event Reminder Message", "RSVP Confirmation",  
+
+            # Speeches & Messages  
+            "Wedding Speech", "Toast", "Thank You Note", "Opening Ceremony Speech",  
+            "Farewell Speech", "Award Ceremony Speech", "Eulogy",  
+
+            # Event Content & Marketing  
+            "Event Marketing", "Social Media Event Promotion", "Press Release for Event",  
+            "Sponsorship Proposal", "Hashtag Strategy for Events",  
+
+            # Entertainment & Activities  
+            "Party Theme", "Entertainment Plan", "Catering Menu", "Music Playlist Suggestion",  
+            "Photo Booth Ideas", "Games & Icebreakers", "Team Building Activity",  
+
+            # Specialized Event Plans  
+            "Wedding Planning Guide", "Birthday Party Plan", "Baby Shower Ideas",  
+            "Graduation Ceremony Plan", "Charity Fundraiser Outline", "Festival & Fair Planning"  
+        ],
         
-        "Relationships": ["Relationship Advice", "Conflict Resolution", "Apology Letter", "Friendship Message",
-                         "Love Letter", "Dating Profile", "Breakup Letter", "Family Communication", "Networking Message",
-                         "Condolence Note", "Birthday Message", "Anniversary Note", "Congratulations Note", "Reconnection"],
-        
-        "Industry": ["Industry Analysis", "Sector Trend", "Market Forecast", "Industry Report", "Competitive Landscape",
-                    "Regulatory Impact", "Technology Adoption", "Industry Disruption", "Vertical Strategy", "Supply Chain",
-                    "Distribution Channel", "Industry Standards", "Industry Partnership", "Trade Association", "Industry Event"]
-    }
+        "Relationships": [
+            # Romantic Relationships  
+            "Love Letter", "Apology Letter", "Breakup Letter", "Anniversary Note", "Proposal Message",  
+            "Long-Distance Relationship Advice", "Heartfelt Compliment Generator",  
+
+            # Friendships & Social Connections  
+            "Friendship Message", "Birthday Message", "Congratulations Note", "Supportive Message",  
+            "Reconnection Message", "Group Chat Icebreaker",  
+
+            # Family & Personal Relationships  
+            "Family Communication Guide", "Parenting Advice", "Sibling Bonding Ideas",  
+            "Holiday Greeting Message", "Personalized Family Storytelling",  
+
+            # Professional & Networking  
+            "Networking Message", "LinkedIn Connection Request", "Mentor Outreach Email",  
+            "Professional Thank You Note", "Colleague Appreciation Message",  
+
+            # Emotional Support & Conflict Resolution  
+            "Relationship Advice", "Conflict Resolution Guide", "Condolence Note",  
+            "Forgiveness Letter", "Active Listening Tips", "Empathy Coaching"  
+        ],
+ 
+        "Industry": [
+            # Industry Research & Market Analysis  
+            "Industry Analysis", "Sector Trend", "Market Forecast", "Industry Report",  
+            "Competitive Landscape", "Market Share Analysis", "Economic Impact Report",  
+
+            # Regulations & Compliance  
+            "Regulatory Impact", "Government Policy Update", "Industry Compliance Checklist",  
+            "International Trade Law Overview", "ESG (Environmental, Social, and Governance) Compliance",  
+
+            # Technology & Innovation  
+            "Technology Adoption", "AI & Automation in Industry", "Sustainability Trends",  
+            "Industry 4.0 Strategy", "Blockchain Use Cases in Industry", "Green Energy Impact",  
+
+            # Business Growth & Strategy  
+            "Industry Disruption", "Vertical Strategy", "Expansion & Globalization Plan",  
+            "Mergers & Acquisitions Insight", "Franchise Model Analysis",  
+
+            # Supply Chain & Distribution  
+            "Supply Chain Optimization", "Logistics Strategy", "Reshoring vs Offshoring Analysis",  
+            "Distribution Channel Strategy", "Inventory Management Trends",  
+
+            # Partnerships & Networking  
+            "Industry Partnership", "Joint Venture Feasibility", "Trade Association Guide",  
+            "Industry Event Planning", "Corporate Sponsorship Strategy",  
+
+            # Future Trends & Predictions  
+            "Emerging Market Analysis", "Future of Work Report", "Disruptive Startup Watchlist",  
+            "AI Impact on Industry", "Space Economy Trends", "Cybersecurity Risk Forecast"  
+        ]
+ }
     
     # Combine base and extended categories
     all_categories = {**base_categories, **extended_categories}
