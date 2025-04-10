@@ -2418,6 +2418,113 @@ with tab14:
 
 
 
+with tab15:
+    st.header("🔍 AI Search & Knowledge Assistant")
+    st.markdown("### Query documents, websites, or GitHub repos with AI-powered search!")
+    
+    # Select search type
+    search_type = st.radio("📚 What would you like to search?", 
+                          ["Website Content", "GitHub Repository", "Document (PDF/TXT)"],
+                          horizontal=True)
+    
+    if search_type == "Website Content":
+        st.markdown("### 🌐 Website QA Agent")
+        website_url = st.text_input("🔗 Enter website URL to analyze (e.g., https://example.com):")
+        website_depth = st.slider("🕸️ Crawling Depth", min_value=1, max_value=5, value=2, 
+                                help="Higher depth means more pages will be crawled")
+        website_query = st.text_area("❓ What would you like to know about this website?")
+        
+    elif search_type == "GitHub Repository":
+        st.markdown("### 🐙 GitHub Repo QA")
+        repo_url = st.text_input("🔗 Enter GitHub repo URL (e.g., https://github.com/username/repo):")
+        include_options = st.multiselect("📂 Select what to include:", 
+                                        ["README", "Code Files", "Issues", "Pull Requests", "Discussions"],
+                                        default=["README", "Code Files"])
+        file_types = st.text_input("🔠 File extensions to include (comma-separated, e.g., py,md,js):", value="py,md,js,html,css")
+        repo_query = st.text_area("❓ What would you like to know about this repository?")
+        
+    else:  # Document search
+        st.markdown("### 📄 Document QA")
+        uploaded_file = st.file_uploader("📎 Upload a document (PDF, TXT, DOCX):", type=["pdf", "txt", "docx"])
+        if uploaded_file:
+            st.success(f"✅ File '{uploaded_file.name}' uploaded successfully")
+        doc_query = st.text_area("❓ What would you like to know about this document?")
+    
+    # Common settings
+    st.markdown("### ⚙️ Search Settings")
+    col1, col2 = st.columns(2)
+    with col1:
+        max_tokens = st.slider("🔤 Maximum response length", min_value=100, max_value=4000, value=1500)
+        context_chunks = st.slider("📚 Context chunks to use", min_value=1, max_value=20, value=5, 
+                                 help="More chunks provide deeper context but increase processing time")
+    with col2:
+        temperature = st.slider("🌡️ Response creativity", min_value=0.0, max_value=1.0, value=0.3, step=0.1)
+        enable_citations = st.checkbox("📝 Include citations in response", value=True)
+    
+    # Common result display
+    if search_type == "Website Content" and st.button("🔍 Search Website"):
+        if not website_url or not website_query:
+            st.warning("⚠️ Please enter both a website URL and a query.")
+        else:
+            with st.spinner(f"Analyzing website {website_url}..."):
+                # Here you would call your function to process the website search
+                search_prompt = f"""
+                Analyze the website: {website_url} with crawl depth: {website_depth}.
+                Question: {website_query}
+                Respond with a detailed answer based on the website content.
+                {"Include citations to specific pages where information was found." if enable_citations else ""}
+                """
+                search_result = generate_ai_content(search_prompt, st.session_state.api_key, st.session_state.api_model, max_tokens=max_tokens, temperature=temperature)
+                
+            st.success("✅ Search Complete!")
+            st.text_area("🔍 Search Results:", search_result, height=300)
+            
+    elif search_type == "GitHub Repository" and st.button("🔍 Search Repository"):
+        if not repo_url or not repo_query:
+            st.warning("⚠️ Please enter both a repository URL and a query.")
+        else:
+            with st.spinner(f"Analyzing GitHub repository {repo_url}..."):
+                # Here you would call your function to process the GitHub repo search
+                included_content = ", ".join(include_options)
+                search_prompt = f"""
+                Analyze the GitHub repository: {repo_url}.
+                Include: {included_content}
+                File types to analyze: {file_types}
+                Question: {repo_query}
+                Respond with a detailed answer based on the repository content.
+                {"Include citations to specific files where information was found." if enable_citations else ""}
+                """
+                search_result = generate_ai_content(search_prompt, st.session_state.api_key, st.session_state.api_model, max_tokens=max_tokens, temperature=temperature)
+                
+            st.success("✅ Search Complete!")
+            st.text_area("🔍 Search Results:", search_result, height=300)
+            
+    elif search_type == "Document (PDF/TXT)" and st.button("🔍 Search Document"):
+        if not uploaded_file or not doc_query:
+            st.warning("⚠️ Please upload a document and enter a query.")
+        else:
+            with st.spinner(f"Analyzing document {uploaded_file.name}..."):
+                # Here you would call your function to process the document search
+                search_prompt = f"""
+                Analyze the uploaded document: {uploaded_file.name}.
+                Question: {doc_query}
+                Respond with a detailed answer based on the document's content.
+                {"Include citations to specific sections or pages where information was found." if enable_citations else ""}
+                """
+                search_result = generate_ai_content(search_prompt, st.session_state.api_key, st.session_state.api_model, max_tokens=max_tokens, temperature=temperature)
+                
+            st.success("✅ Search Complete!")
+            st.text_area("🔍 Search Results:", search_result, height=300)
+    
+    # Download & Copy Options for results
+    if st.session_state.get("search_result"):
+        col1, col2 = st.columns(2)
+        with col1:
+            st.download_button("📥 Download Results", st.session_state.search_result, "search_results.txt")
+        with col2:
+            st.button("📋 Copy to Clipboard", on_click=lambda: st.write(
+                "<script>navigator.clipboard.writeText(`" + st.session_state.search_result.replace("`", "\\`") + "`);</script>", 
+                unsafe_allow_html=True))
 
 # Advanced options expander
 with st.expander("⚙️ Advanced Options"):
