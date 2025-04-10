@@ -2437,7 +2437,7 @@ with tab15:
     elif search_type == "GitHub Repository":
         st.markdown("### 🐙 GitHub Repo QA")
         repo_url = st.text_input("🔗 Enter GitHub repo URL (e.g., https://github.com/username/repo):")
-        include_option = st.radio("📂 Select what to include:", 
+        include_option = st.multiselect("📂 Select what to include:", 
                                 ["README", "Code Files", "Issues", "Pull Requests", "Discussions"],
                                 horizontal=True,
                                 index=0)
