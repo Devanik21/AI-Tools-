@@ -871,14 +871,15 @@ st.markdown(
 st.markdown('<div class="scroll-container">', unsafe_allow_html=True)
 # Close the Scrollable Container
 
-tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9, tab10, tab11, tab12, tab13,tab14 = st.tabs([
+tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9, tab10, tab11, tab12, tab13, tab14, tab15 = st.tabs([
     "📋 Categories", "🔍 Search", 
     "📚 Research", "🤖 Chat", 
     "🌍 Translate", "⚡ Code", 
     "📊 Insights", "🎤 Interview",
     "📧 Email Assistant", "📊 Spreadsheet",
     "🎬 Podcast", "🎯 Learning Path",
-    "📝 Meeting Minutes","🚀 Startup Validator"
+    "📝 Meeting Minutes", "🚀 Startup Validator",
+    "🔮 AI Search"
 ])
 
 
@@ -2419,7 +2420,7 @@ with tab14:
 
 
 with tab15:
-    st.header("🔍 AI Search & Knowledge Assistant")
+    st.header("🔮 AI Search & Knowledge Assistant")
     st.markdown("### Query documents, websites, or GitHub repos with AI-powered search!")
     
     # Select search type
