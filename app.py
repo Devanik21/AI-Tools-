@@ -2418,7 +2418,6 @@ with tab14:
                 unsafe_allow_html=True))
 
 
-
 with tab15:
     st.header("🔮 AI Search & Knowledge Assistant")
     st.markdown("### Query documents, websites, or GitHub repos with AI-powered search!")
@@ -2475,7 +2474,7 @@ with tab15:
                 Respond with a detailed answer based on the website content.
                 {"Include citations to specific pages where information was found." if enable_citations else ""}
                 """
-                search_result = generate_ai_content(search_prompt, st.session_state.api_key, st.session_state.api_model, max_tokens=max_tokens, temperature=temperature)
+                search_result = generate_ai_content(search_prompt, st.session_state.api_key, st.session_state.api_model)
                 
             st.success("✅ Search Complete!")
             st.text_area("🔍 Search Results:", search_result, height=300)
@@ -2495,7 +2494,7 @@ with tab15:
                 Respond with a detailed answer based on the repository content.
                 {"Include citations to specific files where information was found." if enable_citations else ""}
                 """
-                search_result = generate_ai_content(search_prompt, st.session_state.api_key, st.session_state.api_model, max_tokens=max_tokens, temperature=temperature)
+                search_result = generate_ai_content(search_prompt, st.session_state.api_key, st.session_state.api_model)
                 
             st.success("✅ Search Complete!")
             st.text_area("🔍 Search Results:", search_result, height=300)
@@ -2512,7 +2511,7 @@ with tab15:
                 Respond with a detailed answer based on the document's content.
                 {"Include citations to specific sections or pages where information was found." if enable_citations else ""}
                 """
-                search_result = generate_ai_content(search_prompt, st.session_state.api_key, st.session_state.api_model, max_tokens=max_tokens, temperature=temperature)
+                search_result = generate_ai_content(search_prompt, st.session_state.api_key, st.session_state.api_model)
                 
             st.success("✅ Search Complete!")
             st.text_area("🔍 Search Results:", search_result, height=300)
@@ -2526,6 +2525,7 @@ with tab15:
             st.button("📋 Copy to Clipboard", on_click=lambda: st.write(
                 "<script>navigator.clipboard.writeText(`" + st.session_state.search_result.replace("`", "\\`") + "`);</script>", 
                 unsafe_allow_html=True))
+
 
 # Advanced options expander
 with st.expander("⚙️ Advanced Options"):
