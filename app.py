@@ -2437,10 +2437,9 @@ with tab15:
     elif search_type == "GitHub Repository":
         st.markdown("### 🐙 GitHub Repo QA")
         repo_url = st.text_input("🔗 Enter GitHub repo URL (e.g., https://github.com/username/repo):")
-        include_option = st.multiselect("📂 Select what to include:", 
-                                ["README", "Code Files", "Issues", "Pull Requests", "Discussions"],
-                                horizontal=True,
-                                index=0)
+        include_options = st.multiselect("📂 Select what to include:", 
+                                        ["README", "Code Files", "Issues", "Pull Requests", "Discussions"],
+                                        default=["README", "Code Files"])
         file_types = st.text_input("🔠 File extensions to include (comma-separated, e.g., py,md,js):", value="py,md,js,html,css")
         repo_query = st.text_area("❓ What would you like to know about this repository?")
         
@@ -2486,7 +2485,7 @@ with tab15:
         else:
             with st.spinner(f"Analyzing GitHub repository {repo_url}..."):
                 # Here you would call your function to process the GitHub repo search
-                included_content = include_option
+                included_content = ", ".join(include_options)
                 search_prompt = f"""
                 Analyze the GitHub repository: {repo_url}.
                 Include: {included_content}
