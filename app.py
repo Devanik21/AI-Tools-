@@ -2482,7 +2482,8 @@ with tab15:
                 search_result = generate_ai_content(search_prompt, st.session_state.api_key, st.session_state.api_model)
                 
             st.success("✅ Search Complete!")
-            st.text_area("🔍 Search Results:", search_result, height=300)
+            st.markdown(f"<div style='height:300px; overflow-y:scroll; padding:10px; border:1px solid #ddd; border-radius:8px; background-color:#04040f;'>{search_result}</div>", unsafe_allow_html=True)
+
             
     elif search_type == "GitHub Repository" and st.button("🔍 Search Repository"):
         if not repo_url or not repo_query:
@@ -2502,7 +2503,8 @@ with tab15:
                 search_result = generate_ai_content(search_prompt, st.session_state.api_key, st.session_state.api_model)
                 
             st.success("✅ Search Complete!")
-            st.text_area("🔍 Search Results:", search_result, height=300)
+            st.markdown(f"<div style='height:300px; overflow-y:scroll; padding:10px; border:1px solid #ddd; border-radius:8px; background-color:#04040f;'>{search_result}</div>", unsafe_allow_html=True)
+
             
     elif search_type == "Deep Research" and st.button("🔍 Begin Deep Research"):
         if not deep_research_topic:
@@ -2519,7 +2521,8 @@ with tab15:
                 st.session_state.search_result = search_result
                 
             st.success("✅ Deep Research Complete!")
-            st.text_area("🔍 Research Results:", search_result, height=500)
+            st.markdown(f"<div style='height:300px; overflow-y:scroll; padding:10px; border:1px solid #ddd; border-radius:8px; background-color:#04040f;'>{search_result}</div>", unsafe_allow_html=True)
+
             
     elif search_type == "Document (PDF/TXT)" and st.button("🔍 Search Document"):
         if not uploaded_file or not doc_query:
