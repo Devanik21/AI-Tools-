@@ -2424,7 +2424,7 @@ with tab15:
     
     # Select search type
     search_type = st.radio("📚 What would you like to search?", 
-                          ["Website Content", "GitHub Repository", "Document (PDF/TXT)"],
+                          ["Website Content", "GitHub Repository", "Document (PDF/TXT)", "Deep Research"],
                           horizontal=True)
     
     if search_type == "Website Content":
@@ -2442,6 +2442,11 @@ with tab15:
                                         default=["README", "Code Files"])
         file_types = st.text_input("🔠 File extensions to include (comma-separated, e.g., py,md,js):", value="py,md,js,html,css")
         repo_query = st.text_area("❓ What would you like to know about this repository?")
+        
+    elif search_type == "Deep Research":
+        st.markdown("### 🧠 Deep Research")
+        deep_research_topic = st.text_area("📝 Enter your research topic:", 
+                                        help="AI will generate comprehensive research on this topic")
         
     else:  # Document search
         st.markdown("### 📄 Document QA")
@@ -2498,6 +2503,23 @@ with tab15:
                 
             st.success("✅ Search Complete!")
             st.text_area("🔍 Search Results:", search_result, height=300)
+            
+    elif search_type == "Deep Research" and st.button("🔍 Begin Deep Research"):
+        if not deep_research_topic:
+            st.warning("⚠️ Please enter a research topic.")
+        else:
+            with st.spinner(f"Conducting deep research on: {deep_research_topic}..."):
+                # Process the deep research request
+                search_prompt = f"""
+                Deep research on {deep_research_topic}.
+                please, think deeply and  provide a deep comprehensive analysis in at least more than 9000 words.
+                {"Include citations to relevant sources where applicable." if enable_citations else ""}
+                """
+                search_result = generate_ai_content(search_prompt, st.session_state.api_key, st.session_state.api_model)
+                st.session_state.search_result = search_result
+                
+            st.success("✅ Deep Research Complete!")
+            st.text_area("🔍 Research Results:", search_result, height=500)
             
     elif search_type == "Document (PDF/TXT)" and st.button("🔍 Search Document"):
         if not uploaded_file or not doc_query:
