@@ -2512,7 +2512,7 @@ with tab15:
                 # Process the deep research request
                 search_prompt = f"""
                 Deep research on {deep_research_topic}.
-                please, think deeply and  provide a deep comprehensive analysis in at least more than 9000 words.
+                please, think deeply and  provide a deep comprehensive analysis in at least more than 9000 words and add few emojis too with proper styling.
                 {"Include citations to relevant sources where applicable." if enable_citations else ""}
                 """
                 search_result = generate_ai_content(search_prompt, st.session_state.api_key, st.session_state.api_model)
