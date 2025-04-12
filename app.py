@@ -2536,7 +2536,7 @@ with tab15:
                 search_result = generate_ai_content(search_prompt, st.session_state.api_key, st.session_state.api_model)
                 
             st.success("✅ Search Complete!")
-            st.markdown(f"<div style='height:300px; overflow-y:scroll; padding:10px; border:1px solid #ddd; border-radius:8px; background-color:#1e0824;'>{search_result}</div>", unsafe_allow_html=True)
+            st.markdown(f"<div style='height:300px; overflow-y:scroll; padding:10px; border:1px solid #ddd; border-radius:8px; background-color:#04040f;'>{search_result}</div>", unsafe_allow_html=True)
 
     
     # Download & Copy Options for results
