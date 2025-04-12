@@ -2459,7 +2459,7 @@ with tab15:
     st.markdown("### ⚙️ Search Settings")
     col1, col2 = st.columns(2)
     with col1:
-        max_tokens = st.slider("🔤 Maximum response length", min_value=100, max_value=4000, value=1500)
+        max_tokens = st.slider("🔤 Maximum response length", min_value=100, max_value=10000, value=2000)
         context_chunks = st.slider("📚 Context chunks to use", min_value=1, max_value=20, value=5, 
                                  help="More chunks provide deeper context but increase processing time")
     with col2:
