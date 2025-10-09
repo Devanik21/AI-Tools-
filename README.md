@@ -5,7 +5,7 @@
 ![License](./LICENSE)
 ![Built with Streamlit](https://img.shields.io/badge/Built%20With-Streamlit-red)
 
-## ✨ **What is Ultimate AI Creator Hub?**
+## ✨ **What is Ultimate AI Creator Hub?** 
 🔹 A powerful AI-driven platform designed to enhance **writing, research, coding, business, data analysis, and creativity**! 🚀  
 🔹 Features a collection of **2000+ AI tools**—from generating blog posts to analyzing research papers! 📚
 🔹 Built with **Google Gemini API**, **Streamlit**, and **Python** for seamless performance. 🛠️
